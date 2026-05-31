@@ -60,7 +60,7 @@ export function ProductGrid() {
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <a href="#" className="group block">
+    <button type="button" className="group block w-full text-left">
       <div
         className="relative aspect-square overflow-hidden rounded-2xl"
         style={{ background: `linear-gradient(160deg, ${product.swatch}, white 75%)` }}
@@ -102,6 +102,7 @@ function ProductCard({ product }: { product: Product }) {
           ${product.price.toLocaleString()}
         </p>
       </div>
-    </a>
+    </button>
+
   );
 }
