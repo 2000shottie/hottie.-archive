@@ -18,7 +18,7 @@ type Product = {
 };
 
 const products: Product[] = [
-  { id: "bal-city", name: "City Moto Bag — Burgundy", house: "Balenciaga", price: 356, img: balCity, tag: "Just In", swatch: "oklch(0.88 0.05 18)" },
+  { id: "bal-city", name: "City Moto Bag — Burgundy", house: "Balenciaga", price: 800, img: balCity, tag: "Just In", swatch: "oklch(0.88 0.05 18)" },
   { id: "1", name: "Quilted Mini Shoulder", house: "Maison BLNCGA", price: 1480, img: bagBlack, swatch: "oklch(0.92 0.045 12)" },
   { id: "2", name: "Cat-Eye Acetate Frames", house: "Saint Lila", price: 320, img: sun1, swatch: "oklch(0.86 0.005 250)" },
   { id: "3", name: "Powder Top-Handle Mini", house: "Roma Atelier", price: 1240, img: bagPink, tag: "Archive", swatch: "oklch(0.92 0.045 12)" },
