@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A curated designer fashion archive. Bags, sunglasses, jewelry & shoes — softly styled, authenticated, shipped in silk.",
+          "A curated designer fashion archive. Bags, sunglasses, jewelry & shoes — softly styled and hand-picked.",
       },
       { property: "og:title", content: "HOTTIE. — Soft Luxury for Internet Icons" },
       {

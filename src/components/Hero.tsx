@@ -39,9 +39,9 @@ export function Hero() {
 
           <div className="mt-12 hidden grid-cols-3 gap-6 border-t border-border/70 pt-6 md:grid">
             {[
-              ["Authenticated", "Every piece, by hand."],
-              ["Shipped softly", "Wrapped in silk."],
-              ["1% archive", "Selected pieces only."],
+              ["Hand-picked", "Every piece, curated."],
+              ["Worldwide", "Soft, tracked shipping."],
+              ["The 1% edit", "Only what we'd wear."],
             ].map(([t, s]) => (
               <div key={t}>
                 <p className="text-[10px] tracking-luxe uppercase text-foreground">{t}</p>
@@ -104,11 +104,11 @@ export function Hero() {
                 "★",
                 "archive only",
                 "★",
-                "authenticated",
+                "hand-picked",
                 "★",
                 "model off-duty",
                 "★",
-                "shipped in silk",
+                "expensive taste",
                 "★",
               ].map((t, j) => (
                 <span key={j}>{t}</span>
