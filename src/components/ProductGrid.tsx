@@ -102,6 +102,7 @@ function ProductCard({ product }: { product: Product }) {
           ${product.price.toLocaleString()}
         </p>
       </div>
-    </a>
+    </button>
+
   );
 }
