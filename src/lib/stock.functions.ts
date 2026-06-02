@@ -1,0 +1,109 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
+export type StockStatus = {
+  available: boolean;
+  source: "firecrawl" | "unknown";
+  reason: string;
+  checkedAt: string;
+};
+
+/**
+ * Auto out-of-stock checker.
+ * Fetches the Vestiaire Collective listing page via Firecrawl (Cloudflare blocks
+ * direct server fetches) and looks for sold-out signals. Returns `available:false`
+ * when the listing is sold, hidden, or no longer reachable.
+ *
+ * Requires a Firecrawl connection (FIRECRAWL_API_KEY env var).
+ */
+export const checkVestiaireStock = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ url: z.string().url() }))
+  .handler(async ({ data }): Promise<StockStatus> => {
+    const apiKey = process.env.FIRECRAWL_API_KEY;
+    const checkedAt = new Date().toISOString();
+
+    if (!apiKey) {
+      // No Firecrawl connected yet — assume available and surface the reason
+      // in the UI so the seller knows to connect it.
+      return {
+        available: true,
+        source: "unknown",
+        reason: "Firecrawl not connected — stock check skipped.",
+        checkedAt,
+      };
+    }
+
+    try {
+      const res = await fetch("https://api.firecrawl.dev/v2/scrape", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: data.url,
+          formats: ["markdown"],
+          onlyMainContent: false,
+        }),
+      });
+
+      if (!res.ok) {
+        // 404 on the listing usually means it was removed → treat as sold.
+        if (res.status === 404) {
+          return {
+            available: false,
+            source: "firecrawl",
+            reason: "Listing no longer found on Vestiaire.",
+            checkedAt,
+          };
+        }
+        return {
+          available: true,
+          source: "firecrawl",
+          reason: `Stock check failed (${res.status}).`,
+          checkedAt,
+        };
+      }
+
+      const json = (await res.json()) as {
+        data?: { markdown?: string; metadata?: { statusCode?: number } };
+        markdown?: string;
+      };
+      const markdown = (json.data?.markdown ?? json.markdown ?? "").toLowerCase();
+      const statusCode = json.data?.metadata?.statusCode;
+
+      if (statusCode === 404 || /this item has been sold|item is sold|no longer available|product not found/i.test(markdown)) {
+        return {
+          available: false,
+          source: "firecrawl",
+          reason: "Vestiaire marked this listing as sold.",
+          checkedAt,
+        };
+      }
+
+      // Positive signals: an active listing still shows "add to bag" / "make an offer".
+      const hasBuySignal = /add to bag|make an offer|buy now/i.test(markdown);
+      if (!hasBuySignal && markdown.length > 0) {
+        return {
+          available: false,
+          source: "firecrawl",
+          reason: "No buy button detected — likely sold.",
+          checkedAt,
+        };
+      }
+
+      return {
+        available: true,
+        source: "firecrawl",
+        reason: "Listing is live on Vestiaire.",
+        checkedAt,
+      };
+    } catch (err) {
+      return {
+        available: true,
+        source: "firecrawl",
+        reason: `Stock check error: ${err instanceof Error ? err.message : "unknown"}`,
+        checkedAt,
+      };
+    }
+  });

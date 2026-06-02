@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { getProduct, products } from "@/lib/products";
 import { useCart } from "@/lib/cart";
+import { useStock } from "@/lib/useStock";
 
 export const Route = createFileRoute("/product/$id")({
   loader: ({ params }) => {
@@ -44,8 +45,14 @@ function ProductPage() {
   const more = products.filter((p) => p.id !== product.id).slice(0, 4);
   const { add } = useCart();
   const navigate = useNavigate();
+  const { data: stock } = useStock(product.vestiaireUrl);
+  const soldOut = stock ? !stock.available : false;
 
   const onAdd = (then?: "checkout") => {
+    if (soldOut) {
+      toast.error("Sorry — this piece just sold.");
+      return;
+    }
     add(product, 1);
     if (then === "checkout") {
       navigate({ to: "/checkout" });
@@ -79,6 +86,13 @@ function ProductPage() {
                 {product.tag}
               </span>
             )}
+            {soldOut && (
+              <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
+                <span className="rounded-full bg-foreground px-5 py-2 text-[11px] tracking-luxe uppercase text-background">
+                  Sold out
+                </span>
+              </div>
+            )}
             <img
               src={product.img}
               alt={product.name}
@@ -103,18 +117,28 @@ function ProductPage() {
                 "A softly styled, hand-picked piece from the HOTTIE archive. One of one — once it's gone, it's gone."}
             </p>
 
+            {product.vestiaireUrl && (
+              <p className="mt-4 text-[11px] tracking-luxe uppercase text-muted-foreground">
+                {soldOut
+                  ? "● Sold — auto-synced from source"
+                  : "● In stock — live-synced from source"}
+              </p>
+            )}
+
             <div className="mt-10 flex flex-col gap-3">
               <button
                 type="button"
                 onClick={() => onAdd()}
-                className="rounded-full bg-foreground px-7 py-4 text-[11px] tracking-luxe uppercase text-background transition-all hover:bg-primary hover:shadow-soft"
+                disabled={soldOut}
+                className="rounded-full bg-foreground px-7 py-4 text-[11px] tracking-luxe uppercase text-background transition-all hover:bg-primary hover:shadow-soft disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-foreground"
               >
-                Add to Bag
+                {soldOut ? "Sold Out" : "Add to Bag"}
               </button>
               <button
                 type="button"
                 onClick={() => onAdd("checkout")}
-                className="rounded-full border border-foreground/20 px-7 py-4 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary"
+                disabled={soldOut}
+                className="rounded-full border border-foreground/20 px-7 py-4 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Buy it now →
               </button>

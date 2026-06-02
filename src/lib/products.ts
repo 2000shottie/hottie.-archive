@@ -5,7 +5,6 @@ import sun1 from "@/assets/p-sunglasses.png";
 import sun2 from "@/assets/p-sunglasses-2.png";
 import heels from "@/assets/p-heels.png";
 import necklace from "@/assets/p-necklace.png";
-import balCity from "@/assets/p-balenciaga-city.png";
 
 export type Product = {
   id: string;
@@ -16,10 +15,25 @@ export type Product = {
   tag?: string;
   swatch: string;
   description?: string;
+  /** Source listing URL on Vestiaire Collective. When present, stock is polled
+   *  automatically and the product flips to "Sold out" when it goes off-market. */
+  vestiaireUrl?: string;
 };
 
 export const products: Product[] = [
-  { id: "bal-city", name: "City Moto Bag — Burgundy", house: "Balenciaga", price: 800, img: balCity, tag: "Just In", swatch: "oklch(0.88 0.05 18)", description: "Iconic distressed burgundy leather City bag. Slouchy moto silhouette with signature studs and mirror. A true archive piece." },
+  {
+    id: "dg-miss-charles",
+    name: "Miss Charles Leather Handbag — Black",
+    house: "Dolce & Gabbana",
+    price: 384,
+    img: "https://images.vestiairecollective.com/images/resized/w=1024,q=85,f=auto,/produit/black-leather-miss-charles-dolce-gabbana-handbag-66869227-1_2.jpg",
+    tag: "Just In",
+    swatch: "oklch(0.86 0.005 250)",
+    description:
+      "Dolce & Gabbana Miss Charles top-handle in black leather. Structured silhouette, gold hardware, very good vintage condition. One of one — once it's gone, it's gone.",
+    vestiaireUrl:
+      "https://www.vestiairecollective.com/women-bags/handbags/dolce-gabbana/black-leather-miss-charles-dolce-gabbana-handbag-66869227.shtml",
+  },
   { id: "1", name: "Quilted Mini Shoulder", house: "Maison BLNCGA", price: 1480, img: bagBlack, swatch: "oklch(0.92 0.045 12)" },
   { id: "2", name: "Cat-Eye Acetate Frames", house: "Saint Lila", price: 320, img: sun1, swatch: "oklch(0.86 0.005 250)" },
   { id: "3", name: "Powder Top-Handle Mini", house: "Roma Atelier", price: 1240, img: bagPink, tag: "Archive", swatch: "oklch(0.92 0.045 12)" },

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { products, type Product } from "@/lib/products";
+import { useStock } from "@/lib/useStock";
 
 export function ProductGrid() {
   return (
@@ -33,20 +34,29 @@ export function ProductGrid() {
 }
 
 function ProductCard({ product }: { product: Product }) {
+  const { data: stock } = useStock(product.vestiaireUrl);
+  const soldOut = stock ? !stock.available : false;
   return (
     <Link
       to="/product/$id"
       params={{ id: product.id }}
-      className="group block w-full text-left"
+      className={`group block w-full text-left ${soldOut ? "pointer-events-none" : ""}`}
     >
       <div
         className="relative aspect-square overflow-hidden rounded-2xl"
         style={{ background: `linear-gradient(160deg, ${product.swatch}, white 75%)` }}
       >
-        {product.tag && (
+        {product.tag && !soldOut && (
           <span className="absolute left-3 top-3 z-10 rounded-full glass px-2.5 py-1 text-[9px] tracking-luxe uppercase text-foreground">
             {product.tag}
           </span>
+        )}
+        {soldOut && (
+          <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
+            <span className="rounded-full bg-foreground px-4 py-1.5 text-[10px] tracking-luxe uppercase text-background">
+              Sold out
+            </span>
+          </div>
         )}
         <span
           aria-label="Wishlist"
