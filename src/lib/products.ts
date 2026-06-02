@@ -111,10 +111,7 @@ export const products: Product[] = [
       { label: "Colour", value: "Ivory white" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/white-cotton-dior-top-67466994-2_2.jpg",
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/white-cotton-dior-top-67466994-3_2.jpg",
-    ],
+    gallery: [diorTigerTee2, diorTigerTee3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
