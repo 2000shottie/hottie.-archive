@@ -86,7 +86,7 @@ function ProductPage() {
           <div className="flex flex-col gap-3">
             <div
               className="relative aspect-square w-full overflow-hidden rounded-2xl md:rounded-[28px]"
-              style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
+              style={{ background: "white" }}
             >
               {product.tag && (
                 <span className="absolute left-4 top-4 z-10 rounded-full glass px-3 py-1.5 text-[10px] tracking-luxe uppercase text-foreground">
@@ -123,7 +123,7 @@ function ProductPage() {
                           ? "border-foreground/70 shadow-soft"
                           : "border-border/60 opacity-80 hover:opacity-100"
                       }`}
-                      style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
+                      style={{ background: "white" }}
                     >
                       <img
                         src={src}
@@ -212,7 +212,7 @@ function ProductPage() {
                 >
                   <div
                     className="relative aspect-square overflow-hidden rounded-2xl"
-                    style={{ background: `linear-gradient(160deg, ${p.swatch}, white 75%)` }}
+                    style={{ background: "white" }}
                   >
                     <img
                       src={p.img}
