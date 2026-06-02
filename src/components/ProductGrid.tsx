@@ -40,7 +40,7 @@ function ProductCard({ product }: { product: Product }) {
     <Link
       to="/product/$id"
       params={{ id: product.id }}
-      className={`group block w-full text-left ${soldOut ? "pointer-events-none" : ""}`}
+      className="group block w-full text-left"
     >
       <div
         className="relative aspect-square overflow-hidden rounded-2xl"
