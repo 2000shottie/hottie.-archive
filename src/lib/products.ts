@@ -1,9 +1,21 @@
 import lvIdylle from "@/assets/p-lv-idylle.png";
+import lvIdylle2 from "@/assets/p-lv-idylle-2.png";
+import lvIdylle3 from "@/assets/p-lv-idylle-3.png";
 import diorTigerTee from "@/assets/p-dior-white-top.png";
+import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
+import diorTigerTee3 from "@/assets/p-dior-white-top-3.png";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
+import gucciGreenSun2 from "@/assets/p-gucci-green-sun-2.png";
+import gucciGreenSun3 from "@/assets/p-gucci-green-sun-3.png";
 import pradaSandals from "@/assets/p-prada-sandals.png";
+import pradaSandals2 from "@/assets/p-prada-sandals-2.png";
+import pradaSandals3 from "@/assets/p-prada-sandals-3.png";
 import dgTigerTop from "@/assets/p-dg-brown-top.png";
+import dgTigerTop2 from "@/assets/p-dg-brown-top-2.png";
+import dgTigerTop3 from "@/assets/p-dg-brown-top-3.png";
 import vwTartanBag from "@/assets/p-vw-brown-bag.png";
+import vwTartanBag2 from "@/assets/p-vw-brown-bag-2.png";
+import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
