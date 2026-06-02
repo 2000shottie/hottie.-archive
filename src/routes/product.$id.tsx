@@ -86,6 +86,13 @@ function ProductPage() {
                 {product.tag}
               </span>
             )}
+            {soldOut && (
+              <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
+                <span className="rounded-full bg-foreground px-5 py-2 text-[11px] tracking-luxe uppercase text-background">
+                  Sold out
+                </span>
+              </div>
+            )}
             <img
               src={product.img}
               alt={product.name}
