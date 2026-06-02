@@ -85,12 +85,21 @@ function CheckoutPage() {
     }
     setErrors({});
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setSubmitting(false);
-    toast.success("Order placed — you'll get a confirmation email soon. ♡");
-    clear();
-    navigate({ to: "/" });
+    try {
+      await new Promise((r) => setTimeout(r, 900));
+      // Mark every purchased piece as sold so it disappears from the live edit.
+      await markSold({ data: { productIds: lines.map((l) => l.product.id) } });
+      await queryClient.invalidateQueries({ queryKey: ["sold-products"] });
+      toast.success("Order placed — you'll get a confirmation email soon. ♡");
+      clear();
+      navigate({ to: "/" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not place order.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
 
   if (count === 0) {
     return (
