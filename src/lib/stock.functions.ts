@@ -88,10 +88,11 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
         checkedAt,
       };
     } catch (err) {
+      // Fail open on network errors so live pieces stay buyable.
       return {
-        available: false,
+        available: true,
         source: "firecrawl",
-        reason: `Could not verify Vestiaire stock: ${err instanceof Error ? err.message : "unknown"}`,
+        reason: `Could not verify Vestiaire stock: ${err instanceof Error ? err.message : "unknown"} — assuming live.`,
         checkedAt,
       };
     }
