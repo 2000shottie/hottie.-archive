@@ -58,7 +58,7 @@ export function Hero() {
             <img
               src={hero}
               alt="Curated vintage designer flat lay"
-              className="size-full object-cover object-center"
+              className="size-full object-contain object-center"
               width={1600}
               height={1067}
             />
