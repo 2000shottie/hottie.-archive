@@ -67,10 +67,7 @@ export const products: Product[] = [
       { label: "Hardware", value: "Gold-tone" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267-2_2.jpg",
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267-3_2.jpg",
-    ],
+    gallery: [lvIdylle2, lvIdylle3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
   },
