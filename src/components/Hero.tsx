@@ -91,17 +91,11 @@ export function Hero() {
           {Array.from({ length: 2 }).map((_, i) => (
             <div key={i} className="flex items-center gap-14">
               {[
-                "soft luxury",
-                "★",
-                "internet it-girl",
-                "★",
                 "archive only",
                 "★",
                 "hand-picked",
                 "★",
                 "model off-duty",
-                "★",
-                "expensive taste",
                 "★",
               ].map((t, j) => (
                 <span key={j}>{t}</span>
