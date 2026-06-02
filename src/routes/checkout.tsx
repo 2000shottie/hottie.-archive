@@ -162,6 +162,14 @@ function CheckoutPage() {
               </div>
             </Section>
 
+            <p className="text-[12px] leading-relaxed text-muted-foreground">
+              Each item is individually sourced from our exclusive network of designer collections.
+              Because we curate just for you, please allow approximately 3–4 weeks for delivery so you can receive a piece that's truly one-of-a-kind.
+            </p>
+            <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">
+              All sales are final — no returns or refunds.
+            </p>
+
             <button
               type="submit"
               disabled={submitting}
