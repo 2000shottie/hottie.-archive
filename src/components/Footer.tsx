@@ -41,7 +41,16 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 text-[11px] tracking-luxe uppercase text-muted-foreground md:flex-row md:items-center">
+        <div className="mt-14 flex flex-col items-center gap-2 border-t border-border pt-10 text-center">
+          <p className="font-script text-3xl text-foreground md:text-4xl">Have a question?</p>
+          <Link
+            to="/contact"
+            className="text-[12px] tracking-luxe uppercase text-muted-foreground transition-colors hover:text-primary"
+          >
+            Contact us →
+          </Link>
+        </div>
+
           <p>© {new Date().getFullYear()} Hottie. Archive — all rights reserved.</p>
           <p>Soft luxury for internet icons.</p>
         </div>
