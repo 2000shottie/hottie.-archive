@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
+import { useStock } from "@/lib/useStock";
+import type { Product } from "@/lib/products";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -17,6 +20,11 @@ function CartPage() {
   const { lines, setQty, remove, subtotal, count } = useCart();
   const shipping = subtotal > 0 ? 15 : 0;
   const total = subtotal + shipping;
+  const [soldIds, setSoldIds] = useState<Record<string, boolean>>({});
+  const hasSoldOut = useMemo(() => Object.values(soldIds).some(Boolean), [soldIds]);
+  const reportSold = (id: string, sold: boolean) =>
+    setSoldIds((prev) => (prev[id] === sold ? prev : { ...prev, [id]: sold }));
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
