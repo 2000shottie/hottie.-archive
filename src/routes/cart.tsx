@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
@@ -21,7 +21,10 @@ function CartPage() {
   const shipping = subtotal > 0 ? 15 : 0;
   const total = subtotal + shipping;
   const [soldIds, setSoldIds] = useState<Record<string, boolean>>({});
-  const hasSoldOut = useMemo(() => Object.values(soldIds).some(Boolean), [soldIds]);
+  const hasSoldOut = useMemo(
+    () => lines.some(({ product }) => !!product.vestiaireUrl && soldIds[product.id] !== false),
+    [lines, soldIds],
+  );
   const reportSold = (id: string, sold: boolean) =>
     setSoldIds((prev) => (prev[id] === sold ? prev : { ...prev, [id]: sold }));
 
@@ -86,7 +89,7 @@ function CartPage() {
               </p>
               {hasSoldOut && (
                 <p className="mt-4 rounded-xl bg-foreground/5 px-3 py-2 text-[11px] text-foreground/80">
-                  One or more pieces in your bag just sold. Remove them to continue.
+                  Checking availability — any sold pieces must be removed before checkout.
                 </p>
               )}
               {hasSoldOut ? (
@@ -136,9 +139,7 @@ function CartLine({
   const { data: stock } = useStock(product.vestiaireUrl);
   const soldOut = stock ? !stock.available : false;
   // Notify parent so the checkout button can react.
-  if (typeof window !== "undefined") {
-    queueMicrotask(() => onStock(soldOut));
-  }
+  useEffect(() => onStock(soldOut), [onStock, soldOut]);
   return (
     <li className="flex gap-4 py-6">
       <Link
