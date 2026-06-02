@@ -25,7 +25,7 @@ export const products: Product[] = [
     id: "dg-miss-charles",
     name: "Miss Charles Leather Handbag — Black",
     house: "Dolce & Gabbana",
-    price: 384,
+    price: 570,
     img: "https://images.vestiairecollective.com/images/resized/w=1024,q=85,f=auto,/produit/black-leather-miss-charles-dolce-gabbana-handbag-66869227-1_2.jpg",
     tag: "Just In",
     swatch: "oklch(0.86 0.005 250)",
