@@ -34,7 +34,8 @@ export function ProductGrid() {
 }
 
 function ProductCard({ product }: { product: Product }) {
-  return (
+  const { data: stock } = useStock(product.vestiaireUrl);
+  const soldOut = stock ? !stock.available : false;
     <Link
       to="/product/$id"
       params={{ id: product.id }}
