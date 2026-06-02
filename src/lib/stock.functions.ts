@@ -50,19 +50,12 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       });
 
       if (!res.ok) {
-        // 404 on the listing usually means it was removed → treat as sold.
-        if (res.status === 404 || res.status === 410) {
-          return {
-            available: false,
-            source: "firecrawl",
-            reason: "Listing no longer found on Vestiaire.",
-            checkedAt,
-          };
-        }
+        // Transient errors should NOT flip the product to sold out —
+        // fail open so live items stay buyable when the scraper hiccups.
         return {
-          available: false,
+          available: true,
           source: "firecrawl",
-          reason: `Could not verify Vestiaire stock (${res.status}).`,
+          reason: `Could not verify Vestiaire stock (${res.status}) — assuming live.`,
           checkedAt,
         };
       }
