@@ -1,9 +1,21 @@
 import lvIdylle from "@/assets/p-lv-idylle.png";
+import lvIdylle2 from "@/assets/p-lv-idylle-2.png";
+import lvIdylle3 from "@/assets/p-lv-idylle-3.png";
 import diorTigerTee from "@/assets/p-dior-white-top.png";
+import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
+import diorTigerTee3 from "@/assets/p-dior-white-top-3.png";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
+import gucciGreenSun2 from "@/assets/p-gucci-green-sun-2.png";
+import gucciGreenSun3 from "@/assets/p-gucci-green-sun-3.png";
 import pradaSandals from "@/assets/p-prada-sandals.png";
+import pradaSandals2 from "@/assets/p-prada-sandals-2.png";
+import pradaSandals3 from "@/assets/p-prada-sandals-3.png";
 import dgTigerTop from "@/assets/p-dg-brown-top.png";
+import dgTigerTop2 from "@/assets/p-dg-brown-top-2.png";
+import dgTigerTop3 from "@/assets/p-dg-brown-top-3.png";
 import vwTartanBag from "@/assets/p-vw-brown-bag.png";
+import vwTartanBag2 from "@/assets/p-vw-brown-bag-2.png";
+import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
@@ -55,10 +67,7 @@ export const products: Product[] = [
       { label: "Hardware", value: "Gold-tone" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267-2_2.jpg",
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267-3_2.jpg",
-    ],
+    gallery: [lvIdylle2, lvIdylle3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
   },
@@ -81,10 +90,7 @@ export const products: Product[] = [
       { label: "Hardware", value: "Silver-tone orb" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-vegan-leather-vivienne-westwood-handbag-66949891-2_2.jpg",
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-vegan-leather-vivienne-westwood-handbag-66949891-3_2.jpg",
-    ],
+    gallery: [vwTartanBag2, vwTartanBag3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
@@ -105,10 +111,7 @@ export const products: Product[] = [
       { label: "Colour", value: "Ivory white" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/white-cotton-dior-top-67466994-2_2.jpg",
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/white-cotton-dior-top-67466994-3_2.jpg",
-    ],
+    gallery: [diorTigerTee2, diorTigerTee3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
@@ -130,10 +133,7 @@ export const products: Product[] = [
       { label: "Colour", value: "Brown tiger print" },
       { label: "Condition", value: "Never worn · with tags" },
     ],
-    gallery: [
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-polyamide-dolce-gabbana-top-67070568-2_2.jpg",
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-polyamide-dolce-gabbana-top-67070568-3_2.jpg",
-    ],
+    gallery: [dgTigerTop2, dgTigerTop3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dolce-gabbana/brown-polyamide-dolce-gabbana-top-67070568.shtml",
   },
