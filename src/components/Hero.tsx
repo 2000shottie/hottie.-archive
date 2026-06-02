@@ -54,15 +54,14 @@ export function Hero() {
 
         {/* Right: image with floating products */}
         <div className="relative order-1 md:order-2 md:col-span-7">
-          <div className="relative aspect-[5/6] w-full overflow-hidden rounded-2xl bg-blush shadow-soft md:rounded-[28px]">
+          <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl bg-blush shadow-soft md:rounded-[28px]">
             <img
               src={hero}
-              alt="HOTTIE editorial — luxury blush portrait"
-              className="size-full object-cover"
+              alt="Curated vintage designer flat lay"
+              className="size-full object-cover object-center"
               width={1600}
-              height={1200}
+              height={1067}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-blush/30 via-transparent to-transparent" />
             <div className="absolute left-5 top-5 rounded-full glass px-4 py-1.5 text-[10px] tracking-luxe uppercase text-foreground">
               Summer Drop
             </div>
