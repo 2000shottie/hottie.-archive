@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
+import { useStock } from "@/lib/useStock";
+import type { Product } from "@/lib/products";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -40,6 +42,13 @@ function CheckoutPage() {
   const navigate = useNavigate();
   const shipping = subtotal > 0 ? 15 : 0;
   const total = subtotal + shipping;
+  const [availableIds, setAvailableIds] = useState<Record<string, boolean>>({});
+  const checkoutBlocked = useMemo(
+    () => lines.some(({ product }) => !!product.vestiaireUrl && availableIds[product.id] !== true),
+    [availableIds, lines],
+  );
+  const reportAvailability = (id: string, available: boolean) =>
+    setAvailableIds((prev) => (prev[id] === available ? prev : { ...prev, [id]: available }));
 
   const [form, setForm] = useState<FormState>({
     email: "", firstName: "", lastName: "", phone: "",
@@ -54,6 +63,10 @@ function CheckoutPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (checkoutBlocked) {
+      toast.error("Checking Vestiaire stock — sold pieces can’t be purchased.");
+      return;
+    }
     const parsed = checkoutSchema.safeParse(form);
     if (!parsed.success) {
       const fieldErrors: Partial<Record<keyof FormState, string>> = {};
@@ -172,10 +185,10 @@ function CheckoutPage() {
 
             <button
               type="submit"
-              disabled={submitting}
+              disabled={submitting || checkoutBlocked}
               className="w-full rounded-full bg-foreground py-4 text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary disabled:opacity-60"
             >
-              {submitting ? "Placing order…" : `Pay $${total.toLocaleString()}`}
+              {checkoutBlocked ? "Checking stock…" : submitting ? "Placing order…" : `Pay $${total.toLocaleString()}`}
             </button>
           </div>
 
@@ -183,19 +196,12 @@ function CheckoutPage() {
             <h2 className="text-[11px] tracking-luxe uppercase">Order</h2>
             <ul className="mt-5 space-y-4">
               {lines.map(({ product, qty }) => (
-                <li key={product.id} className="flex items-center gap-3">
-                  <div
-                    className="size-14 shrink-0 overflow-hidden rounded-lg"
-                    style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
-                  >
-                    <img src={product.img} alt="" className="size-full object-contain p-1" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13px]">{product.name}</p>
-                    <p className="text-[11px] text-muted-foreground">Qty {qty}</p>
-                  </div>
-                  <p className="text-[13px]">${(product.price * qty).toLocaleString()}</p>
-                </li>
+                <CheckoutLine
+                  key={product.id}
+                  product={product}
+                  qty={qty}
+                  onStock={(available) => reportAvailability(product.id, available)}
+                />
               ))}
             </ul>
             <dl className="mt-6 space-y-2 border-t border-border pt-4 text-[13px]">
