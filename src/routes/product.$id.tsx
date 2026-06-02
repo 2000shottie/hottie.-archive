@@ -49,6 +49,11 @@ function ProductPage() {
   const { data: stock } = useStock(product.vestiaireUrl);
   const soldOut = stock ? !stock.available : false;
 
+  const images = [product.img, ...(product.gallery ?? [])];
+  const [activeIdx, setActiveIdx] = useState(0);
+  const activeImg = images[activeIdx] ?? product.img;
+  const isMainShot = activeIdx === 0;
+
   const onAdd = (then?: "checkout") => {
     if (soldOut) {
       toast.error("Sorry — this piece just sold.");
