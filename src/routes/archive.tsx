@@ -100,7 +100,7 @@ function ArchiveCard({ product }: { product: Product }) {
     >
       <div
         className="relative aspect-square overflow-hidden rounded-2xl"
-        style={{ background: `linear-gradient(160deg, ${product.swatch}, white 75%)` }}
+        style={{ background: "white" }}
       >
         {product.tag && !soldOut && (
           <span className="absolute left-3 top-3 z-10 rounded-full glass px-2.5 py-1 text-[9px] tracking-luxe uppercase text-foreground">
