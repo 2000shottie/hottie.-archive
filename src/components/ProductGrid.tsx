@@ -1,33 +1,5 @@
-import bagBlack from "@/assets/p-bag-black.png";
-import bagPink from "@/assets/p-bag-pink.png";
-import bagWhite from "@/assets/p-bag-white.png";
-import sun1 from "@/assets/p-sunglasses.png";
-import sun2 from "@/assets/p-sunglasses-2.png";
-import heels from "@/assets/p-heels.png";
-import necklace from "@/assets/p-necklace.png";
-import balCity from "@/assets/p-balenciaga-city.png";
-
-type Product = {
-  id: string;
-  name: string;
-  house: string;
-  price: number;
-  img: string;
-  tag?: string;
-  swatch: string;
-};
-
-const products: Product[] = [
-  { id: "bal-city", name: "City Moto Bag — Burgundy", house: "Balenciaga", price: 800, img: balCity, tag: "Just In", swatch: "oklch(0.88 0.05 18)" },
-  { id: "1", name: "Quilted Mini Shoulder", house: "Maison BLNCGA", price: 1480, img: bagBlack, swatch: "oklch(0.92 0.045 12)" },
-  { id: "2", name: "Cat-Eye Acetate Frames", house: "Saint Lila", price: 320, img: sun1, swatch: "oklch(0.86 0.005 250)" },
-  { id: "3", name: "Powder Top-Handle Mini", house: "Roma Atelier", price: 1240, img: bagPink, tag: "Archive", swatch: "oklch(0.92 0.045 12)" },
-  { id: "4", name: "Chrome Stiletto 95", house: "Vega Studio", price: 690, img: heels, swatch: "oklch(0.95 0.012 20)" },
-  { id: "5", name: "Heavy Curb Choker", house: "Atelier Onze", price: 280, img: necklace, swatch: "oklch(0.86 0.005 250)" },
-  { id: "6", name: "Ivory Raffia Micro", house: "Côte Maison", price: 560, img: bagWhite, tag: "New", swatch: "oklch(0.95 0.012 20)" },
-  { id: "7", name: "Tortoise Rectangle Frames", house: "Saint Lila", price: 360, img: sun2, swatch: "oklch(0.92 0.045 12)" },
-];
-
+import { Link } from "@tanstack/react-router";
+import { products, type Product } from "@/lib/products";
 
 export function ProductGrid() {
   return (
@@ -62,7 +34,11 @@ export function ProductGrid() {
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <button type="button" className="group block w-full text-left">
+    <Link
+      to="/product/$id"
+      params={{ id: product.id }}
+      className="group block w-full text-left"
+    >
       <div
         className="relative aspect-square overflow-hidden rounded-2xl"
         style={{ background: `linear-gradient(160deg, ${product.swatch}, white 75%)` }}
@@ -72,12 +48,12 @@ function ProductCard({ product }: { product: Product }) {
             {product.tag}
           </span>
         )}
-        <button
+        <span
           aria-label="Wishlist"
           className="absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-full glass text-foreground/70 opacity-0 transition-all hover:text-primary group-hover:opacity-100"
         >
           ♡
-        </button>
+        </span>
         <img
           src={product.img}
           alt={product.name}
@@ -88,9 +64,9 @@ function ProductCard({ product }: { product: Product }) {
           style={{ filter: "drop-shadow(0 30px 25px rgb(0 0 0 / 0.12))" }}
         />
         <div className="absolute inset-x-3 bottom-3 translate-y-3 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-          <button className="w-full rounded-full bg-foreground/90 py-2.5 text-[10px] tracking-luxe uppercase text-background backdrop-blur transition-colors hover:bg-primary">
-            Quick Add
-          </button>
+          <span className="block w-full rounded-full bg-foreground/90 py-2.5 text-center text-[10px] tracking-luxe uppercase text-background backdrop-blur">
+            View Piece
+          </span>
         </div>
       </div>
       <div className="mt-4 flex items-start justify-between gap-3">
@@ -104,7 +80,6 @@ function ProductCard({ product }: { product: Product }) {
           ${product.price.toLocaleString()}
         </p>
       </div>
-    </button>
-
+    </Link>
   );
 }
