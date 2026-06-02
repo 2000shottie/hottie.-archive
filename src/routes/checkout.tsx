@@ -43,6 +43,8 @@ type FormState = Record<keyof z.infer<typeof checkoutSchema>, string>;
 function CheckoutPage() {
   const { lines, subtotal, clear, count } = useCart();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const markSold = useServerFn(markProductsSold);
   const shipping = subtotal > 0 ? 15 : 0;
   const total = subtotal + shipping;
   const [availableIds, setAvailableIds] = useState<Record<string, boolean>>({});
