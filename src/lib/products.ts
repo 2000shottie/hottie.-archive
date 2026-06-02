@@ -81,6 +81,10 @@ export const products: Product[] = [
       { label: "Hardware", value: "Silver-tone orb" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-vegan-leather-vivienne-westwood-handbag-66949891-2_2.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-vegan-leather-vivienne-westwood-handbag-66949891-3_2.jpg",
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
