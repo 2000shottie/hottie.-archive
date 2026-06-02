@@ -45,8 +45,14 @@ function ProductPage() {
   const more = products.filter((p) => p.id !== product.id).slice(0, 4);
   const { add } = useCart();
   const navigate = useNavigate();
+  const { data: stock } = useStock(product.vestiaireUrl);
+  const soldOut = stock ? !stock.available : false;
 
   const onAdd = (then?: "checkout") => {
+    if (soldOut) {
+      toast.error("Sorry — this piece just sold.");
+      return;
+    }
     add(product, 1);
     if (then === "checkout") {
       navigate({ to: "/checkout" });
