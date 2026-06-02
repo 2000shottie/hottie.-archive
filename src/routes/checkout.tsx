@@ -217,6 +217,44 @@ function CheckoutPage() {
   );
 }
 
+function CheckoutLine({
+  product,
+  qty,
+  onStock,
+}: {
+  product: Product;
+  qty: number;
+  onStock: (available: boolean) => void;
+}) {
+  const { data: stock } = useStock(product.vestiaireUrl);
+  const available = stock ? stock.available : false;
+
+  useEffect(() => onStock(available), [available, onStock]);
+
+  return (
+    <li className="flex items-center gap-3">
+      <div
+        className="relative size-14 shrink-0 overflow-hidden rounded-lg"
+        style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
+      >
+        <img src={product.img} alt="" className="size-full object-contain p-1" />
+        {!available && product.vestiaireUrl && (
+          <span className="absolute inset-0 grid place-items-center bg-background/55 text-[8px] tracking-luxe uppercase text-foreground">
+            Sold
+          </span>
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[13px]">{product.name}</p>
+        <p className="text-[11px] text-muted-foreground">
+          Qty {qty}{!available && product.vestiaireUrl ? " · unavailable" : ""}
+        </p>
+      </div>
+      <p className="text-[13px]">${(product.price * qty).toLocaleString()}</p>
+    </li>
+  );
+}
+
 const inputCls =
   "w-full rounded-xl border border-border bg-card px-4 py-3 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary";
 
