@@ -26,6 +26,8 @@ export type Product = {
   swatch: string;
   category: Category;
   description?: string;
+  /** Key spec lines shown on the product page (size, material, color, etc.). */
+  details?: { label: string; value: string }[];
   /** Source listing URL on Vestiaire Collective. When present, stock is polled
    *  automatically and the product flips to "Sold out" when it goes off-market. */
   vestiaireUrl?: string;
