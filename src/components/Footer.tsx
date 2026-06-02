@@ -11,11 +11,6 @@ export function Footer() {
       { label: "Jewelry", to: "/#shop" as const },
       { label: "Shoes", to: "/#shop" as const },
     ]},
-    { t: "Studio", links: [
-      { label: "Journal", to: "/#editorial" as const },
-      { label: "Lookbook", to: "/#editorial" as const },
-      { label: "Stylist Notes", to: "/#editorial" as const },
-    ]},
     { t: "Care", links: [
       { label: "Shipping", to: "/contact" as const },
       { label: "Authenticity", to: "/contact" as const },
