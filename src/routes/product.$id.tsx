@@ -117,18 +117,28 @@ function ProductPage() {
                 "A softly styled, hand-picked piece from the HOTTIE archive. One of one — once it's gone, it's gone."}
             </p>
 
+            {product.vestiaireUrl && (
+              <p className="mt-4 text-[11px] tracking-luxe uppercase text-muted-foreground">
+                {soldOut
+                  ? "● Sold — auto-synced from source"
+                  : "● In stock — live-synced from source"}
+              </p>
+            )}
+
             <div className="mt-10 flex flex-col gap-3">
               <button
                 type="button"
                 onClick={() => onAdd()}
-                className="rounded-full bg-foreground px-7 py-4 text-[11px] tracking-luxe uppercase text-background transition-all hover:bg-primary hover:shadow-soft"
+                disabled={soldOut}
+                className="rounded-full bg-foreground px-7 py-4 text-[11px] tracking-luxe uppercase text-background transition-all hover:bg-primary hover:shadow-soft disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-foreground"
               >
-                Add to Bag
+                {soldOut ? "Sold Out" : "Add to Bag"}
               </button>
               <button
                 type="button"
                 onClick={() => onAdd("checkout")}
-                className="rounded-full border border-foreground/20 px-7 py-4 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary"
+                disabled={soldOut}
+                className="rounded-full border border-foreground/20 px-7 py-4 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Buy it now →
               </button>
