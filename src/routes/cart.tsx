@@ -52,67 +52,14 @@ function CartPage() {
           <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-[1.6fr,1fr]">
             <ul className="divide-y divide-border/70">
               {lines.map(({ product, qty }) => (
-                <li key={product.id} className="flex gap-4 py-6">
-                  <Link
-                    to="/product/$id"
-                    params={{ id: product.id }}
-                    className="block size-24 shrink-0 overflow-hidden rounded-xl md:size-32"
-                    style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
-                  >
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      className="size-full object-contain p-3"
-                    />
-                  </Link>
-                  <div className="flex flex-1 flex-col justify-between">
-                    <div>
-                      <p className="text-[10px] tracking-luxe uppercase text-muted-foreground">
-                        {product.house}
-                      </p>
-                      <Link
-                        to="/product/$id"
-                        params={{ id: product.id }}
-                        className="mt-1 line-clamp-2 text-[14px] text-foreground hover:text-primary"
-                      >
-                        {product.name}
-                      </Link>
-                    </div>
-                    <div className="flex items-end justify-between">
-                      <div className="flex items-center gap-2 rounded-full border border-border bg-card px-2 py-1">
-                        <button
-                          type="button"
-                          onClick={() => setQty(product.id, qty - 1)}
-                          className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
-                          aria-label="Decrease"
-                        >
-                          −
-                        </button>
-                        <span className="min-w-[18px] text-center text-[12px]">{qty}</span>
-                        <button
-                          type="button"
-                          onClick={() => setQty(product.id, qty + 1)}
-                          className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
-                          aria-label="Increase"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-display text-[16px] text-foreground">
-                          ${(product.price * qty).toLocaleString()}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => remove(product.id)}
-                          className="mt-1 text-[10px] tracking-luxe uppercase text-muted-foreground hover:text-primary"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                <CartLine
+                  key={product.id}
+                  product={product}
+                  qty={qty}
+                  onQty={(q) => setQty(product.id, q)}
+                  onRemove={() => remove(product.id)}
+                  onStock={(sold) => reportSold(product.id, sold)}
+                />
               ))}
             </ul>
 
@@ -123,6 +70,7 @@ function CartPage() {
                   <dt className="text-muted-foreground">Subtotal</dt>
                   <dd className="text-foreground">${subtotal.toLocaleString()}</dd>
                 </div>
+
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Shipping</dt>
                   <dd className="text-foreground">${shipping}</dd>
