@@ -44,6 +44,8 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
           url: data.url,
           formats: ["markdown"],
           onlyMainContent: false,
+          // Vestiaire renders price / sold badge with JS — wait for it.
+          waitFor: 4000,
         }),
       });
 
@@ -72,22 +74,16 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       const markdown = (json.data?.markdown ?? json.markdown ?? "").toLowerCase();
       const statusCode = json.data?.metadata?.statusCode;
 
-      if (statusCode === 404 || /this item has been sold|item is sold|no longer available|product not found/i.test(markdown)) {
+      // Definitive Vestiaire sold-out markers (JS-rendered — see waitFor above).
+      // The product header replaces the price + "Add to bag" with "Sold at $X".
+      const soldRegex =
+        /sold at \$|this item has been sold|item is sold|no longer available|product not found|item sold out/i;
+
+      if (statusCode === 404 || soldRegex.test(markdown)) {
         return {
           available: false,
           source: "firecrawl",
           reason: "Vestiaire marked this listing as sold.",
-          checkedAt,
-        };
-      }
-
-      // Positive signals: an active listing still shows "add to bag" / "make an offer".
-      const hasBuySignal = /add to bag|make an offer|buy now/i.test(markdown);
-      if (!hasBuySignal && markdown.length > 0) {
-        return {
-          available: false,
-          source: "firecrawl",
-          reason: "No buy button detected — likely sold.",
           checkedAt,
         };
       }
