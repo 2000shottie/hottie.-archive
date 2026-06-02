@@ -28,6 +28,8 @@ export type Product = {
   description?: string;
   /** Key spec lines shown on the product page (size, material, color, etc.). */
   details?: { label: string; value: string }[];
+  /** Extra photos shown as a gallery on the product page. */
+  gallery?: string[];
   /** Source listing URL on Vestiaire Collective. When present, stock is polled
    *  automatically and the product flips to "Sold out" when it goes off-market. */
   vestiaireUrl?: string;
