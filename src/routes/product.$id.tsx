@@ -46,7 +46,7 @@ function ProductPage() {
   const more = products.filter((p) => p.id !== product.id).slice(0, 4);
   const { add } = useCart();
   const navigate = useNavigate();
-  const { data: stock } = useStock(product.vestiaireUrl);
+  const { data: stock } = useStock(product.vestiaireUrl, product.id);
   const soldOut = stock ? !stock.available : false;
 
   const images = [product.img, ...(product.gallery ?? [])];

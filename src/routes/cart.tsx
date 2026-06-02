@@ -136,7 +136,7 @@ function CartLine({
   onRemove: () => void;
   onStock: (sold: boolean) => void;
 }) {
-  const { data: stock } = useStock(product.vestiaireUrl);
+  const { data: stock } = useStock(product.vestiaireUrl, product.id);
   const soldOut = stock ? !stock.available : false;
   // Notify parent so the checkout button can react.
   useEffect(() => onStock(soldOut), [onStock, soldOut]);

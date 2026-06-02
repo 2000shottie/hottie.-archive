@@ -1,11 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
 import { useStock } from "@/lib/useStock";
+import { markProductsSold } from "@/lib/sold.functions";
 import type { Product } from "@/lib/products";
 
 export const Route = createFileRoute("/checkout")({
@@ -40,6 +43,8 @@ type FormState = Record<keyof z.infer<typeof checkoutSchema>, string>;
 function CheckoutPage() {
   const { lines, subtotal, clear, count } = useCart();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const markSold = useServerFn(markProductsSold);
   const shipping = subtotal > 0 ? 15 : 0;
   const total = subtotal + shipping;
   const [availableIds, setAvailableIds] = useState<Record<string, boolean>>({});
@@ -80,12 +85,21 @@ function CheckoutPage() {
     }
     setErrors({});
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setSubmitting(false);
-    toast.success("Order placed — you'll get a confirmation email soon. ♡");
-    clear();
-    navigate({ to: "/" });
+    try {
+      await new Promise((r) => setTimeout(r, 900));
+      // Mark every purchased piece as sold so it disappears from the live edit.
+      await markSold({ data: { productIds: lines.map((l) => l.product.id) } });
+      await queryClient.invalidateQueries({ queryKey: ["sold-products"] });
+      toast.success("Order placed — you'll get a confirmation email soon. ♡");
+      clear();
+      navigate({ to: "/" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not place order.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
 
   if (count === 0) {
     return (
@@ -226,7 +240,7 @@ function CheckoutLine({
   qty: number;
   onStock: (available: boolean) => void;
 }) {
-  const { data: stock } = useStock(product.vestiaireUrl);
+  const { data: stock } = useStock(product.vestiaireUrl, product.id);
   const available = stock ? stock.available : false;
 
   useEffect(() => onStock(available), [available, onStock]);
