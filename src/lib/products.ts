@@ -130,6 +130,10 @@ export const products: Product[] = [
       { label: "Colour", value: "Brown tiger print" },
       { label: "Condition", value: "Never worn · with tags" },
     ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-polyamide-dolce-gabbana-top-67070568-2_2.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-polyamide-dolce-gabbana-top-67070568-3_2.jpg",
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dolce-gabbana/brown-polyamide-dolce-gabbana-top-67070568.shtml",
   },
