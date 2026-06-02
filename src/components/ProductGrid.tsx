@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { products, type Product } from "@/lib/products";
+import { useStock } from "@/lib/useStock";
 
 export function ProductGrid() {
   return (
