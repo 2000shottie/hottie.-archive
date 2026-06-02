@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ProductGrid } from "@/components/ProductGrid";
-import { Collections } from "@/components/Collections";
-import { Editorial } from "@/components/Editorial";
 import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
