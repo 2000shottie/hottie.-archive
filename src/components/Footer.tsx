@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 
-const SUPPORT_EMAIL = "a2000shottie@hotmail.com";
 
 export function Footer() {
   const columns = [
