@@ -1,9 +1,9 @@
 import lvIdylle from "@/assets/p-lv-idylle.png";
-import diorWhiteTop from "@/assets/p-dior-white-top.png";
+import diorTigerTee from "@/assets/p-dior-white-top.png";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
 import pradaSandals from "@/assets/p-prada-sandals.png";
-import dgBrownTop from "@/assets/p-dg-brown-top.png";
-import vwBrownBag from "@/assets/p-vw-brown-bag.png";
+import dgTigerTop from "@/assets/p-dg-brown-top.png";
+import vwTartanBag from "@/assets/p-vw-brown-bag.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
@@ -33,83 +33,84 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    id: "lv-idylle-beige-denim",
-    name: "Idylle Denim Handbag",
+    id: "lv-idylle-mini-lin",
+    name: "Idylle Mini Lin Bowler",
     house: "Louis Vuitton",
     price: 750,
     img: lvIdylle,
-    swatch: "#e8dcc4",
+    swatch: "#cbd1cd",
     category: "bags",
-    tag: "New In",
+    tag: "Vintage",
     description:
-      "Beige denim Idylle handbag with monogram weave and tan leather trim. A soft, archival LV silhouette.",
+      "Mini Lin monogram bowler in dusty grey-blue with tan vachetta handles and gold hardware. Quintessential early-2000s LV.",
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
   },
   {
-    id: "vw-brown-orb-bag",
-    name: "Orb Top-Handle Bag",
+    id: "vw-tartan-yasmine-bag",
+    name: "Tartan Yasmine Bag",
     house: "Vivienne Westwood",
     price: 780,
-    img: vwBrownBag,
-    swatch: "#d6b89a",
+    img: vwTartanBag,
+    swatch: "#caa78a",
     category: "bags",
+    tag: "Archive",
     description:
-      "Tan vegan-leather top-handle bag with signature gold orb. Structured, ladylike, unmistakably Westwood.",
+      "Brown and red tartan top-handle bag with red leather trim, signature blue orb print and detachable strap. Pure Westwood archive energy.",
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
   {
-    id: "dior-white-cotton-top",
-    name: "Tailored Cotton Top",
-    house: "Dior",
+    id: "dior-tiger-tee",
+    name: "Tiger Print Tee",
+    house: "Christian Dior",
     price: 450,
-    img: diorWhiteTop,
+    img: diorTigerTee,
     swatch: "#f4f1ec",
     category: "tops",
     description:
-      "Crisp white cotton top, sculpted at the waist. Quiet luxury, perfect under tailoring or denim.",
+      "Ivory cotton tee with the iconic Dior tiger sketch printed at the front. Soft, easy, instantly recognisable.",
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
   {
-    id: "dg-brown-silk-top",
-    name: "Liquid Cami Top",
+    id: "dg-tiger-cami",
+    name: "Tiger Print Cami",
     house: "Dolce & Gabbana",
     price: 410,
-    img: dgBrownTop,
-    swatch: "#c89a76",
+    img: dgTigerTop,
+    swatch: "#e9d39a",
     category: "tops",
     tag: "2000s",
     description:
-      "Chocolate brown polyamide cami with that perfect 2000s sheen. Spaghetti straps, soft drape.",
+      "Slinky tiger-print stretch cami with thin straps and a deep scoop neck. Peak Y2K D&G.",
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dolce-gabbana/brown-polyamide-dolce-gabbana-top-67070568.shtml",
   },
   {
-    id: "prada-soft-sandals-black",
-    name: "Soft Crossed Sandals",
+    id: "prada-t-strap-kitten",
+    name: "T-Strap Kitten Sandals",
     house: "Prada",
     price: 450,
     img: pradaSandals,
-    swatch: "#e9e9ec",
+    swatch: "#dadada",
     category: "shoes",
     description:
-      "Black padded leather slides with crossed straps and the triangle logo plaque. Quietly cool.",
+      "Black satin and patent T-strap sandals on a tiny kitten heel. Prada Sport-era, impossibly chic.",
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-shoes/sandals/prada/black-leather-soft-prada-sandals-67472977.shtml",
   },
   {
-    id: "gucci-green-oversized-sun",
-    name: "Oversized Square Sunglasses",
+    id: "gucci-olive-shield-sun",
+    name: "Olive Shield Sunglasses",
     house: "Gucci",
     price: 580,
     img: gucciGreenSun,
-    swatch: "#c8e0c0",
+    swatch: "#cbc28c",
     category: "eyewear",
     tag: "Rare",
     description:
-      "Translucent jade-green oversized square frames with gold GG hardware. Pure Y2K it-girl energy.",
+      "Oversized shield sunglasses in marbled olive-green acetate with subtle gold Gucci lettering. Big-aughts statement.",
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-accessories/sunglasses/gucci/green-plastic-gucci-sunglasses-67258298.shtml",
   },
