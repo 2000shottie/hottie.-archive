@@ -4,24 +4,39 @@ import { checkVestiaireStock, type StockStatus } from "@/lib/stock.functions";
 
 /**
  * Polls the Vestiaire listing every 5 minutes and refetches on window focus.
- * Returns `{ available: true }` while loading so UI stays optimistic.
+ * Fails closed while loading so stale/unchecked stock can never be purchased.
  */
 export function useStock(url: string | undefined) {
   const check = useServerFn(checkVestiaireStock);
-  return useQuery<StockStatus>({
+  const query = useQuery<StockStatus>({
     queryKey: ["stock", url],
     enabled: !!url,
     queryFn: () => check({ data: { url: url! } }),
-    refetchInterval: 1000 * 60 * 5,
-    refetchOnWindowFocus: true,
-    staleTime: 1000 * 60 * 2,
-    initialData: url
+    refetchInterval: 1000 * 60,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: "always",
+    staleTime: 0,
+    placeholderData: url
       ? {
-          available: true,
+          available: false,
           source: "unknown",
-          reason: "Checking…",
+          reason: "Checking Vestiaire stock…",
           checkedAt: new Date().toISOString(),
         }
       : undefined,
   });
+
+  if (url && query.isFetching) {
+    return {
+      ...query,
+      data: {
+        available: false,
+        source: "unknown" as const,
+        reason: "Checking Vestiaire stock…",
+        checkedAt: new Date().toISOString(),
+      },
+    };
+  }
+
+  return query;
 }

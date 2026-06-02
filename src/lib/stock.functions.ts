@@ -51,7 +51,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
 
       if (!res.ok) {
         // 404 on the listing usually means it was removed → treat as sold.
-        if (res.status === 404) {
+        if (res.status === 404 || res.status === 410) {
           return {
             available: false,
             source: "firecrawl",
@@ -60,9 +60,9 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
           };
         }
         return {
-          available: true,
+          available: false,
           source: "firecrawl",
-          reason: `Stock check failed (${res.status}).`,
+          reason: `Could not verify Vestiaire stock (${res.status}).`,
           checkedAt,
         };
       }
@@ -77,7 +77,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       // Definitive Vestiaire sold-out markers (JS-rendered — see waitFor above).
       // The product header replaces the price + "Add to bag" with "Sold at $X".
       const soldRegex =
-        /sold at \$|this item has been sold|item is sold|no longer available|product not found|item sold out/i;
+        /\bsold at\b|this item has been sold|item is sold|no longer available|product not found|item sold out|out of stock/i;
 
       if (statusCode === 404 || soldRegex.test(markdown)) {
         return {
@@ -96,9 +96,9 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       };
     } catch (err) {
       return {
-        available: true,
+        available: false,
         source: "firecrawl",
-        reason: `Stock check error: ${err instanceof Error ? err.message : "unknown"}`,
+        reason: `Could not verify Vestiaire stock: ${err instanceof Error ? err.message : "unknown"}`,
         checkedAt,
       };
     }
