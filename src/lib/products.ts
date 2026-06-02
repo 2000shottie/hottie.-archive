@@ -5,6 +5,7 @@ import sun1 from "@/assets/p-sunglasses.png";
 import sun2 from "@/assets/p-sunglasses-2.png";
 import heels from "@/assets/p-heels.png";
 import necklace from "@/assets/p-necklace.png";
+import dgMissCharles from "@/assets/p-dg-miss-charles.png";
 
 export type Product = {
   id: string;
@@ -26,7 +27,7 @@ export const products: Product[] = [
     name: "Miss Charles Leather Handbag — Black",
     house: "Dolce & Gabbana",
     price: 570,
-    img: "https://images.vestiairecollective.com/images/resized/w=1024,q=85,f=auto,/produit/black-leather-miss-charles-dolce-gabbana-handbag-66869227-1_2.jpg",
+    img: dgMissCharles,
     tag: "Just In",
     swatch: "oklch(0.86 0.005 250)",
     description:
