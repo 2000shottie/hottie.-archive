@@ -8,7 +8,7 @@ import { checkVestiaireStock, type StockStatus } from "@/lib/stock.functions";
  */
 export function useStock(url: string | undefined) {
   const check = useServerFn(checkVestiaireStock);
-  return useQuery<StockStatus>({
+  const query = useQuery<StockStatus>({
     queryKey: ["stock", url],
     enabled: !!url,
     queryFn: () => check({ data: { url: url! } }),
@@ -25,4 +25,18 @@ export function useStock(url: string | undefined) {
         }
       : undefined,
   });
+
+  if (url && query.isFetching) {
+    return {
+      ...query,
+      data: {
+        available: false,
+        source: "unknown" as const,
+        reason: "Checking Vestiaire stock…",
+        checkedAt: new Date().toISOString(),
+      },
+    };
+  }
+
+  return query;
 }
