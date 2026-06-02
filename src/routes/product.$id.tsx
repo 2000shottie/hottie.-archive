@@ -106,15 +106,17 @@ function ProductPage() {
             <div className="mt-10 flex flex-col gap-3">
               <button
                 type="button"
+                onClick={() => onAdd()}
                 className="rounded-full bg-foreground px-7 py-4 text-[11px] tracking-luxe uppercase text-background transition-all hover:bg-primary hover:shadow-soft"
               >
                 Add to Bag
               </button>
               <button
                 type="button"
+                onClick={() => onAdd("checkout")}
                 className="rounded-full border border-foreground/20 px-7 py-4 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary"
               >
-                ♡ Save to Wishlist
+                Buy it now →
               </button>
             </div>
 
