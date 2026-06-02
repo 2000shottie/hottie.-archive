@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
+import { useStock } from "@/lib/useStock";
+import type { Product } from "@/lib/products";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -17,6 +20,11 @@ function CartPage() {
   const { lines, setQty, remove, subtotal, count } = useCart();
   const shipping = subtotal > 0 ? 15 : 0;
   const total = subtotal + shipping;
+  const [soldIds, setSoldIds] = useState<Record<string, boolean>>({});
+  const hasSoldOut = useMemo(() => Object.values(soldIds).some(Boolean), [soldIds]);
+  const reportSold = (id: string, sold: boolean) =>
+    setSoldIds((prev) => (prev[id] === sold ? prev : { ...prev, [id]: sold }));
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -44,67 +52,14 @@ function CartPage() {
           <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-[1.6fr,1fr]">
             <ul className="divide-y divide-border/70">
               {lines.map(({ product, qty }) => (
-                <li key={product.id} className="flex gap-4 py-6">
-                  <Link
-                    to="/product/$id"
-                    params={{ id: product.id }}
-                    className="block size-24 shrink-0 overflow-hidden rounded-xl md:size-32"
-                    style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
-                  >
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      className="size-full object-contain p-3"
-                    />
-                  </Link>
-                  <div className="flex flex-1 flex-col justify-between">
-                    <div>
-                      <p className="text-[10px] tracking-luxe uppercase text-muted-foreground">
-                        {product.house}
-                      </p>
-                      <Link
-                        to="/product/$id"
-                        params={{ id: product.id }}
-                        className="mt-1 line-clamp-2 text-[14px] text-foreground hover:text-primary"
-                      >
-                        {product.name}
-                      </Link>
-                    </div>
-                    <div className="flex items-end justify-between">
-                      <div className="flex items-center gap-2 rounded-full border border-border bg-card px-2 py-1">
-                        <button
-                          type="button"
-                          onClick={() => setQty(product.id, qty - 1)}
-                          className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
-                          aria-label="Decrease"
-                        >
-                          −
-                        </button>
-                        <span className="min-w-[18px] text-center text-[12px]">{qty}</span>
-                        <button
-                          type="button"
-                          onClick={() => setQty(product.id, qty + 1)}
-                          className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
-                          aria-label="Increase"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-display text-[16px] text-foreground">
-                          ${(product.price * qty).toLocaleString()}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => remove(product.id)}
-                          className="mt-1 text-[10px] tracking-luxe uppercase text-muted-foreground hover:text-primary"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                <CartLine
+                  key={product.id}
+                  product={product}
+                  qty={qty}
+                  onQty={(q) => setQty(product.id, q)}
+                  onRemove={() => remove(product.id)}
+                  onStock={(sold) => reportSold(product.id, sold)}
+                />
               ))}
             </ul>
 
@@ -115,6 +70,7 @@ function CartPage() {
                   <dt className="text-muted-foreground">Subtotal</dt>
                   <dd className="text-foreground">${subtotal.toLocaleString()}</dd>
                 </div>
+
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Shipping</dt>
                   <dd className="text-foreground">${shipping}</dd>
@@ -128,12 +84,27 @@ function CartPage() {
                 Each piece is individually sourced — please allow approximately 3–4 weeks for delivery.
                 All sales are final. No returns or refunds.
               </p>
-              <Link
-                to="/checkout"
-                className="mt-4 block w-full rounded-full bg-foreground py-3.5 text-center text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary"
-              >
-                Checkout →
-              </Link>
+              {hasSoldOut && (
+                <p className="mt-4 rounded-xl bg-foreground/5 px-3 py-2 text-[11px] text-foreground/80">
+                  One or more pieces in your bag just sold. Remove them to continue.
+                </p>
+              )}
+              {hasSoldOut ? (
+                <button
+                  type="button"
+                  disabled
+                  className="mt-4 block w-full rounded-full bg-foreground/40 py-3.5 text-center text-[11px] tracking-luxe uppercase text-background"
+                >
+                  Sold out
+                </button>
+              ) : (
+                <Link
+                  to="/checkout"
+                  className="mt-4 block w-full rounded-full bg-foreground py-3.5 text-center text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary"
+                >
+                  Checkout →
+                </Link>
+              )}
               <Link
                 to="/"
                 className="mt-3 block text-center text-[11px] tracking-luxe uppercase text-foreground/60 hover:text-primary"
@@ -146,5 +117,93 @@ function CartPage() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+function CartLine({
+  product,
+  qty,
+  onQty,
+  onRemove,
+  onStock,
+}: {
+  product: Product;
+  qty: number;
+  onQty: (q: number) => void;
+  onRemove: () => void;
+  onStock: (sold: boolean) => void;
+}) {
+  const { data: stock } = useStock(product.vestiaireUrl);
+  const soldOut = stock ? !stock.available : false;
+  // Notify parent so the checkout button can react.
+  if (typeof window !== "undefined") {
+    queueMicrotask(() => onStock(soldOut));
+  }
+  return (
+    <li className="flex gap-4 py-6">
+      <Link
+        to="/product/$id"
+        params={{ id: product.id }}
+        className="relative block size-24 shrink-0 overflow-hidden rounded-xl md:size-32"
+        style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
+      >
+        <img src={product.img} alt={product.name} className="size-full object-contain p-3" />
+        {soldOut && (
+          <span className="absolute inset-0 grid place-items-center bg-background/55 backdrop-blur-sm text-[9px] tracking-luxe uppercase text-foreground">
+            Sold
+          </span>
+        )}
+      </Link>
+      <div className="flex flex-1 flex-col justify-between">
+        <div>
+          <p className="text-[10px] tracking-luxe uppercase text-muted-foreground">{product.house}</p>
+          <Link
+            to="/product/$id"
+            params={{ id: product.id }}
+            className="mt-1 line-clamp-2 text-[14px] text-foreground hover:text-primary"
+          >
+            {product.name}
+          </Link>
+          {soldOut && (
+            <p className="mt-1 text-[10px] tracking-luxe uppercase text-foreground/70">
+              Just sold — remove to continue
+            </p>
+          )}
+        </div>
+        <div className="flex items-end justify-between">
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card px-2 py-1">
+            <button
+              type="button"
+              onClick={() => onQty(qty - 1)}
+              className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
+              aria-label="Decrease"
+            >
+              −
+            </button>
+            <span className="min-w-[18px] text-center text-[12px]">{qty}</span>
+            <button
+              type="button"
+              onClick={() => onQty(qty + 1)}
+              className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
+              aria-label="Increase"
+            >
+              +
+            </button>
+          </div>
+          <div className="text-right">
+            <p className="font-display text-[16px] text-foreground">
+              ${(product.price * qty).toLocaleString()}
+            </p>
+            <button
+              type="button"
+              onClick={onRemove}
+              className="mt-1 text-[10px] tracking-luxe uppercase text-muted-foreground hover:text-primary"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
   );
 }
