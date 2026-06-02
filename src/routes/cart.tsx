@@ -119,3 +119,91 @@ function CartPage() {
     </div>
   );
 }
+
+function CartLine({
+  product,
+  qty,
+  onQty,
+  onRemove,
+  onStock,
+}: {
+  product: Product;
+  qty: number;
+  onQty: (q: number) => void;
+  onRemove: () => void;
+  onStock: (sold: boolean) => void;
+}) {
+  const { data: stock } = useStock(product.vestiaireUrl);
+  const soldOut = stock ? !stock.available : false;
+  // Notify parent so the checkout button can react.
+  if (typeof window !== "undefined") {
+    queueMicrotask(() => onStock(soldOut));
+  }
+  return (
+    <li className="flex gap-4 py-6">
+      <Link
+        to="/product/$id"
+        params={{ id: product.id }}
+        className="relative block size-24 shrink-0 overflow-hidden rounded-xl md:size-32"
+        style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
+      >
+        <img src={product.img} alt={product.name} className="size-full object-contain p-3" />
+        {soldOut && (
+          <span className="absolute inset-0 grid place-items-center bg-background/55 backdrop-blur-sm text-[9px] tracking-luxe uppercase text-foreground">
+            Sold
+          </span>
+        )}
+      </Link>
+      <div className="flex flex-1 flex-col justify-between">
+        <div>
+          <p className="text-[10px] tracking-luxe uppercase text-muted-foreground">{product.house}</p>
+          <Link
+            to="/product/$id"
+            params={{ id: product.id }}
+            className="mt-1 line-clamp-2 text-[14px] text-foreground hover:text-primary"
+          >
+            {product.name}
+          </Link>
+          {soldOut && (
+            <p className="mt-1 text-[10px] tracking-luxe uppercase text-foreground/70">
+              Just sold — remove to continue
+            </p>
+          )}
+        </div>
+        <div className="flex items-end justify-between">
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card px-2 py-1">
+            <button
+              type="button"
+              onClick={() => onQty(qty - 1)}
+              className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
+              aria-label="Decrease"
+            >
+              −
+            </button>
+            <span className="min-w-[18px] text-center text-[12px]">{qty}</span>
+            <button
+              type="button"
+              onClick={() => onQty(qty + 1)}
+              className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
+              aria-label="Increase"
+            >
+              +
+            </button>
+          </div>
+          <div className="text-right">
+            <p className="font-display text-[16px] text-foreground">
+              ${(product.price * qty).toLocaleString()}
+            </p>
+            <button
+              type="button"
+              onClick={onRemove}
+              className="mt-1 text-[10px] tracking-luxe uppercase text-muted-foreground hover:text-primary"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+}
