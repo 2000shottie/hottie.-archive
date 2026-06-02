@@ -143,7 +143,7 @@ function ProductPage() {
             </div>
 
             <dl className="mt-10 grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 border-t border-border/70 pt-6 text-[12px]">
-              {product.details?.map((d) => (
+              {product.details?.map((d: { label: string; value: string }) => (
                 <div key={d.label} className="contents">
                   <dt className="text-muted-foreground">{d.label}</dt>
                   <dd className="text-foreground">{d.value}</dd>
