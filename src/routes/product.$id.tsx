@@ -1,7 +1,9 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { getProduct, products } from "@/lib/products";
+import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/product/$id")({
   loader: ({ params }) => {
