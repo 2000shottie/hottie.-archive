@@ -12,7 +12,7 @@ export function Hero() {
         <div className="order-2 flex flex-col justify-between md:order-1 md:col-span-5">
           <div className="animate-fade-up">
             <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">
-              Vol. 01 — Spring Archive
+              Vol. 01 — Summer Archive
             </p>
             <h1 className="mt-6 font-display text-[56px] leading-[0.95] text-foreground md:text-[88px]">
               Hot garments for
