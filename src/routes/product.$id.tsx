@@ -148,7 +148,9 @@ function ProductPage() {
               <dt className="text-muted-foreground">Condition</dt>
               <dd className="text-foreground">Very good · Vintage</dd>
               <dt className="text-muted-foreground">Shipping</dt>
-              <dd className="text-foreground">Worldwide, tracked</dd>
+              <dd className="text-foreground">Worldwide, tracked · 3–4 weeks</dd>
+              <dt className="text-muted-foreground">Returns</dt>
+              <dd className="text-foreground">No returns or refunds</dd>
               <dt className="text-muted-foreground">Authenticity</dt>
               <dd className="text-foreground">Hand-checked</dd>
             </dl>
