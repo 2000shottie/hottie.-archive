@@ -1,7 +1,9 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { getProduct, products } from "@/lib/products";
+import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/product/$id")({
   loader: ({ params }) => {
@@ -40,6 +42,19 @@ export const Route = createFileRoute("/product/$id")({
 function ProductPage() {
   const { product } = Route.useLoaderData();
   const more = products.filter((p) => p.id !== product.id).slice(0, 4);
+  const { add } = useCart();
+  const navigate = useNavigate();
+
+  const onAdd = (then?: "checkout") => {
+    add(product, 1);
+    if (then === "checkout") {
+      navigate({ to: "/checkout" });
+    } else {
+      toast.success(`${product.name} added to your bag ♡`, {
+        action: { label: "View bag", onClick: () => navigate({ to: "/cart" }) },
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -91,15 +106,17 @@ function ProductPage() {
             <div className="mt-10 flex flex-col gap-3">
               <button
                 type="button"
+                onClick={() => onAdd()}
                 className="rounded-full bg-foreground px-7 py-4 text-[11px] tracking-luxe uppercase text-background transition-all hover:bg-primary hover:shadow-soft"
               >
                 Add to Bag
               </button>
               <button
                 type="button"
+                onClick={() => onAdd("checkout")}
                 className="rounded-full border border-foreground/20 px-7 py-4 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary"
               >
-                ♡ Save to Wishlist
+                Buy it now →
               </button>
             </div>
 
