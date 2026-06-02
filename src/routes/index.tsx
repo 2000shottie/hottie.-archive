@@ -30,8 +30,6 @@ function Index() {
       <main>
         <Hero />
         <ProductGrid />
-        <Collections />
-        <Editorial />
       </main>
       <Footer />
     </div>
