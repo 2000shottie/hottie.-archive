@@ -150,7 +150,7 @@ function CartLine({
       >
         <img src={product.img} alt={product.name} className="size-full object-contain p-3" />
         {soldOut && (
-          <span className="absolute inset-0 grid place-items-center bg-background/55 backdrop-blur-sm text-[9px] tracking-luxe uppercase text-foreground">
+          <span className="absolute right-1 top-1 rounded-full bg-foreground px-2 py-0.5 text-[8px] tracking-luxe uppercase text-background">
             Sold
           </span>
         )}

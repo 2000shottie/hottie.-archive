@@ -94,11 +94,9 @@ function ProductPage() {
                 </span>
               )}
               {soldOut && (
-                <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
-                  <span className="rounded-full bg-foreground px-5 py-2 text-[11px] tracking-luxe uppercase text-background">
-                    Sold out
-                  </span>
-                </div>
+                <span className="absolute right-4 top-4 z-20 rounded-full bg-foreground px-3 py-1.5 text-[10px] tracking-luxe uppercase text-background shadow-soft">
+                  Sold out
+                </span>
               )}
               <img
                 src={activeImg}
