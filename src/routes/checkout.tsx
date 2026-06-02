@@ -226,7 +226,7 @@ function CheckoutLine({
   qty: number;
   onStock: (available: boolean) => void;
 }) {
-  const { data: stock } = useStock(product.vestiaireUrl);
+  const { data: stock } = useStock(product.vestiaireUrl, product.id);
   const available = stock ? stock.available : false;
 
   useEffect(() => onStock(available), [available, onStock]);

@@ -34,7 +34,7 @@ export function ProductGrid() {
 }
 
 function ProductCard({ product }: { product: Product }) {
-  const { data: stock } = useStock(product.vestiaireUrl);
+  const { data: stock } = useStock(product.vestiaireUrl, product.id);
   const soldOut = stock ? !stock.available : false;
   return (
     <Link
