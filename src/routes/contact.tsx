@@ -103,7 +103,7 @@ function ContactPage() {
             </a>
             <div className="mt-8 space-y-3 text-[13px]">
               <p className="text-foreground">Replies within 24h, mon–fri.</p>
-              <p className="text-muted-foreground">Worldwide tracked shipping. Returns within 14 days on unworn pieces.</p>
+              <p className="text-muted-foreground">Worldwide tracked shipping.</p>
             </div>
             <Link
               to="/"
