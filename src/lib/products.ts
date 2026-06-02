@@ -176,10 +176,7 @@ export const products: Product[] = [
       { label: "Colour", value: "Marbled olive green / gold lettering" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/green-plastic-gucci-sunglasses-67258298-2_2.jpg",
-      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/green-plastic-gucci-sunglasses-67258298-3_2.jpg",
-    ],
+    gallery: [gucciGreenSun2, gucciGreenSun3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-accessories/sunglasses/gucci/green-plastic-gucci-sunglasses-67258298.shtml",
   },
