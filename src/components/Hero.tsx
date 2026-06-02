@@ -64,16 +64,9 @@ export function Hero() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-blush/30 via-transparent to-transparent" />
             <div className="absolute left-5 top-5 rounded-full glass px-4 py-1.5 text-[10px] tracking-luxe uppercase text-foreground">
-              SS25 · Editorial
+              Summer Drop
             </div>
-            <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
-              <p className="font-script text-2xl text-white drop-shadow-md md:text-3xl">
-                soft luxury, served chilled.
-              </p>
-              <span className="hidden rounded-full glass px-3 py-1.5 text-[10px] tracking-luxe uppercase md:inline-block">
-                01 / 24
-              </span>
-            </div>
+
           </div>
 
           {/* floating product chips */}
