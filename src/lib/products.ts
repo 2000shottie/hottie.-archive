@@ -28,6 +28,8 @@ export type Product = {
   description?: string;
   /** Key spec lines shown on the product page (size, material, color, etc.). */
   details?: { label: string; value: string }[];
+  /** Extra photos shown as a gallery on the product page. */
+  gallery?: string[];
   /** Source listing URL on Vestiaire Collective. When present, stock is polled
    *  automatically and the product flips to "Sold out" when it goes off-market. */
   vestiaireUrl?: string;
@@ -53,6 +55,10 @@ export const products: Product[] = [
       { label: "Hardware", value: "Gold-tone" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267-2_2.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267-3_2.jpg",
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
   },
@@ -75,6 +81,10 @@ export const products: Product[] = [
       { label: "Hardware", value: "Silver-tone orb" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-vegan-leather-vivienne-westwood-handbag-66949891-2_2.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-vegan-leather-vivienne-westwood-handbag-66949891-3_2.jpg",
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
@@ -94,6 +104,10 @@ export const products: Product[] = [
       { label: "Material", value: "100% cotton" },
       { label: "Colour", value: "Ivory white" },
       { label: "Condition", value: "Very good · pre-loved" },
+    ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/white-cotton-dior-top-67466994-2_2.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/white-cotton-dior-top-67466994-3_2.jpg",
     ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
@@ -116,6 +130,10 @@ export const products: Product[] = [
       { label: "Colour", value: "Brown tiger print" },
       { label: "Condition", value: "Never worn · with tags" },
     ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-polyamide-dolce-gabbana-top-67070568-2_2.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/brown-polyamide-dolce-gabbana-top-67070568-3_2.jpg",
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dolce-gabbana/brown-polyamide-dolce-gabbana-top-67070568.shtml",
   },
@@ -135,6 +153,10 @@ export const products: Product[] = [
       { label: "Material", value: "Leather upper · leather sole" },
       { label: "Colour", value: "Black" },
       { label: "Condition", value: "Very good · minor scratches on heels" },
+    ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/black-leather-soft-prada-sandals-67472977-2_3.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/black-leather-soft-prada-sandals-67472977-3_3.jpg",
     ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-shoes/sandals/prada/black-leather-soft-prada-sandals-67472977.shtml",
@@ -156,6 +178,10 @@ export const products: Product[] = [
       { label: "Material", value: "Acetate frame · plastic lens" },
       { label: "Colour", value: "Marbled olive green / gold lettering" },
       { label: "Condition", value: "Very good · pre-loved" },
+    ],
+    gallery: [
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/green-plastic-gucci-sunglasses-67258298-2_2.jpg",
+      "https://images.vestiairecollective.com/images/resized/w=1024,q=75,f=auto,/produit/green-plastic-gucci-sunglasses-67258298-3_2.jpg",
     ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-accessories/sunglasses/gucci/green-plastic-gucci-sunglasses-67258298.shtml",

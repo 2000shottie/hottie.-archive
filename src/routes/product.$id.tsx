@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -48,6 +49,11 @@ function ProductPage() {
   const { data: stock } = useStock(product.vestiaireUrl);
   const soldOut = stock ? !stock.available : false;
 
+  const images = [product.img, ...(product.gallery ?? [])];
+  const [activeIdx, setActiveIdx] = useState(0);
+  const activeImg = images[activeIdx] ?? product.img;
+  const isMainShot = activeIdx === 0;
+
   const onAdd = (then?: "checkout") => {
     if (soldOut) {
       toast.error("Sorry — this piece just sold.");
@@ -77,29 +83,69 @@ function ProductPage() {
         </div>
 
         <section className="mx-auto grid max-w-[1480px] grid-cols-1 gap-10 px-5 pb-16 pt-8 md:grid-cols-2 md:gap-16 md:px-10 md:pb-24 md:pt-12">
-          <div
-            className="relative aspect-square w-full overflow-hidden rounded-2xl md:rounded-[28px]"
-            style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
-          >
-            {product.tag && (
-              <span className="absolute left-4 top-4 z-10 rounded-full glass px-3 py-1.5 text-[10px] tracking-luxe uppercase text-foreground">
-                {product.tag}
-              </span>
-            )}
-            {soldOut && (
-              <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
-                <span className="rounded-full bg-foreground px-5 py-2 text-[11px] tracking-luxe uppercase text-background">
-                  Sold out
+          <div className="flex flex-col gap-3">
+            <div
+              className="relative aspect-square w-full overflow-hidden rounded-2xl md:rounded-[28px]"
+              style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
+            >
+              {product.tag && (
+                <span className="absolute left-4 top-4 z-10 rounded-full glass px-3 py-1.5 text-[10px] tracking-luxe uppercase text-foreground">
+                  {product.tag}
                 </span>
+              )}
+              {soldOut && (
+                <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
+                  <span className="rounded-full bg-foreground px-5 py-2 text-[11px] tracking-luxe uppercase text-background">
+                    Sold out
+                  </span>
+                </div>
+              )}
+              <img
+                src={activeImg}
+                alt={product.name}
+                className={
+                  isMainShot
+                    ? "absolute inset-0 size-full object-contain p-10 md:p-16"
+                    : "absolute inset-0 size-full object-cover"
+                }
+                style={isMainShot ? { filter: "drop-shadow(0 40px 30px rgb(0 0 0 / 0.14))" } : undefined}
+              />
+            </div>
+
+            {images.length > 1 && (
+              <div className="grid grid-cols-4 gap-2 md:gap-3">
+                {images.map((src, i) => {
+                  const isActive = i === activeIdx;
+                  const thumbMain = i === 0;
+                  return (
+                    <button
+                      key={src + i}
+                      type="button"
+                      onClick={() => setActiveIdx(i)}
+                      aria-label={`View photo ${i + 1}`}
+                      className={`relative aspect-square overflow-hidden rounded-xl border transition-all ${
+                        isActive
+                          ? "border-foreground/70 shadow-soft"
+                          : "border-border/60 opacity-80 hover:opacity-100"
+                      }`}
+                      style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
+                    >
+                      <img
+                        src={src}
+                        alt=""
+                        className={
+                          thumbMain
+                            ? "absolute inset-0 size-full object-contain p-3"
+                            : "absolute inset-0 size-full object-cover"
+                        }
+                      />
+                    </button>
+                  );
+                })}
               </div>
             )}
-            <img
-              src={product.img}
-              alt={product.name}
-              className="absolute inset-0 size-full object-contain p-10 md:p-16"
-              style={{ filter: "drop-shadow(0 40px 30px rgb(0 0 0 / 0.14))" }}
-            />
           </div>
+
 
           <div className="flex flex-col justify-center">
             <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">
