@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { getProduct, products } from "@/lib/products";
 import { useCart } from "@/lib/cart";
+import { useStock } from "@/lib/useStock";
 
 export const Route = createFileRoute("/product/$id")({
   loader: ({ params }) => {
