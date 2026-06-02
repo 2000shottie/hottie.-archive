@@ -42,6 +42,19 @@ export const Route = createFileRoute("/product/$id")({
 function ProductPage() {
   const { product } = Route.useLoaderData();
   const more = products.filter((p) => p.id !== product.id).slice(0, 4);
+  const { add } = useCart();
+  const navigate = useNavigate();
+
+  const onAdd = (then?: "checkout") => {
+    add(product, 1);
+    if (then === "checkout") {
+      navigate({ to: "/checkout" });
+    } else {
+      toast.success(`${product.name} added to your bag ♡`, {
+        action: { label: "View bag", onClick: () => navigate({ to: "/cart" }) },
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
