@@ -7,7 +7,7 @@ export function Navbar() {
       <div className="mx-auto flex max-w-[1480px] items-center justify-between px-5 py-4 md:px-10">
         <nav className="hidden flex-1 items-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
           {links.map((l) => (
-            <a key={l} href="#" className="transition-colors hover:text-primary">
+            <a key={l} href="/#shop" className="transition-colors hover:text-primary">
               {l}
             </a>
           ))}
