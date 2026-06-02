@@ -101,13 +101,10 @@ function ProductPage() {
               <img
                 src={activeImg}
                 alt={product.name}
-                className={
-                  isMainShot
-                    ? "absolute inset-0 size-full object-contain p-10 md:p-16"
-                    : "absolute inset-0 size-full object-cover"
-                }
+                className="absolute inset-0 size-full object-contain p-4 md:p-6"
                 style={isMainShot ? { filter: "drop-shadow(0 40px 30px rgb(0 0 0 / 0.14))" } : undefined}
               />
+
             </div>
 
             {images.length > 1 && (
