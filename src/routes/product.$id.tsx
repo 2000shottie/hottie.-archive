@@ -128,12 +128,9 @@ function ProductPage() {
                       <img
                         src={src}
                         alt=""
-                        className={
-                          thumbMain
-                            ? "absolute inset-0 size-full object-contain p-3"
-                            : "absolute inset-0 size-full object-cover"
-                        }
+                        className="absolute inset-0 size-full object-contain p-2"
                       />
+
                     </button>
                   );
                 })}
