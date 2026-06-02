@@ -142,9 +142,13 @@ function ProductPage() {
               </button>
             </div>
 
-            <dl className="mt-10 grid grid-cols-2 gap-y-3 border-t border-border/70 pt-6 text-[12px]">
-              <dt className="text-muted-foreground">Condition</dt>
-              <dd className="text-foreground">Very good · Vintage</dd>
+            <dl className="mt-10 grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 border-t border-border/70 pt-6 text-[12px]">
+              {product.details?.map((d: { label: string; value: string }) => (
+                <div key={d.label} className="contents">
+                  <dt className="text-muted-foreground">{d.label}</dt>
+                  <dd className="text-foreground">{d.value}</dd>
+                </div>
+              ))}
               <dt className="text-muted-foreground">Shipping</dt>
               <dd className="text-foreground">Worldwide, tracked · 3–4 weeks</dd>
               <dt className="text-muted-foreground">Returns</dt>

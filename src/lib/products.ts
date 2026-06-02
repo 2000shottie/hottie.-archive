@@ -26,6 +26,8 @@ export type Product = {
   swatch: string;
   category: Category;
   description?: string;
+  /** Key spec lines shown on the product page (size, material, color, etc.). */
+  details?: { label: string; value: string }[];
   /** Source listing URL on Vestiaire Collective. When present, stock is polled
    *  automatically and the product flips to "Sold out" when it goes off-market. */
   vestiaireUrl?: string;
@@ -43,6 +45,14 @@ export const products: Product[] = [
     tag: "Vintage",
     description:
       "Mini Lin monogram bowler in dusty grey-blue with tan vachetta handles and gold hardware. Quintessential early-2000s LV.",
+    details: [
+      { label: "Size", value: "Mini · one size" },
+      { label: "Measurements", value: "W 36cm · H 26cm (approx.)" },
+      { label: "Material", value: "Mini Lin denim · vachetta leather trim" },
+      { label: "Colour", value: "Dusty grey-blue / tan" },
+      { label: "Hardware", value: "Gold-tone" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
   },
@@ -57,6 +67,14 @@ export const products: Product[] = [
     tag: "Archive",
     description:
       "Brown and red tartan top-handle bag with red leather trim, signature blue orb print and detachable strap. Pure Westwood archive energy.",
+    details: [
+      { label: "Size", value: "Mini · one size" },
+      { label: "Measurements", value: "W 20cm · H 20cm · D 20cm (approx.)" },
+      { label: "Material", value: "Vegan leather · tartan canvas" },
+      { label: "Colour", value: "Brown / red tartan" },
+      { label: "Hardware", value: "Silver-tone orb" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
@@ -70,6 +88,13 @@ export const products: Product[] = [
     category: "tops",
     description:
       "Ivory cotton tee with the iconic Dior tiger sketch printed at the front. Soft, easy, instantly recognisable.",
+    details: [
+      { label: "Size", value: "M · International" },
+      { label: "Fit", value: "Regular · crew neck · short sleeve" },
+      { label: "Material", value: "100% cotton" },
+      { label: "Colour", value: "Ivory white" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
@@ -84,6 +109,13 @@ export const products: Product[] = [
     tag: "2000s",
     description:
       "Slinky tiger-print stretch cami with thin straps and a deep scoop neck. Peak Y2K D&G.",
+    details: [
+      { label: "Size", value: "40 IT · S–M (fits UK 8 / US 4)" },
+      { label: "Fit", value: "Slim · thin straps · scoop neck" },
+      { label: "Material", value: "Stretch polyamide blend" },
+      { label: "Colour", value: "Brown tiger print" },
+      { label: "Condition", value: "Never worn · with tags" },
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/dolce-gabbana/brown-polyamide-dolce-gabbana-top-67070568.shtml",
   },
@@ -97,6 +129,13 @@ export const products: Product[] = [
     category: "shoes",
     description:
       "Black satin and patent T-strap sandals on a tiny kitten heel. Prada Sport-era, impossibly chic.",
+    details: [
+      { label: "Size", value: "37 IT · UK 4 · US 6.5" },
+      { label: "Heel", value: "~4 cm kitten" },
+      { label: "Material", value: "Leather upper · leather sole" },
+      { label: "Colour", value: "Black" },
+      { label: "Condition", value: "Very good · minor scratches on heels" },
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-shoes/sandals/prada/black-leather-soft-prada-sandals-67472977.shtml",
   },
@@ -111,6 +150,13 @@ export const products: Product[] = [
     tag: "Rare",
     description:
       "Oversized shield sunglasses in marbled olive-green acetate with subtle gold Gucci lettering. Big-aughts statement.",
+    details: [
+      { label: "Model", value: "GG 2164/S" },
+      { label: "Size", value: "Oversized · one size" },
+      { label: "Material", value: "Acetate frame · plastic lens" },
+      { label: "Colour", value: "Marbled olive green / gold lettering" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-accessories/sunglasses/gucci/green-plastic-gucci-sunglasses-67258298.shtml",
   },
