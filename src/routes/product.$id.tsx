@@ -119,9 +119,7 @@ function ProductPage() {
 
             {product.vestiaireUrl && (
               <p className="mt-4 text-[11px] tracking-luxe uppercase text-muted-foreground">
-                {soldOut
-                  ? "● Sold — auto-synced from source"
-                  : "● In stock — live-synced from source"}
+                {soldOut ? "● Sold out" : "● In stock"}
               </p>
             )}
 
