@@ -124,9 +124,13 @@ function CartPage() {
                   <dd>${total.toLocaleString()}</dd>
                 </div>
               </dl>
+              <p className="mt-5 text-[11px] leading-relaxed text-muted-foreground">
+                Each piece is individually sourced — please allow approximately 3–4 weeks for delivery.
+                All sales are final. No returns or refunds.
+              </p>
               <Link
                 to="/checkout"
-                className="mt-6 block w-full rounded-full bg-foreground py-3.5 text-center text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary"
+                className="mt-4 block w-full rounded-full bg-foreground py-3.5 text-center text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary"
               >
                 Checkout →
               </Link>
