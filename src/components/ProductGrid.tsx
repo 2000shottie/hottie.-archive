@@ -36,10 +36,11 @@ export function ProductGrid() {
 function ProductCard({ product }: { product: Product }) {
   const { data: stock } = useStock(product.vestiaireUrl);
   const soldOut = stock ? !stock.available : false;
+  return (
     <Link
       to="/product/$id"
       params={{ id: product.id }}
-      className="group block w-full text-left"
+      className={`group block w-full text-left ${soldOut ? "pointer-events-none" : ""}`}
     >
       <div
         className="relative aspect-square overflow-hidden rounded-2xl"
