@@ -84,12 +84,27 @@ function CartPage() {
                 Each piece is individually sourced — please allow approximately 3–4 weeks for delivery.
                 All sales are final. No returns or refunds.
               </p>
-              <Link
-                to="/checkout"
-                className="mt-4 block w-full rounded-full bg-foreground py-3.5 text-center text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary"
-              >
-                Checkout →
-              </Link>
+              {hasSoldOut && (
+                <p className="mt-4 rounded-xl bg-foreground/5 px-3 py-2 text-[11px] text-foreground/80">
+                  One or more pieces in your bag just sold. Remove them to continue.
+                </p>
+              )}
+              {hasSoldOut ? (
+                <button
+                  type="button"
+                  disabled
+                  className="mt-4 block w-full rounded-full bg-foreground/40 py-3.5 text-center text-[11px] tracking-luxe uppercase text-background"
+                >
+                  Sold out
+                </button>
+              ) : (
+                <Link
+                  to="/checkout"
+                  className="mt-4 block w-full rounded-full bg-foreground py-3.5 text-center text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary"
+                >
+                  Checkout →
+                </Link>
+              )}
               <Link
                 to="/"
                 className="mt-3 block text-center text-[11px] tracking-luxe uppercase text-foreground/60 hover:text-primary"
