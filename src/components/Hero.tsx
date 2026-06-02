@@ -14,12 +14,12 @@ export function Hero() {
               Vol. 01 — Spring Archive
             </p>
             <h1 className="mt-6 font-display text-[56px] leading-[0.95] text-foreground md:text-[88px]">
-              For girls with
-              <span className="block font-script text-primary"> expensive taste.</span>
+              Hot garments for
+              <span className="block font-script text-primary"> hot girls.</span>
             </h1>
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-muted-foreground">
-              A curated archive of designer pieces. Softly lit, carefully chosen,
-              styled like a moodboard you can wear.
+              A curated collection of vintage designer pieces. Timeless, rare,
+              uniquely sourced, and handpicked like a moodboard you can wear.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <a
@@ -29,12 +29,12 @@ export function Hero() {
                 Shop New
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </a>
-              <a
-                href="#archive"
+              <Link
+                to="/archive"
                 className="inline-flex items-center gap-3 rounded-full border border-foreground/20 px-7 py-3.5 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 Explore Archive
-              </a>
+              </Link>
             </div>
           </div>
 
