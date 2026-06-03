@@ -105,7 +105,7 @@ export const products: Product[] = [
     name: "Tiger Print Tee",
     house: "Christian Dior",
     price: 450,
-    img: diorfinal,
+    img: diorTigerTee,
     swatch: "#f4f1ec",
     category: "tops",
     description:
