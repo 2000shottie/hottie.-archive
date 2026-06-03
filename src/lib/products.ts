@@ -4,9 +4,9 @@ import lvIdylle3 from "@/assets/p-lv-idylle-3.png";
 import lvIdylle4 from "@/assets/p-lv-idylle-4.png";
 import lvIdylle5 from "@/assets/p-lv-idylle-5.png";
 import lvIdylle6 from "@/assets/p-lv-idylle-6.png";
-import diorTigerTee from "@/assets/p-dior-white-top.png";
-import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
-import diorTigerTee3 from "@/assets/p-dior-white-top-3.png";
+import diorTigerTee from "@/assets/newdior1.png.jpeg";
+import diorTigerTee2 from "@/assets/newdior2.jpeg";
+import diorTigerTee3 from "@/assets/newdior3.jpeg";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
 import gucciGreenSun2 from "@/assets/p-gucci-green-sun-2.png";
 import gucciGreenSun3 from "@/assets/p-gucci-green-sun-3.png";
@@ -117,8 +117,7 @@ export const products: Product[] = [
       { label: "Condition", value: "Very good · pre-loved" },
     ],
     gallery: [diorTigerTee2, diorTigerTee3],
-    vestiaireUrl:
-      "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
+    vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
   {
     id: "dg-tiger-cami",
@@ -129,8 +128,7 @@ export const products: Product[] = [
     swatch: "#e9d39a",
     category: "tops",
     tag: "2000s",
-    description:
-      "Slinky tiger-print stretch cami with thin straps and a deep scoop neck. Peak Y2K D&G.",
+    description: "Slinky tiger-print stretch cami with thin straps and a deep scoop neck. Peak Y2K D&G.",
     details: [
       { label: "Size", value: "40 IT · S–M (fits UK 8 / US 4)" },
       { label: "Fit", value: "Slim · thin straps · scoop neck" },
@@ -150,8 +148,7 @@ export const products: Product[] = [
     img: pradaSandals,
     swatch: "#dadada",
     category: "shoes",
-    description:
-      "Black satin and patent T-strap sandals on a tiny kitten heel. Prada Sport-era, impossibly chic.",
+    description: "Black satin and patent T-strap sandals on a tiny kitten heel. Prada Sport-era, impossibly chic.",
     details: [
       { label: "Size", value: "37 IT · UK 4 · US 6.5" },
       { label: "Heel", value: "~4 cm kitten" },
