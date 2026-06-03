@@ -4,8 +4,8 @@ import lvIdylle3 from "@/assets/p-lv-idylle-3.png";
 import lvIdylle4 from "@/assets/p-lv-idylle-4.png";
 import lvIdylle5 from "@/assets/p-lv-idylle-5.png";
 import lvIdylle6 from "@/assets/p-lv-idylle-6.png";
-import diorTigerTee from "@/assets/p-dior-white-top.png";
-import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
+import diorTigerTee from "@/assets/diorfinal.png.jpeg";
+import diorTigerTee2 from "@/assets/newdior2.jpeg";
 import diorTigerTee3 from "@/assets/newdior3.jpeg";
 import diorTigerTee4 from "@/assets/newdior4.jpeg";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
@@ -105,7 +105,7 @@ export const products: Product[] = [
     name: "Tiger Print Tee",
     house: "Christian Dior",
     price: 450,
-    img: diorTigerTee,
+    img: diorfinal,
     swatch: "#f4f1ec",
     category: "tops",
     description:
@@ -117,7 +117,7 @@ export const products: Product[] = [
       { label: "Colour", value: "Ivory white" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [diorTigerTee2, diorTigerTee3, diorTigerTee4],
+    gallery: [newdior2, newdior3, newdior4],
     vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
   {
