@@ -19,6 +19,8 @@ import dgTigerTop3 from "@/assets/p-dg-brown-top-3.png";
 import vwTartanBag from "@/assets/p-vw-brown-bag.png";
 import vwTartanBag2 from "@/assets/p-vw-brown-bag-2.png";
 import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
+import vwTartanBag4 from "@/assets/p-vw-brown-bag-4.png";
+import vwTartanBag5 from "@/assets/p-vw-brown-bag-5.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
@@ -93,7 +95,7 @@ export const products: Product[] = [
       { label: "Hardware", value: "Silver-tone orb" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [vwTartanBag2, vwTartanBag3],
+    gallery: [vwTartanBag2, vwTartanBag3, vwTartanBag4, vwTartanBag5],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
