@@ -4,7 +4,7 @@ import lvIdylle3 from "@/assets/p-lv-idylle-3.png";
 import lvIdylle4 from "@/assets/p-lv-idylle-4.png";
 import lvIdylle5 from "@/assets/p-lv-idylle-5.png";
 import lvIdylle6 from "@/assets/p-lv-idylle-6.png";
-import diorTigerTee from "@/assets/newdior1.png.jpeg";
+import diorTigerTee from "@/assets/diorfinal.png";
 import diorTigerTee2 from "@/assets/newdior2.jpeg";
 import diorTigerTee3 from "@/assets/newdior3.jpeg";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
