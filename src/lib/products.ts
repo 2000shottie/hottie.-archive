@@ -16,7 +16,7 @@ import pradaSandals3 from "@/assets/p-prada-sandals-3.png";
 import dgTigerTop from "@/assets/p-dg-brown-top.png";
 import dgTigerTop2 from "@/assets/p-dg-brown-top-2.png";
 import dgTigerTop3 from "@/assets/p-dg-brown-top-3.png";
-import vwTartanBag from "@/assets/p-vw-brown-bag-square.png";
+import vwTartanBag from "@/assets/p-vw-brown-bag-square.jpg";
 import vwTartanBag2 from "@/assets/p-vw-brown-bag-square-2.png";
 import vwTartanBag3 from "@/assets/p-vw-brown-bag-square-3.png";
 import vwTartanBag4 from "@/assets/p-vw-brown-bag-square-4.png";
