@@ -70,7 +70,7 @@ function ProductCard({ product }: { product: Product }) {
           loading="lazy"
           width={1024}
           height={1024}
-          className="absolute inset-0 size-full object-contain transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1"
+          className="absolute inset-0 size-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 object-fill"
           style={{ filter: "drop-shadow(0 30px 25px rgb(0 0 0 / 0.12))" }}
         />
         <div className="absolute inset-x-3 bottom-3 translate-y-3 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
