@@ -16,11 +16,11 @@ import pradaSandals3 from "@/assets/p-prada-sandals-3.png";
 import dgTigerTop from "@/assets/p-dg-brown-top.png";
 import dgTigerTop2 from "@/assets/p-dg-brown-top-2.png";
 import dgTigerTop3 from "@/assets/p-dg-brown-top-3.png";
-import vwTartanBag from "@/assets/p-vw-brown-bag.png";
-import vwTartanBag2 from "@/assets/p-vw-brown-bag-2.png";
-import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
-import vwTartanBag4 from "@/assets/p-vw-brown-bag-4.png";
-import vwTartanBag5 from "@/assets/p-vw-brown-bag-5.png";
+import vwTartanBag from "@/assets/p-vw-brown-bag-square.png";
+import vwTartanBag2 from "@/assets/p-vw-brown-bag-square-2.png";
+import vwTartanBag3 from "@/assets/p-vw-brown-bag-square-3.png";
+import vwTartanBag4 from "@/assets/p-vw-brown-bag-square-4.png";
+import vwTartanBag5 from "@/assets/p-vw-brown-bag-square-5.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
