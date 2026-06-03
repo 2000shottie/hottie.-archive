@@ -7,7 +7,6 @@ import lvIdylle6 from "@/assets/p-lv-idylle-6.png";
 import diorTigerTee from "@/assets/p-dior-white-top.png";
 import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
 import diorTigerTee3 from "@/assets/newdior3.jpeg";
-import diorTigerTee4 from "@/assets/https://imgur.com/onLCASE";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
 import gucciGreenSun2 from "@/assets/p-gucci-green-sun-2.png";
 import gucciGreenSun3 from "@/assets/p-gucci-green-sun-3.png";
@@ -117,7 +116,7 @@ export const products: Product[] = [
       { label: "Colour", value: "Ivory white" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [diorTigerTee2, diorTigerTee3, https://imgur.com/onLCASE],
+    gallery: [diorTigerTee2, diorTigerTee3, "https://i.imgur.com/onLCASE.jpeg"],
     vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
   {
