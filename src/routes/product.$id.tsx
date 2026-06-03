@@ -101,7 +101,7 @@ function ProductPage() {
               <img
                 src={activeImg}
                 alt={product.name}
-                className="absolute inset-0 size-full object-contain p-4 md:p-6"
+                className="absolute inset-0 size-full object-contain"
                 style={isMainShot ? { filter: "drop-shadow(0 40px 30px rgb(0 0 0 / 0.14))" } : undefined}
               />
 
@@ -128,7 +128,7 @@ function ProductPage() {
                       <img
                         src={src}
                         alt=""
-                        className="absolute inset-0 size-full object-contain p-2"
+                        className="absolute inset-0 size-full object-contain"
                       />
 
                     </button>
