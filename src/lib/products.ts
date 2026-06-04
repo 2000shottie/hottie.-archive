@@ -193,7 +193,7 @@ gallery: [
       { label: "Care", value: "Delicate handwash · cool iron reverse · no dryclean" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [annCowl2, annCowl3, annCowl4, annCowl5],
+    gallery: [annCowl2, annCowl3, annCowl4, annCowl5, annCowl6, annCowl7],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/ann-demeulemeester/black-wool-ann-demeulemeester-top-67634392.shtml",
   },
