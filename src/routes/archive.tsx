@@ -24,9 +24,17 @@ export const Route = createFileRoute("/archive")({
 });
 
 function ArchivePage() {
+  const [sort, setSort] = useState<SortMode>("default");
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sort === "price-asc") return a.price - b.price;
+    if (sort === "price-desc") return b.price - a.price;
+    return 0;
+  });
+
   const grouped = ORDER.map((cat) => ({
     cat,
-    items: products.filter((p) => p.category === cat),
+    items: sortedProducts.filter((p) => p.category === cat),
   }));
 
   return (
