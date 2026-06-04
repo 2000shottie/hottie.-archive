@@ -123,6 +123,29 @@ gallery: [
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
   {
+    id: "gucci-abbey-d-ring",
+    name: "Abbey D-Ring GG Hobo",
+    house: "Gucci",
+    price: 980,
+    img: gucciAbbey,
+    swatch: "#c9a87a",
+    category: "bags",
+    tag: "Archive",
+    description:
+      "Classic Gucci Abbey hobo in beige/ebony GG canvas with rich brown leather trim and the signature gold D-ring. Slouchy, soft, instantly iconic.",
+    details: [
+      { label: "Size", value: "Medium · one size" },
+      { label: "Material", value: "GG canvas · calfskin leather trim" },
+      { label: "Colour", value: "Beige / ebony brown" },
+      { label: "Hardware", value: "Gold-tone D-ring" },
+      { label: "Origin", value: "Made in Italy" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
+    gallery: [gucciAbbey2, gucciAbbey3, gucciAbbey4, gucciAbbey5, gucciAbbey6, gucciAbbey7, gucciAbbey8, gucciAbbey9],
+    vestiaireUrl:
+      "https://www.vestiairecollective.com/women-bags/handbags/gucci/multicolour-cloth-abbey-gucci-handbag-67615661.shtml",
+  },
+  {
     id: "dior-tiger-tee",
     name: "Tiger Print Tee",
     house: "Christian Dior",
