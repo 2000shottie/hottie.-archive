@@ -23,13 +23,13 @@ export function Hero() {
               uniquely sourced, and handpicked like a moodboard you can wear.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <a
-                href="#shop"
+              <Link
+                to="/new"
                 className="group inline-flex items-center gap-3 rounded-full bg-foreground px-7 py-3.5 text-[11px] tracking-luxe uppercase text-background transition-all hover:bg-primary hover:shadow-soft"
               >
                 Shop New
                 <span className="transition-transform group-hover:translate-x-1">→</span>
-              </a>
+              </Link>
               <Link
                 to="/archive"
                 className="inline-flex items-center gap-3 rounded-full border border-foreground/20 px-7 py-3.5 text-[11px] tracking-luxe uppercase text-foreground transition-colors hover:border-primary hover:text-primary"
