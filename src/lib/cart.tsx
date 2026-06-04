@@ -38,15 +38,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [lines]);
 
-  const add: CartState["add"] = (product, qty = 1) => {
+  const add: CartState["add"] = (product) => {
     setLines((prev) => {
       const existing = prev.find((l) => l.product.id === product.id);
-      if (existing) {
-        return prev.map((l) =>
-          l.product.id === product.id ? { ...l, qty: l.qty + qty } : l,
-        );
-      }
-      return [...prev, { product, qty }];
+      if (existing) return prev; // one-of-one: never exceed qty 1
+      return [...prev, { product, qty: 1 }];
     });
   };
   const remove: CartState["remove"] = (id) =>
@@ -55,7 +51,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setLines((prev) =>
       qty <= 0
         ? prev.filter((l) => l.product.id !== id)
-        : prev.map((l) => (l.product.id === id ? { ...l, qty } : l)),
+        : prev.map((l) => (l.product.id === id ? { ...l, qty: 1 } : l)),
     );
   const clear = () => setLines([]);
 
