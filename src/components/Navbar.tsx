@@ -34,7 +34,7 @@ export function Navbar() {
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-32 w-auto md:h-44"
+            className="h-36 w-auto md:h-48"
           />
         </Link>
 
