@@ -211,7 +211,7 @@ function ProductPage() {
                   className="group block"
                 >
                   <div
-                    className="relative aspect-square overflow-hidden rounded-2xl"
+                    className="relative aspect-square overflow-hidden rounded-full"
                     style={{ background: "white" }}
                   >
                     <img
