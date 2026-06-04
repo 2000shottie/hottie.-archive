@@ -148,7 +148,7 @@ function CartLine({
         className="relative block size-24 shrink-0 overflow-hidden rounded-xl md:size-32"
         style={{ background: "white" }}
       >
-        <img src={product.img} alt={product.name} className="absolute inset-0 size-full object-fill" />
+        <img src={product.img} alt={product.name} className="absolute inset-0 size-full object-contain" />
         {soldOut && (
           <span className="absolute right-1 top-1 rounded-full bg-foreground px-2 py-0.5 text-[8px] tracking-luxe uppercase text-background">
             Sold
