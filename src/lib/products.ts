@@ -132,7 +132,7 @@ gallery: [
     id: "dg-tiger-cami",
     name: "Tiger Print Cami",
     house: "Dolce & Gabbana",
-    price: 220,
+    price: 520,
     img: dgTigerCami,
     swatch: "#c9a35a",
     category: "tops",
