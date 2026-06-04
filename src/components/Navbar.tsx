@@ -16,8 +16,15 @@ export function Navbar() {
   const { count } = useCart();
   return (
     <header className="sticky top-0 z-50 glass border-b border-border/60">
-      <div className="mx-auto flex max-w-[1480px] items-center justify-between px-5 py-4 md:px-10">
-        <nav className="hidden flex-1 items-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
+      <div className="mx-auto flex max-w-[1480px] items-center justify-between gap-6 px-5 py-4 md:px-10">
+        <Link to="/" aria-label="Hottie — home" className="flex shrink-0 items-center">
+          <img
+            src={hottieLogo.url}
+            alt="Hottie"
+            className="h-10 w-auto md:h-12"
+          />
+        </Link>
+        <nav className="hidden flex-1 items-center justify-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
           {links.map((l) =>
             l.to.startsWith("/#") ? (
               <a key={l.label} href={l.to} className="transition-colors hover:text-primary">
@@ -30,13 +37,8 @@ export function Navbar() {
             ),
           )}
         </nav>
-        <Link to="/" aria-label="Hottie — home" className="flex items-center">
-          <img
-            src={hottieLogo.url}
-            alt="Hottie"
-            className="h-10 w-auto md:h-12"
-          />
-        </Link>
+
+
 
         <div className="flex flex-1 items-center justify-end gap-4 text-foreground/70">
           <button aria-label="Search" className="hidden transition-colors hover:text-primary md:block">
