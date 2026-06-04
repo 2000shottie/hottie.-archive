@@ -85,7 +85,7 @@ function ProductPage() {
         <section className="mx-auto grid max-w-[1480px] grid-cols-1 gap-10 px-5 pb-16 pt-8 md:grid-cols-2 md:gap-16 md:px-10 md:pb-24 md:pt-12">
           <div className="flex flex-col gap-3">
             <div
-              className="relative aspect-square w-full overflow-hidden rounded-2xl md:rounded-[28px]"
+              className="relative aspect-square w-full overflow-hidden rounded-full"
               style={{ background: "white" }}
             >
               {product.tag && (
