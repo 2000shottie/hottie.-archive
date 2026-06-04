@@ -1,7 +1,7 @@
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCart } from "@/lib/cart";
-import hottieLogo from "@/assets/hottie-signature.png.asset.json";
+import hottieLogo from "@/assets/hottie-signature-transparent.png.asset.json";
 
 
 export function Navbar() {
