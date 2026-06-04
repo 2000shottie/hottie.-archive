@@ -49,10 +49,10 @@ export function Navbar() {
             <User className="size-[18px]" strokeWidth={1.4} />
           </Link>
           <Link to="/" aria-label="Home" className="transition-colors hover:text-primary">
-            <Home className="size-[18px]" strokeWidth={1.4} />
+            <Home className="size-[22px]" strokeWidth={1.4} />
           </Link>
           <Link to="/cart" aria-label="Bag" className="flex items-center gap-1.5 transition-colors hover:text-primary">
-            <ShoppingBag className="size-[18px]" strokeWidth={1.4} />
+            <ShoppingBag className="size-[22px]" strokeWidth={1.4} />
             <span className="text-[11px] tracking-luxe uppercase">({count})</span>
           </Link>
         </div>
