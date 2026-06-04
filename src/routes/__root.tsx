@@ -13,6 +13,11 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/lib/cart";
 import { Toaster } from "@/components/ui/sonner";
+import hottieShell from "@/assets/hottie-shell.jpg.asset.json";
+import hottieSignature from "@/assets/hottie-signature.png.asset.json";
+
+const SHELL_OG_URL = `https://2000shottie.com${hottieShell.url}`;
+
 
 function NotFoundComponent() {
   return (
@@ -89,16 +94,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "2000shottie" },
       { name: "twitter:description", content: "hand-picked archive pieces." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/OcpElEahm7byhnhzpNhW2R4IuhC3/social-images/social-1780596473752-0B16865C-CD2C-4492-AF0C-856B64AC0ED2.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/OcpElEahm7byhnhzpNhW2R4IuhC3/social-images/social-1780596473752-0B16865C-CD2C-4492-AF0C-856B64AC0ED2.webp" },
+      { property: "og:image", content: SHELL_OG_URL },
+      { name: "twitter:image", content: SHELL_OG_URL },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: hottieSignature.url },
+      { rel: "apple-touch-icon", href: hottieShell.url },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
