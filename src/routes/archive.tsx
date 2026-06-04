@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { products, CATEGORY_LABELS, type Category, type Product } from "@/lib/products";
 import { useStock } from "@/lib/useStock";
-
-type SortMode = "default" | "price-asc" | "price-desc";
 
 const ORDER: Category[] = ["bags", "tops", "bottoms", "shoes", "jewelry", "eyewear"];
 
