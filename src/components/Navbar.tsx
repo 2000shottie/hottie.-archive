@@ -16,7 +16,7 @@ export function Navbar() {
   const { count } = useCart();
   return (
     <header className="sticky top-0 z-50 glass border-b border-border/60">
-      <div className="relative mx-auto flex max-w-[1480px] items-center justify-between px-5 py-2 md:px-10">
+      <div className="relative mx-auto flex max-w-[1480px] items-center justify-between px-5 py-4 md:px-10">
         <nav className="hidden flex-1 items-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
           {links.map((l) =>
             l.to.startsWith("/#") ? (
@@ -38,7 +38,7 @@ export function Navbar() {
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-28 w-auto md:h-36"
+            className="h-36 w-auto md:h-48"
           />
         </Link>
 
