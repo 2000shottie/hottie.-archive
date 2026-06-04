@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { products, type Product } from "@/lib/products";
 import { useStock } from "@/lib/useStock";
+
+type SortMode = "newest" | "price-desc" | "price-asc";
 
 export const Route = createFileRoute("/new")({
   head: () => ({
@@ -18,9 +21,20 @@ export const Route = createFileRoute("/new")({
 });
 
 function NewPage() {
-  const sorted = [...products].sort(
-    (a, b) => new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime()
-  );
+  const [sort, setSort] = useState<SortMode>("newest");
+
+  const sorted = [...products].sort((a, b) => {
+    if (sort === "price-asc") return a.price - b.price;
+    if (sort === "price-desc") return b.price - a.price;
+    return new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime();
+  });
+
+  const label =
+    sort === "newest"
+      ? "newest first"
+      : sort === "price-desc"
+        ? "highest price first"
+        : "lowest price first";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -34,8 +48,31 @@ function NewPage() {
             Fresh <span className="font-script text-primary">drops</span>
           </h1>
           <p className="mt-4 text-[11px] tracking-luxe uppercase text-muted-foreground">
-            {sorted.length} {sorted.length === 1 ? "piece" : "pieces"} · newest first
+            {sorted.length} {sorted.length === 1 ? "piece" : "pieces"} · {label}
           </p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <span className="text-[10px] tracking-luxe uppercase text-muted-foreground">
+              Sort by
+            </span>
+            {([
+              { key: "newest", label: "Newest" },
+              { key: "price-desc", label: "Price: High → Low" },
+              { key: "price-asc", label: "Price: Low → High" },
+            ] as { key: SortMode; label: string }[]).map((opt) => (
+              <button
+                key={opt.key}
+                onClick={() => setSort(opt.key)}
+                className={`rounded-full border px-3 py-1.5 text-[10px] tracking-luxe uppercase transition-colors ${
+                  sort === opt.key
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-foreground/15 text-foreground/70 hover:border-primary hover:text-primary"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </section>
 
         <div className="bg-background pb-24">
@@ -52,6 +89,7 @@ function NewPage() {
     </div>
   );
 }
+
 
 function NewCard({ product }: { product: Product }) {
   const { data: stock } = useStock(product.vestiaireUrl, product.id);
