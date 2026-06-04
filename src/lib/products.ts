@@ -163,7 +163,7 @@ gallery: [
       { label: "Colour", value: "Black" },
       { label: "Condition", value: "Very good · minor scratches on heels" },
     ],
-    gallery: [pradaSandals2, pradaSandals3],
+    gallery: [pradaSandals2, pradaSandals3, pradaSandals4, pradaSandals5, pradaSandals6],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-shoes/sandals/prada/black-leather-soft-prada-sandals-67472977.shtml",
   },
