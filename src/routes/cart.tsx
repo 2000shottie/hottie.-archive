@@ -42,7 +42,7 @@ function CartPage() {
           <div className="mt-16 rounded-2xl border border-border/70 bg-blush/30 p-12 text-center">
             <p className="font-script text-3xl text-foreground">find something hot.</p>
             <p className="mt-3 text-[14px] text-muted-foreground">
-              Hot-pick a piece you love from the edit.
+              Pick a piece you like from the edit.
             </p>
             <Link
               to="/"
