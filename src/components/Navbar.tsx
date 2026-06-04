@@ -33,12 +33,12 @@ export function Navbar() {
         <Link
           to="/"
           aria-label="Hottie — home"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-1/2 -translate-x-1/2 flex items-center"
         >
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-36 w-auto md:h-48"
+            className="h-20 w-auto md:h-24"
           />
         </Link>
 
