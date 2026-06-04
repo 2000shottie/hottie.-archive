@@ -13,6 +13,11 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/lib/cart";
 import { Toaster } from "@/components/ui/sonner";
+import hottieShell from "@/assets/hottie-shell.jpg.asset.json";
+import hottieSignature from "@/assets/hottie-signature.png.asset.json";
+
+const SHELL_OG_URL = `https://2000shottie.com${hottieShell.url}`;
+
 
 function NotFoundComponent() {
   return (
