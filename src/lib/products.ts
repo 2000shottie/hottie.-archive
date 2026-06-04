@@ -21,7 +21,8 @@ import vwTartanBag from "@/assets/p-vw-brown-bag.png";
 import vwTartanBag2 from "@/assets/p-vw-brown-bag-2.png";
 import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
 import vwTartanBag4 from "@/assets/p-vw-brown-bag-4.png";
-
+import vwTartanBag6 from "@/assets/p-vw-brown-bag-6.png";
+import vwTartanBag7 from "@/assets/p-vw-brown-bag-7.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
