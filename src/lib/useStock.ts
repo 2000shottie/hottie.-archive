@@ -12,9 +12,9 @@ export function useLocallySoldIds() {
   return useQuery<string[]>({
     queryKey: ["sold-products"],
     queryFn: () => fetchIds(),
-    refetchInterval: 1000 * 60,
+    refetchInterval: 5000,
     refetchOnWindowFocus: true,
-    staleTime: 1000 * 30,
+    staleTime: 0,
     placeholderData: [],
   });
 }
