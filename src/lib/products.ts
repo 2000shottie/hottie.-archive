@@ -80,7 +80,7 @@ export const products: Product[] = [
       { label: "Hardware", value: "Gold-tone" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [lvIdylle2, lvIdylle3, lvIdylle4, lvIdylle5, lvIdylle6],
+    gallery: [lvIdylle2, lvIdylle3, lvIdylle4, lvIdylle5, lvIdylle6, lvIdylle7, lvIdylle8],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
   },
