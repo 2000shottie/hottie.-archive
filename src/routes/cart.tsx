@@ -145,7 +145,7 @@ function CartLine({
       <Link
         to="/product/$id"
         params={{ id: product.id }}
-        className="relative block size-24 shrink-0 overflow-hidden rounded-xl md:size-32"
+        className="relative block size-24 shrink-0 overflow-hidden rounded-full md:size-32"
         style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
       >
         <img src={product.img} alt={product.name} className="size-full object-contain p-3" />
