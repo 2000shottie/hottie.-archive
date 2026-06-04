@@ -7,6 +7,11 @@ import lvIdylle6 from "@/assets/p-lv-idylle-6.png";
 import diorTigerTee from "@/assets/p-dior-white-top.png";
 import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
 import diorTigerTee3 from "@/assets/p-dior-white-top-3.png";
+import diorTigerTee4 from "@/assets/p-dior-white-top-4.png";
+import dgTigerCami from "@/assets/p-dg-tiger-cami.png";
+import dgTigerCami2 from "@/assets/p-dg-tiger-cami-2.png";
+import dgTigerCami3 from "@/assets/p-dg-tiger-cami-3.png";
+import dgTigerCami4 from "@/assets/p-dg-tiger-cami-4.png";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
 import gucciGreenSun2 from "@/assets/p-gucci-green-sun-2.png";
 import gucciGreenSun3 from "@/assets/p-gucci-green-sun-3.png";
@@ -120,8 +125,28 @@ gallery: [
       { label: "Colour", value: "Ivory white" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [diorTigerTee2, diorTigerTee3],
+    gallery: [diorTigerTee2, diorTigerTee3, diorTigerTee4],
     vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
+  },
+  {
+    id: "dg-tiger-cami",
+    name: "Tiger Print Cami",
+    house: "Dolce & Gabbana",
+    price: 220,
+    img: dgTigerCami,
+    swatch: "#c9a35a",
+    category: "tops",
+    tag: "Vintage",
+    description:
+      "Y2K Dolce & Gabbana Underwear tiger-print cami with delicate criss-cross spaghetti straps. Pure early-aughts It-girl.",
+    details: [
+      { label: "Size", value: "II · approx. S" },
+      { label: "Fit", value: "Slim · scoop neck · criss-cross back" },
+      { label: "Material", value: "Stretch jersey" },
+      { label: "Colour", value: "Tiger print · cream / black / gold" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
+    gallery: [dgTigerCami2, dgTigerCami3, dgTigerCami4],
   },
   {
     id: "prada-t-strap-kitten",
