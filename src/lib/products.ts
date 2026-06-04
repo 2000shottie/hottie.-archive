@@ -38,6 +38,11 @@ import gucciAbbey6 from "@/assets/p-gucci-abbey-6.png";
 import gucciAbbey7 from "@/assets/p-gucci-abbey-7.png";
 import gucciAbbey8 from "@/assets/p-gucci-abbey-8.png";
 import gucciAbbey9 from "@/assets/p-gucci-abbey-9.png";
+import annCowl from "@/assets/p-ann-cowl.png";
+import annCowl2 from "@/assets/p-ann-cowl-2.png";
+import annCowl3 from "@/assets/p-ann-cowl-3.png";
+import annCowl4 from "@/assets/p-ann-cowl-4.png";
+import annCowl5 from "@/assets/p-ann-cowl-5.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
