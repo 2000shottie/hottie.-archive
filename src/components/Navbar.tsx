@@ -48,9 +48,6 @@ export function Navbar() {
           <Link to="/contact" aria-label="Account" className="hidden transition-colors hover:text-primary md:block">
             <User className="size-[18px]" strokeWidth={1.4} />
           </Link>
-          <Link to="/cart" aria-label="Wishlist" className="transition-colors hover:text-primary">
-            <Heart className="size-[18px]" strokeWidth={1.4} />
-          </Link>
           <Link to="/" aria-label="Home" className="transition-colors hover:text-primary">
             <Home className="size-[18px]" strokeWidth={1.4} />
           </Link>
