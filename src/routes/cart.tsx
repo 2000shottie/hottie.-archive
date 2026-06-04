@@ -40,9 +40,9 @@ function CartPage() {
 
         {count === 0 ? (
           <div className="mt-16 rounded-2xl border border-border/70 bg-blush/30 p-12 text-center">
-            <p className="font-script text-3xl text-foreground">it's empty in here.</p>
+            <p className="font-script text-3xl text-foreground">find something hot.</p>
             <p className="mt-3 text-[14px] text-muted-foreground">
-              Soft-pick a piece you love from the edit.
+              Hot-pick a piece you love from the edit.
             </p>
             <Link
               to="/"
