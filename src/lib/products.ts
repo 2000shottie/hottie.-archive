@@ -74,6 +74,8 @@ export type Product = {
   /** Source listing URL on Vestiaire Collective. When present, stock is polled
    *  automatically and the product flips to "Sold out" when it goes off-market. */
   vestiaireUrl?: string;
+  /** ISO date when the piece was listed on the site. */
+  listedAt: string;
 };
 
 export const products: Product[] = [
