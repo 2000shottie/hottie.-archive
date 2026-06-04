@@ -1,14 +1,14 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState, useRef } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { z } from "zod";
-import { toast } from "sonner";
+import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useCart } from "@/lib/cart";
 import { useStock } from "@/lib/useStock";
-import { markProductsSold } from "@/lib/sold.functions";
+import { getStripe, getStripeEnvironment } from "@/lib/stripe";
+import { createCartCheckoutSession } from "@/lib/payments.functions";
 import type { Product } from "@/lib/products";
 
 export const Route = createFileRoute("/checkout")({
@@ -21,85 +21,42 @@ export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
-const checkoutSchema = z.object({
-  email: z.string().trim().email("Enter a valid email").max(255),
-  firstName: z.string().trim().min(1, "Required").max(60),
-  lastName: z.string().trim().min(1, "Required").max(60),
-  phone: z.string().trim().min(5, "Enter a valid phone").max(30),
-  address: z.string().trim().min(3, "Required").max(200),
-  apt: z.string().trim().max(60).optional(),
-  city: z.string().trim().min(1, "Required").max(80),
-  state: z.string().trim().min(1, "Required").max(80),
-  zip: z.string().trim().min(2, "Required").max(20),
-  country: z.string().trim().min(2, "Required").max(60),
-  cardName: z.string().trim().min(1, "Required").max(80),
-  cardNumber: z.string().trim().regex(/^[0-9 ]{12,23}$/, "Enter a valid card number"),
-  cardExp: z.string().trim().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "MM/YY"),
-  cardCvc: z.string().trim().regex(/^\d{3,4}$/, "3–4 digits"),
-});
-
-type FormState = Record<keyof z.infer<typeof checkoutSchema>, string>;
-
 function CheckoutPage() {
-  const { lines, subtotal, clear, count } = useCart();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const markSold = useServerFn(markProductsSold);
-  const shipping = subtotal > 0 ? 20 : 0;
-  const total = subtotal + shipping;
+  const { lines, subtotal, count } = useCart();
+  const createSession = useServerFn(createCartCheckoutSession);
   const [availableIds, setAvailableIds] = useState<Record<string, boolean>>({});
-  const checkoutBlocked = useMemo(
-    () => lines.some(({ product }) => !!product.vestiaireUrl && availableIds[product.id] !== true),
-    [availableIds, lines],
-  );
   const reportAvailability = (id: string, available: boolean) =>
     setAvailableIds((prev) => (prev[id] === available ? prev : { ...prev, [id]: available }));
 
-  const [form, setForm] = useState<FormState>({
-    email: "", firstName: "", lastName: "", phone: "",
-    address: "", apt: "", city: "", state: "", zip: "", country: "United States",
-    cardName: "", cardNumber: "", cardExp: "", cardCvc: "",
-  });
-  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [submitting, setSubmitting] = useState(false);
+  const checkoutBlocked = lines.some(
+    ({ product }) => !!product.vestiaireUrl && availableIds[product.id] !== true,
+  );
 
-  const update = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm((f) => ({ ...f, [k]: e.target.value }));
+  // Snapshot the cart so the Stripe session is created once for this cart.
+  const itemsKey = lines.map((l) => `${l.product.id}:${l.qty}`).join("|");
+  const lastKeyRef = useRef<string>("");
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (checkoutBlocked) {
-      toast.error("Checking Vestiaire stock — sold pieces can’t be purchased.");
-      return;
-    }
-    const parsed = checkoutSchema.safeParse(form);
-    if (!parsed.success) {
-      const fieldErrors: Partial<Record<keyof FormState, string>> = {};
-      for (const issue of parsed.error.issues) {
-        const k = issue.path[0] as keyof FormState;
-        if (!fieldErrors[k]) fieldErrors[k] = issue.message;
-      }
-      setErrors(fieldErrors);
-      toast.error("Check the highlighted fields.");
-      return;
-    }
-    setErrors({});
-    setSubmitting(true);
-    try {
-      await new Promise((r) => setTimeout(r, 900));
-      // Mark every purchased piece as sold so it disappears from the live edit.
-      await markSold({ data: { productIds: lines.map((l) => l.product.id) } });
-      await queryClient.invalidateQueries({ queryKey: ["sold-products"] });
-      toast.success("Order placed — you'll get a confirmation email soon. ♡");
-      clear();
-      navigate({ to: "/" });
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not place order.");
-    } finally {
-      setSubmitting(false);
-    }
+  const fetchClientSecret = async (): Promise<string> => {
+    const result = await createSession({
+      data: {
+        items: lines.map((l) => ({ priceId: l.product.id, quantity: l.qty })),
+        returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
+        environment: getStripeEnvironment(),
+      },
+    });
+    if ("error" in result) throw new Error(result.error);
+    if (!result.clientSecret) throw new Error("No client secret returned");
+    return result.clientSecret;
   };
 
+  // Reset Stripe iframe whenever the cart changes
+  const [providerKey, setProviderKey] = useState(itemsKey);
+  useEffect(() => {
+    if (lastKeyRef.current !== itemsKey) {
+      lastKeyRef.current = itemsKey;
+      setProviderKey(itemsKey);
+    }
+  }, [itemsKey]);
 
   if (count === 0) {
     return (
@@ -119,8 +76,12 @@ function CheckoutPage() {
     );
   }
 
+  const shipping = 20;
+  const total = subtotal + shipping;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <PaymentTestModeBanner />
       <Navbar />
       <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-10 md:py-16">
         <Link to="/cart" className="text-[11px] tracking-luxe uppercase text-foreground/60 hover:text-primary">
@@ -130,80 +91,30 @@ function CheckoutPage() {
           Soft <span className="font-script text-primary">checkout</span>
         </h1>
 
-        <form onSubmit={onSubmit} className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr,1fr]" noValidate>
-          <div className="space-y-10">
-            <Section title="Contact">
-              <Field label="Email" error={errors.email}>
-                <input className={inputCls} type="email" autoComplete="email" value={form.email} onChange={update("email")} />
-              </Field>
-              <Field label="Phone" error={errors.phone}>
-                <input className={inputCls} type="tel" autoComplete="tel" value={form.phone} onChange={update("phone")} />
-              </Field>
-            </Section>
-
-            <Section title="Shipping">
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="First name" error={errors.firstName}>
-                  <input className={inputCls} autoComplete="given-name" value={form.firstName} onChange={update("firstName")} />
-                </Field>
-                <Field label="Last name" error={errors.lastName}>
-                  <input className={inputCls} autoComplete="family-name" value={form.lastName} onChange={update("lastName")} />
-                </Field>
+        <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr,1fr]">
+          <div>
+            {checkoutBlocked ? (
+              <div className="rounded-2xl border border-border bg-card p-6 text-[13px] text-muted-foreground">
+                One or more items in your bag are sold out. Remove them from your bag to continue.
               </div>
-              <Field label="Address" error={errors.address}>
-                <input className={inputCls} autoComplete="street-address" value={form.address} onChange={update("address")} />
-              </Field>
-              <Field label="Apt / Suite (optional)" error={errors.apt}>
-                <input className={inputCls} value={form.apt} onChange={update("apt")} />
-              </Field>
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="City" error={errors.city}>
-                  <input className={inputCls} autoComplete="address-level2" value={form.city} onChange={update("city")} />
-                </Field>
-                <Field label="State / Region" error={errors.state}>
-                  <input className={inputCls} autoComplete="address-level1" value={form.state} onChange={update("state")} />
-                </Field>
-                <Field label="ZIP / Postcode" error={errors.zip}>
-                  <input className={inputCls} autoComplete="postal-code" value={form.zip} onChange={update("zip")} />
-                </Field>
-                <Field label="Country" error={errors.country}>
-                  <input className={inputCls} autoComplete="country-name" value={form.country} onChange={update("country")} />
-                </Field>
+            ) : (
+              <div className="rounded-2xl border border-border bg-card overflow-hidden">
+                <EmbeddedCheckoutProvider
+                  key={providerKey}
+                  stripe={getStripe()}
+                  options={{ fetchClientSecret }}
+                >
+                  <EmbeddedCheckout />
+                </EmbeddedCheckoutProvider>
               </div>
-            </Section>
-
-            <Section title="Payment" sub="Demo only — no real charge.">
-              <Field label="Name on card" error={errors.cardName}>
-                <input className={inputCls} autoComplete="cc-name" value={form.cardName} onChange={update("cardName")} />
-              </Field>
-              <Field label="Card number" error={errors.cardNumber}>
-                <input className={inputCls} inputMode="numeric" autoComplete="cc-number" placeholder="4242 4242 4242 4242" value={form.cardNumber} onChange={update("cardNumber")} />
-              </Field>
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Expiry (MM/YY)" error={errors.cardExp}>
-                  <input className={inputCls} autoComplete="cc-exp" placeholder="08/28" value={form.cardExp} onChange={update("cardExp")} />
-                </Field>
-                <Field label="CVC" error={errors.cardCvc}>
-                  <input className={inputCls} inputMode="numeric" autoComplete="cc-csc" placeholder="123" value={form.cardCvc} onChange={update("cardCvc")} />
-                </Field>
-              </div>
-            </Section>
-
-            <p className="text-[12px] leading-relaxed text-muted-foreground">
+            )}
+            <p className="mt-6 text-[12px] leading-relaxed text-muted-foreground">
               Each item is individually sourced from our exclusive network of designer collections.
-              Because we curate just for you, please allow approximately 3–4 weeks for delivery so you can receive a piece that's truly one-of-a-kind.
+              Please allow approximately 3–4 weeks for delivery.
             </p>
-            <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">
+            <p className="mt-2 text-[11px] tracking-luxe uppercase text-muted-foreground">
               All sales are final — no returns or refunds.
             </p>
-
-            <button
-              type="submit"
-              disabled={submitting || checkoutBlocked}
-              className="w-full rounded-full bg-foreground py-4 text-[11px] tracking-luxe uppercase text-background transition-colors hover:bg-primary disabled:opacity-60"
-            >
-              {checkoutBlocked ? "Checking stock…" : submitting ? "Placing order…" : `Pay $${total.toLocaleString()}`}
-            </button>
           </div>
 
           <aside className="h-fit rounded-2xl border border-border/70 bg-blush/30 p-6 md:sticky md:top-24">
@@ -221,10 +132,11 @@ function CheckoutPage() {
             <dl className="mt-6 space-y-2 border-t border-border pt-4 text-[13px]">
               <div className="flex justify-between"><dt className="text-muted-foreground">Subtotal</dt><dd>${subtotal.toLocaleString()}</dd></div>
               <div className="flex justify-between"><dt className="text-muted-foreground">Shipping</dt><dd>${shipping}</dd></div>
-              <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border"><dt>Total</dt><dd>${total.toLocaleString()}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Tax</dt><dd>calculated at checkout</dd></div>
+              <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border"><dt>Total</dt><dd>~${total.toLocaleString()}</dd></div>
             </dl>
           </aside>
-        </form>
+        </div>
       </main>
       <Footer />
     </div>
@@ -247,11 +159,8 @@ function CheckoutLine({
 
   return (
     <li className="flex items-center gap-3">
-      <div
-        className="relative size-14 shrink-0 overflow-hidden rounded-lg"
-        style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
-      >
-        <img src={product.img} alt="" className="size-full object-contain p-1" />
+      <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-white">
+        <img src={product.img} alt="" className="absolute inset-0 size-full object-contain" />
         {!available && product.vestiaireUrl && (
           <span className="absolute inset-0 grid place-items-center bg-background/55 text-[8px] tracking-luxe uppercase text-foreground">
             Sold
@@ -266,30 +175,5 @@ function CheckoutLine({
       </div>
       <p className="text-[13px]">${(product.price * qty).toLocaleString()}</p>
     </li>
-  );
-}
-
-const inputCls =
-  "w-full rounded-xl border border-border bg-card px-4 py-3 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary";
-
-function Section({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
-  return (
-    <section>
-      <div className="mb-4 flex items-baseline justify-between">
-        <h2 className="font-display text-2xl">{title}</h2>
-        {sub && <p className="text-[11px] text-muted-foreground">{sub}</p>}
-      </div>
-      <div className="space-y-4">{children}</div>
-    </section>
-  );
-}
-
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-[10px] tracking-luxe uppercase text-muted-foreground">{label}</span>
-      {children}
-      {error && <span className="mt-1 block text-[11px] text-destructive">{error}</span>}
-    </label>
   );
 }
