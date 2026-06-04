@@ -45,7 +45,7 @@ function CheckoutPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const markSold = useServerFn(markProductsSold);
-  const shipping = subtotal > 0 ? 15 : 0;
+  const shipping = subtotal > 0 ? 20 : 0;
   const total = subtotal + shipping;
   const [availableIds, setAvailableIds] = useState<Record<string, boolean>>({});
   const checkoutBlocked = useMemo(
