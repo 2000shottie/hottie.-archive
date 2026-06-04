@@ -21,9 +21,11 @@ export function Navbar() {
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-10 w-auto md:h-12"
+            className="h-16 w-auto md:h-20"
+            style={{ mixBlendMode: "multiply" }}
           />
         </Link>
+
         <nav className="hidden flex-1 items-center justify-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
           {links.map((l) =>
             l.to.startsWith("/#") ? (
