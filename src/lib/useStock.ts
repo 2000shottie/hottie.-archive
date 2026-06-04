@@ -30,10 +30,10 @@ export function useStock(url: string | undefined, productId?: string) {
     queryKey: ["stock", url],
     enabled: !!url,
     queryFn: () => check({ data: { url: url! } }),
-    refetchInterval: 5000,
+    refetchInterval: 1000 * 60,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    staleTime: 0,
+    staleTime: 1000 * 30,
     placeholderData: {
       available: true,
       source: "unknown",
