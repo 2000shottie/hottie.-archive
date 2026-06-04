@@ -1,4 +1,4 @@
-import { Search, Heart, ShoppingBag, User, Home } from "lucide-react";
+import { Search, ShoppingBag, User, Home } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCart } from "@/lib/cart";
 import hottieLogo from "@/assets/hottie-signature-transparent.png.asset.json";
@@ -34,7 +34,7 @@ export function Navbar() {
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-24 w-auto md:h-32"
+            className="h-32 w-auto md:h-44"
           />
         </Link>
 
@@ -47,9 +47,6 @@ export function Navbar() {
           </button>
           <Link to="/contact" aria-label="Account" className="hidden transition-colors hover:text-primary md:block">
             <User className="size-[18px]" strokeWidth={1.4} />
-          </Link>
-          <Link to="/cart" aria-label="Wishlist" className="transition-colors hover:text-primary">
-            <Heart className="size-[18px]" strokeWidth={1.4} />
           </Link>
           <Link to="/" aria-label="Home" className="transition-colors hover:text-primary">
             <Home className="size-[18px]" strokeWidth={1.4} />
