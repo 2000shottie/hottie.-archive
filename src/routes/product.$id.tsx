@@ -85,7 +85,7 @@ function ProductPage() {
         <section className="mx-auto grid max-w-[1480px] grid-cols-1 gap-10 px-5 pb-16 pt-8 md:grid-cols-2 md:gap-16 md:px-10 md:pb-24 md:pt-12">
           <div className="flex flex-col gap-3">
             <div
-              className="relative aspect-square w-full overflow-hidden rounded-full"
+              className="relative aspect-square w-full overflow-hidden rounded-2xl md:rounded-[28px]"
               style={{ background: "white" }}
             >
               {product.tag && (
@@ -118,7 +118,7 @@ function ProductPage() {
                       type="button"
                       onClick={() => setActiveIdx(i)}
                       aria-label={`View photo ${i + 1}`}
-                      className={`relative aspect-square overflow-hidden rounded-full border transition-all ${
+                      className={`relative aspect-square overflow-hidden rounded-xl border transition-all ${
                         isActive
                           ? "border-foreground/70 shadow-soft"
                           : "border-border/60 opacity-80 hover:opacity-100"
@@ -211,7 +211,7 @@ function ProductPage() {
                   className="group block"
                 >
                   <div
-                    className="relative aspect-square overflow-hidden rounded-full"
+                    className="relative aspect-square overflow-hidden rounded-xl"
                     style={{ background: "white" }}
                   >
                     <img
