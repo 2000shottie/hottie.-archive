@@ -25,7 +25,7 @@ export function Navbar() {
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-28 w-auto md:h-36"
+            className="h-24 w-auto md:h-32"
           />
         </Link>
         <nav className="hidden items-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
