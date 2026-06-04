@@ -103,7 +103,7 @@ gallery: [
   vwTartanBag4,
   vwTartanBag6,
   vwTartanBag7,
-]
+],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
