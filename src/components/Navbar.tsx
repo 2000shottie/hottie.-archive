@@ -4,7 +4,7 @@ import { useCart } from "@/lib/cart";
 
 export function Navbar() {
   const links = [
-    { label: "New", to: "/#shop" },
+    { label: "New", to: "/new" },
     { label: "Bags", to: "/#shop" },
     { label: "Sunglasses", to: "/#shop" },
     { label: "Jewelry", to: "/#shop" },

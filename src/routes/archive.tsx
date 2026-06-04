@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { products, CATEGORY_LABELS, type Category, type Product } from "@/lib/products";
 import { useStock } from "@/lib/useStock";
+
+type SortMode = "default" | "price-asc" | "price-desc";
 
 const ORDER: Category[] = ["bags", "tops", "bottoms", "shoes", "jewelry", "eyewear"];
 
@@ -21,9 +24,17 @@ export const Route = createFileRoute("/archive")({
 });
 
 function ArchivePage() {
+  const [sort, setSort] = useState<SortMode>("default");
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sort === "price-asc") return a.price - b.price;
+    if (sort === "price-desc") return b.price - a.price;
+    return 0;
+  });
+
   const grouped = ORDER.map((cat) => ({
     cat,
-    items: products.filter((p) => p.category === cat),
+    items: sortedProducts.filter((p) => p.category === cat),
   }));
 
   return (
@@ -51,6 +62,29 @@ function ArchivePage() {
               );
             })}
           </nav>
+
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <span className="text-[10px] tracking-luxe uppercase text-muted-foreground">
+              Sort by
+            </span>
+            {([
+              { key: "default", label: "Default" },
+              { key: "price-desc", label: "Price: High → Low" },
+              { key: "price-asc", label: "Price: Low → High" },
+            ] as { key: SortMode; label: string }[]).map((opt) => (
+              <button
+                key={opt.key}
+                onClick={() => setSort(opt.key)}
+                className={`rounded-full border px-3 py-1.5 text-[10px] tracking-luxe uppercase transition-colors ${
+                  sort === opt.key
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-foreground/15 text-foreground/70 hover:border-primary hover:text-primary"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </section>
 
         <div className="bg-background pb-24">

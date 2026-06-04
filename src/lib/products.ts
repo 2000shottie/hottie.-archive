@@ -74,6 +74,8 @@ export type Product = {
   /** Source listing URL on Vestiaire Collective. When present, stock is polled
    *  automatically and the product flips to "Sold out" when it goes off-market. */
   vestiaireUrl?: string;
+  /** ISO date when the piece was listed on the site. */
+  listedAt: string;
 };
 
 export const products: Product[] = [
@@ -99,6 +101,7 @@ export const products: Product[] = [
     gallery: [lvIdylle2, lvIdylle3, lvIdylle4, lvIdylle5, lvIdylle6, lvIdylle7, lvIdylle8],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
+    listedAt: "2024-01-15",
   },
   {
     id: "vw-tartan-yasmine-bag",
@@ -119,15 +122,16 @@ export const products: Product[] = [
       { label: "Hardware", value: "Silver-tone orb" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-gallery: [
-  vwTartanBag2,
-  vwTartanBag3,
-  vwTartanBag4,
-  vwTartanBag6,
-  vwTartanBag7,
-],
+    gallery: [
+      vwTartanBag2,
+      vwTartanBag3,
+      vwTartanBag4,
+      vwTartanBag6,
+      vwTartanBag7,
+    ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
+    listedAt: "2024-04-01",
   },
   {
     id: "gucci-abbey-d-ring",
@@ -151,6 +155,7 @@ gallery: [
     gallery: [gucciAbbey2, gucciAbbey3, gucciAbbey4, gucciAbbey5, gucciAbbey6, gucciAbbey7, gucciAbbey8, gucciAbbey9],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/gucci/multicolour-cloth-abbey-gucci-handbag-67615661.shtml",
+    listedAt: "2024-05-01",
   },
   {
     id: "dior-tiger-tee",
@@ -171,6 +176,7 @@ gallery: [
     ],
     gallery: [diorTigerTee2, diorTigerTee3, diorTigerTee4],
     vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
+    listedAt: "2024-02-01",
   },
   {
     id: "ann-demeulemeester-cowl-top",
@@ -196,6 +202,7 @@ gallery: [
     gallery: [annCowl2, annCowl3, annCowl4, annCowl5, annCowl6, annCowl7],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/ann-demeulemeester/black-wool-ann-demeulemeester-top-67634392.shtml",
+    listedAt: "2024-05-15",
   },
   {
     id: "dg-tiger-cami",
@@ -216,6 +223,7 @@ gallery: [
       { label: "Condition", value: "Very good · pre-loved" },
     ],
     gallery: [dgTigerCami2, dgTigerCami3, dgTigerCami4],
+    listedAt: "2024-02-15",
   },
   {
     id: "prada-t-strap-kitten",
@@ -236,6 +244,7 @@ gallery: [
     gallery: [pradaSandals2, pradaSandals3, pradaSandals4, pradaSandals5, pradaSandals6],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-shoes/sandals/prada/black-leather-soft-prada-sandals-67472977.shtml",
+    listedAt: "2024-03-15",
   },
   {
     id: "gucci-olive-shield-sun",
@@ -258,6 +267,7 @@ gallery: [
     gallery: [gucciGreenSun2, gucciGreenSun3],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-accessories/sunglasses/gucci/green-plastic-gucci-sunglasses-67258298.shtml",
+    listedAt: "2024-03-01",
   },
 ];
 
