@@ -30,11 +30,15 @@ export function Navbar() {
             ),
           )}
         </nav>
-        <Link to="/" aria-label="Hottie — home" className="flex items-center">
+        <Link
+          to="/"
+          aria-label="Hottie — home"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        >
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-16 w-auto md:h-20"
+            className="h-28 w-auto md:h-36"
           />
         </Link>
 
