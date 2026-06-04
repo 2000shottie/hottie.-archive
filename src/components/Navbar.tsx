@@ -1,4 +1,4 @@
-import { Search, Heart, ShoppingBag, User, Home } from "lucide-react";
+import { Search, ShoppingBag, User, Home } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCart } from "@/lib/cart";
 import hottieLogo from "@/assets/hottie-signature-transparent.png.asset.json";
