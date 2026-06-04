@@ -43,7 +43,7 @@ function ProductCard({ product }: { product: Product }) {
       className="group block w-full text-left"
     >
       <div
-        className="relative aspect-square overflow-hidden rounded-2xl"
+        className="relative aspect-square overflow-hidden rounded-full"
         style={{ background: "white" }}
       >
         {product.tag && !soldOut && (
