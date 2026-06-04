@@ -7,16 +7,12 @@ import lvIdylle6 from "@/assets/p-lv-idylle-6.png";
 import diorTigerTee from "@/assets/p-dior-white-top.png";
 import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
 import diorTigerTee3 from "@/assets/p-dior-white-top-3.png";
-import diorTigerTee4 from "@/assets/p-dior-white-top-4.png";
 import gucciGreenSun from "@/assets/p-gucci-green-sun.png";
 import gucciGreenSun2 from "@/assets/p-gucci-green-sun-2.png";
 import gucciGreenSun3 from "@/assets/p-gucci-green-sun-3.png";
 import pradaSandals from "@/assets/p-prada-sandals.png";
 import pradaSandals2 from "@/assets/p-prada-sandals-2.png";
 import pradaSandals3 from "@/assets/p-prada-sandals-3.png";
-import dgTigerTop from "@/assets/p-dg-brown-top.png";
-import dgTigerTop2 from "@/assets/p-dg-brown-top-2.png";
-import dgTigerTop3 from "@/assets/p-dg-brown-top-3.png";
 import vwTartanBag from "@/assets/p-vw-brown-bag.png";
 import vwTartanBag2 from "@/assets/p-vw-brown-bag-2.png";
 import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
@@ -124,29 +120,8 @@ gallery: [
       { label: "Colour", value: "Ivory white" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [diorTigerTee2, diorTigerTee3, diorTigerTee4],
+    gallery: [diorTigerTee2, diorTigerTee3],
     vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
-  },
-  {
-    id: "dg-tiger-cami",
-    name: "Tiger Print Cami",
-    house: "Dolce & Gabbana",
-    price: 410,
-    img: dgTigerTop,
-    swatch: "#e9d39a",
-    category: "tops",
-    tag: "2000s",
-    description: "Slinky tiger-print stretch cami with thin straps and a deep scoop neck. Peak Y2K D&G.",
-    details: [
-      { label: "Size", value: "40 IT · S–M (fits UK 8 / US 4)" },
-      { label: "Fit", value: "Slim · thin straps · scoop neck" },
-      { label: "Material", value: "Stretch polyamide blend" },
-      { label: "Colour", value: "Brown tiger print" },
-      { label: "Condition", value: "Never worn · with tags" },
-    ],
-    gallery: [dgTigerTop2, dgTigerTop3],
-    vestiaireUrl:
-      "https://www.vestiairecollective.com/women-clothing/tops/dolce-gabbana/brown-polyamide-dolce-gabbana-top-67070568.shtml",
   },
   {
     id: "prada-t-strap-kitten",
