@@ -248,7 +248,7 @@ function CheckoutLine({
   return (
     <li className="flex items-center gap-3">
       <div
-        className="relative size-14 shrink-0 overflow-hidden rounded-full"
+        className="relative size-14 shrink-0 overflow-hidden rounded-lg"
         style={{ background: `linear-gradient(160deg, ${product.swatch}, white 78%)` }}
       >
         <img src={product.img} alt="" className="size-full object-contain p-1" />
