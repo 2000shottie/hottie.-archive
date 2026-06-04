@@ -12,9 +12,9 @@ export function useLocallySoldIds() {
   return useQuery<string[]>({
     queryKey: ["sold-products"],
     queryFn: () => fetchIds(),
-    refetchInterval: 1000 * 60,
+    refetchInterval: 5000,
     refetchOnWindowFocus: true,
-    staleTime: 1000 * 30,
+    staleTime: 0,
     placeholderData: [],
   });
 }
@@ -30,10 +30,10 @@ export function useStock(url: string | undefined, productId?: string) {
     queryKey: ["stock", url],
     enabled: !!url,
     queryFn: () => check({ data: { url: url! } }),
-    refetchInterval: 1000 * 60 * 5,
+    refetchInterval: 5000,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    staleTime: 1000 * 60,
+    staleTime: 0,
     placeholderData: {
       available: true,
       source: "unknown",
