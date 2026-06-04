@@ -30,9 +30,14 @@ export function Navbar() {
             ),
           )}
         </nav>
-        <Link to="/" className="font-script text-[34px] leading-none text-foreground md:text-[40px]">
-          Hottie<span className="text-primary">.</span>
+        <Link to="/" aria-label="Hottie — home" className="flex items-center">
+          <img
+            src={hottieLogo.url}
+            alt="Hottie"
+            className="h-10 w-auto md:h-12"
+          />
         </Link>
+
         <div className="flex flex-1 items-center justify-end gap-4 text-foreground/70">
           <button aria-label="Search" className="hidden transition-colors hover:text-primary md:block">
             <Search className="size-[18px]" strokeWidth={1.4} />
