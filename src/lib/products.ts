@@ -96,7 +96,7 @@ export const products: Product[] = [
       { label: "Hardware", value: "Silver-tone orb" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [vwTartanBag2, vwTartanBag3, vwTartanBag4, vwTartanBag5],
+    gallery: [vwTartanBag2, vwTartanBag3, vwTartanBag4],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
   },
