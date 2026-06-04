@@ -172,25 +172,9 @@ function CartLine({
           )}
         </div>
         <div className="flex items-end justify-between">
-          <div className="flex items-center gap-2 rounded-full border border-border bg-card px-2 py-1">
-            <button
-              type="button"
-              onClick={() => onQty(qty - 1)}
-              className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
-              aria-label="Decrease"
-            >
-              −
-            </button>
-            <span className="min-w-[18px] text-center text-[12px]">{qty}</span>
-            <button
-              type="button"
-              onClick={() => onQty(qty + 1)}
-              className="grid size-6 place-items-center text-foreground/60 hover:text-primary"
-              aria-label="Increase"
-            >
-              +
-            </button>
-          </div>
+          <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">
+            One of one
+          </p>
           <div className="text-right">
             <p className="font-display text-[16px] text-foreground">
               ${(product.price * qty).toLocaleString()}
