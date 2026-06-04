@@ -29,6 +29,15 @@ import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
 import vwTartanBag4 from "@/assets/p-vw-brown-bag-4.png";
 import vwTartanBag6 from "@/assets/p-vw-brown-bag-6.png";
 import vwTartanBag7 from "@/assets/p-vw-brown-bag-7.png";
+import gucciAbbey from "@/assets/p-gucci-abbey.png";
+import gucciAbbey2 from "@/assets/p-gucci-abbey-2.png";
+import gucciAbbey3 from "@/assets/p-gucci-abbey-3.png";
+import gucciAbbey4 from "@/assets/p-gucci-abbey-4.png";
+import gucciAbbey5 from "@/assets/p-gucci-abbey-5.png";
+import gucciAbbey6 from "@/assets/p-gucci-abbey-6.png";
+import gucciAbbey7 from "@/assets/p-gucci-abbey-7.png";
+import gucciAbbey8 from "@/assets/p-gucci-abbey-8.png";
+import gucciAbbey9 from "@/assets/p-gucci-abbey-9.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
