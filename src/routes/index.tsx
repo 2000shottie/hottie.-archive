@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HOTTIE. — Soft Luxury for Internet Icons" },
+      { title: "HOTTIE. — archived & cherry-picked pieces 4 u <33" },
       {
         name: "description",
         content:
