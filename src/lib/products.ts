@@ -29,6 +29,15 @@ import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
 import vwTartanBag4 from "@/assets/p-vw-brown-bag-4.png";
 import vwTartanBag6 from "@/assets/p-vw-brown-bag-6.png";
 import vwTartanBag7 from "@/assets/p-vw-brown-bag-7.png";
+import gucciAbbey from "@/assets/p-gucci-abbey.png";
+import gucciAbbey2 from "@/assets/p-gucci-abbey-2.png";
+import gucciAbbey3 from "@/assets/p-gucci-abbey-3.png";
+import gucciAbbey4 from "@/assets/p-gucci-abbey-4.png";
+import gucciAbbey5 from "@/assets/p-gucci-abbey-5.png";
+import gucciAbbey6 from "@/assets/p-gucci-abbey-6.png";
+import gucciAbbey7 from "@/assets/p-gucci-abbey-7.png";
+import gucciAbbey8 from "@/assets/p-gucci-abbey-8.png";
+import gucciAbbey9 from "@/assets/p-gucci-abbey-9.png";
 
 export type Category = "bags" | "tops" | "bottoms" | "shoes" | "jewelry" | "eyewear";
 
@@ -112,6 +121,29 @@ gallery: [
 ],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
+  },
+  {
+    id: "gucci-abbey-d-ring",
+    name: "Abbey D-Ring GG Hobo",
+    house: "Gucci",
+    price: 980,
+    img: gucciAbbey,
+    swatch: "#c9a87a",
+    category: "bags",
+    tag: "Archive",
+    description:
+      "Classic Gucci Abbey hobo in beige/ebony GG canvas with rich brown leather trim and the signature gold D-ring. Slouchy, soft, instantly iconic.",
+    details: [
+      { label: "Size", value: "Medium · one size" },
+      { label: "Material", value: "GG canvas · calfskin leather trim" },
+      { label: "Colour", value: "Beige / ebony brown" },
+      { label: "Hardware", value: "Gold-tone D-ring" },
+      { label: "Origin", value: "Made in Italy" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
+    gallery: [gucciAbbey2, gucciAbbey3, gucciAbbey4, gucciAbbey5, gucciAbbey6, gucciAbbey7, gucciAbbey8, gucciAbbey9],
+    vestiaireUrl:
+      "https://www.vestiairecollective.com/women-bags/handbags/gucci/multicolour-cloth-abbey-gucci-handbag-67615661.shtml",
   },
   {
     id: "dior-tiger-tee",
