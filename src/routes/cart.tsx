@@ -18,7 +18,7 @@ export const Route = createFileRoute("/cart")({
 
 function CartPage() {
   const { lines, setQty, remove, subtotal, count } = useCart();
-  const shipping = subtotal > 0 ? 15 : 0;
+  const shipping = subtotal > 0 ? 20 : 0;
   const total = subtotal + shipping;
   const [soldIds, setSoldIds] = useState<Record<string, boolean>>({});
   const hasSoldOut = useMemo(
