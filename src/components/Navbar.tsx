@@ -16,7 +16,7 @@ export function Navbar() {
   const { count } = useCart();
   return (
     <header className="sticky top-0 z-50 glass border-b border-border/60">
-      <div className="mx-auto flex max-w-[1480px] items-center justify-between px-5 py-4 md:px-10">
+      <div className="mx-auto flex max-w-[1480px] items-center justify-between px-5 py-2 md:px-10">
         <nav className="hidden flex-1 items-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
           {links.map((l) =>
             l.to.startsWith("/#") ? (
@@ -34,7 +34,7 @@ export function Navbar() {
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-32 w-auto md:h-44"
+            className="h-36 w-auto md:h-48"
           />
         </Link>
 
@@ -49,10 +49,10 @@ export function Navbar() {
             <User className="size-[18px]" strokeWidth={1.4} />
           </Link>
           <Link to="/" aria-label="Home" className="transition-colors hover:text-primary">
-            <Home className="size-[18px]" strokeWidth={1.4} />
+            <Home className="size-[22px]" strokeWidth={1.4} />
           </Link>
           <Link to="/cart" aria-label="Bag" className="flex items-center gap-1.5 transition-colors hover:text-primary">
-            <ShoppingBag className="size-[18px]" strokeWidth={1.4} />
+            <ShoppingBag className="size-[22px]" strokeWidth={1.4} />
             <span className="text-[11px] tracking-luxe uppercase">({count})</span>
           </Link>
         </div>
