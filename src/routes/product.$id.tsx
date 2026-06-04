@@ -118,7 +118,7 @@ function ProductPage() {
                       type="button"
                       onClick={() => setActiveIdx(i)}
                       aria-label={`View photo ${i + 1}`}
-                      className={`relative aspect-square overflow-hidden rounded-full border transition-all ${
+                      className={`relative aspect-square overflow-hidden rounded-xl border transition-all ${
                         isActive
                           ? "border-foreground/70 shadow-soft"
                           : "border-border/60 opacity-80 hover:opacity-100"
