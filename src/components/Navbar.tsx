@@ -16,7 +16,7 @@ export function Navbar() {
   const { count } = useCart();
   return (
     <header className="sticky top-0 z-50 glass border-b border-border/60">
-      <div className="relative mx-auto flex max-w-[1480px] items-center justify-between px-5 py-4 md:px-10">
+      <div className="mx-auto flex max-w-[1480px] items-center justify-between gap-4 px-5 md:px-10">
         <nav className="hidden flex-1 items-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
           {links.map((l) =>
             l.to.startsWith("/#") ? (
@@ -30,17 +30,19 @@ export function Navbar() {
             ),
           )}
         </nav>
+        <div className="flex-1 md:hidden" aria-hidden />
         <Link
           to="/"
           aria-label="Hottie — home"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="flex shrink-0 items-center"
         >
           <img
             src={hottieLogo.url}
             alt="Hottie"
-            className="h-36 w-auto md:h-48"
+            className="h-24 w-auto md:h-32"
           />
         </Link>
+
 
 
 
