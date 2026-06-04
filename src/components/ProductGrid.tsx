@@ -52,11 +52,9 @@ function ProductCard({ product }: { product: Product }) {
           </span>
         )}
         {soldOut && (
-          <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
-            <span className="rounded-full bg-foreground px-4 py-1.5 text-[10px] tracking-luxe uppercase text-background">
-              Sold out
-            </span>
-          </div>
+          <span className="absolute right-3 top-3 z-20 rounded-full bg-foreground px-2.5 py-1 text-[9px] tracking-luxe uppercase text-background shadow-md">
+            Sold out
+          </span>
         )}
         <span
           aria-label="Wishlist"
