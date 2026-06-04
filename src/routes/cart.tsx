@@ -171,10 +171,7 @@ function CartLine({
             </p>
           )}
         </div>
-        <div className="flex items-end justify-between">
-          <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">
-            One of one
-          </p>
+        <div className="flex items-end justify-end">
           <div className="text-right">
             <p className="font-display text-[16px] text-foreground">
               ${(product.price * qty).toLocaleString()}
