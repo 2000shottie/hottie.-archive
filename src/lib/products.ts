@@ -171,6 +171,31 @@ gallery: [
     vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
   },
   {
+    id: "ann-demeulemeester-cowl-top",
+    name: "Asymmetric Cowl-Neck Top",
+    house: "Ann Demeulemeester",
+    price: 395,
+    img: annCowl,
+    swatch: "#1a1a1a",
+    category: "tops",
+    tag: "Archive",
+    description:
+      "Soft black lyocell-wool top with a draped asymmetric hem, sculptural snap-button funnel neck and a single trailing sash. Pure Ann — quiet, dark, architectural.",
+    details: [
+      { label: "Size", value: "38 FR · approx. S" },
+      { label: "Fit", value: "Slim · long sleeve · asymmetric hem" },
+      { label: "Material", value: "70% lyocell · 30% wool" },
+      { label: "Colour", value: "Black" },
+      { label: "Hardware", value: "Gunmetal snap buttons at neck" },
+      { label: "Origin", value: "Made in Portugal" },
+      { label: "Care", value: "Delicate handwash · cool iron reverse · no dryclean" },
+      { label: "Condition", value: "Very good · pre-loved" },
+    ],
+    gallery: [annCowl2, annCowl3, annCowl4, annCowl5],
+    vestiaireUrl:
+      "https://www.vestiairecollective.com/women-clothing/tops/ann-demeulemeester/black-wool-ann-demeulemeester-top-67634392.shtml",
+  },
+  {
     id: "dg-tiger-cami",
     name: "Tiger Print Cami",
     house: "Dolce & Gabbana",
