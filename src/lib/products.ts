@@ -1,9 +1,5 @@
 import lvIdylle from "@/assets/p-lv-idylle.png";
 import lvIdylle2 from "@/assets/p-lv-idylle-2.png";
-import lvIdylle3 from "@/assets/p-lv-idylle-3.png";
-import lvIdylle4 from "@/assets/p-lv-idylle-4.png";
-import lvIdylle5 from "@/assets/p-lv-idylle-5.png";
-import lvIdylle6 from "@/assets/p-lv-idylle-6.png";
 import diorTigerTee from "@/assets/p-dior-white-top.png";
 import diorTigerTee2 from "@/assets/p-dior-white-top-2.png";
 import diorTigerTee3 from "@/assets/p-dior-white-top-3.png";
@@ -18,6 +14,9 @@ import gucciGreenSun3 from "@/assets/p-gucci-green-sun-3.png";
 import pradaSandals from "@/assets/p-prada-sandals.png";
 import pradaSandals2 from "@/assets/p-prada-sandals-2.png";
 import pradaSandals3 from "@/assets/p-prada-sandals-3.png";
+import pradaSandals4 from "@/assets/p-prada-sandals-4.png";
+import pradaSandals5 from "@/assets/p-prada-sandals-5.png";
+import pradaSandals6 from "@/assets/p-prada-sandals-6.png";
 import vwTartanBag from "@/assets/p-vw-brown-bag.png";
 import vwTartanBag2 from "@/assets/p-vw-brown-bag-2.png";
 import vwTartanBag3 from "@/assets/p-vw-brown-bag-3.png";
@@ -75,7 +74,7 @@ export const products: Product[] = [
       { label: "Hardware", value: "Gold-tone" },
       { label: "Condition", value: "Very good · pre-loved" },
     ],
-    gallery: [lvIdylle2, lvIdylle3, lvIdylle4, lvIdylle5, lvIdylle6],
+    gallery: [lvIdylle2],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
   },
@@ -164,7 +163,7 @@ gallery: [
       { label: "Colour", value: "Black" },
       { label: "Condition", value: "Very good · minor scratches on heels" },
     ],
-    gallery: [pradaSandals2, pradaSandals3],
+    gallery: [pradaSandals2, pradaSandals3, pradaSandals4, pradaSandals5, pradaSandals6],
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-shoes/sandals/prada/black-leather-soft-prada-sandals-67472977.shtml",
   },
