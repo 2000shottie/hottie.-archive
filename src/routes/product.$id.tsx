@@ -101,7 +101,7 @@ function ProductPage() {
               <img
                 src={activeImg}
                 alt={product.name}
-                className="absolute inset-0 size-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 object-fill"
+                className="absolute inset-0 size-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 object-contain"
                 style={isMainShot ? { filter: "drop-shadow(0 40px 30px rgb(0 0 0 / 0.14))" } : undefined}
               />
 
@@ -128,7 +128,7 @@ function ProductPage() {
                       <img
                         src={src}
                         alt=""
-                        className="absolute inset-0 size-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 object-fill"
+                        className="absolute inset-0 size-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 object-contain"
                       />
 
                     </button>
@@ -217,7 +217,7 @@ function ProductPage() {
                     <img
                       src={p.img}
                       alt={p.name}
-                      className="absolute inset-0 size-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 object-fill"
+                      className="absolute inset-0 size-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 object-contain"
                       style={{ filter: "drop-shadow(0 30px 25px rgb(0 0 0 / 0.12))" }}
                     />
                   </div>
