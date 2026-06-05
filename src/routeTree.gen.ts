@@ -19,6 +19,7 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
+import { Route as AdminSyncRouteImport } from './routes/admin.sync'
 import { Route as AdminPricingRouteImport } from './routes/admin.pricing'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksSyncStockRouteImport } from './routes/api/public/hooks/sync-stock'
@@ -73,6 +74,11 @@ const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   path: '/return',
   getParentRoute: () => CheckoutRoute,
 } as any)
+const AdminSyncRoute = AdminSyncRouteImport.update({
+  id: '/admin/sync',
+  path: '/admin/sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPricingRoute = AdminPricingRouteImport.update({
   id: '/admin/pricing',
   path: '/admin/pricing',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
   '/admin/pricing': typeof AdminPricingRoute
+  '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/hooks/sync-stock': typeof ApiPublicHooksSyncStockRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
   '/admin/pricing': typeof AdminPricingRoute
+  '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/hooks/sync-stock': typeof ApiPublicHooksSyncStockRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
   '/admin/pricing': typeof AdminPricingRoute
+  '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/hooks/sync-stock': typeof ApiPublicHooksSyncStockRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/shipping'
     | '/admin/pricing'
+    | '/admin/sync'
     | '/checkout/return'
     | '/product/$id'
     | '/api/public/hooks/sync-stock'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/shipping'
     | '/admin/pricing'
+    | '/admin/sync'
     | '/checkout/return'
     | '/product/$id'
     | '/api/public/hooks/sync-stock'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/shipping'
     | '/admin/pricing'
+    | '/admin/sync'
     | '/checkout/return'
     | '/product/$id'
     | '/api/public/hooks/sync-stock'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   NewRoute: typeof NewRoute
   ShippingRoute: typeof ShippingRoute
   AdminPricingRoute: typeof AdminPricingRoute
+  AdminSyncRoute: typeof AdminSyncRoute
   ProductIdRoute: typeof ProductIdRoute
   ApiPublicHooksSyncStockRoute: typeof ApiPublicHooksSyncStockRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutReturnRouteImport
       parentRoute: typeof CheckoutRoute
     }
+    '/admin/sync': {
+      id: '/admin/sync'
+      path: '/admin/sync'
+      fullPath: '/admin/sync'
+      preLoaderRoute: typeof AdminSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/pricing': {
       id: '/admin/pricing'
       path: '/admin/pricing'
@@ -317,6 +337,7 @@ const rootRouteChildren: RootRouteChildren = {
   NewRoute: NewRoute,
   ShippingRoute: ShippingRoute,
   AdminPricingRoute: AdminPricingRoute,
+  AdminSyncRoute: AdminSyncRoute,
   ProductIdRoute: ProductIdRoute,
   ApiPublicHooksSyncStockRoute: ApiPublicHooksSyncStockRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,

@@ -39,7 +39,7 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
               .map((s) => s.trim())
               .filter(Boolean);
             if (productIds.length > 0) {
-              const rows = productIds.map((id) => ({ product_id: id }));
+              const rows = productIds.map((id) => ({ product_id: id, source: "local" }));
               const { error } = await supabaseAdmin
                 .from("sold_products")
                 .upsert(rows, { onConflict: "product_id" });
