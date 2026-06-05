@@ -76,6 +76,19 @@ export type Product = {
   vestiaireUrl?: string;
   /** ISO date when the piece was listed on the site. */
   listedAt: string;
+
+  // ────────────────────────────────────────────────────────────────────
+  // ADMIN-ONLY. Never render any of these in customer-facing UI.
+  // Used only by /admin/pricing to enforce the $150 minimum profit floor.
+  // ────────────────────────────────────────────────────────────────────
+  /** What this piece cost us (sourcing/supplier/Vestiaire). USD. */
+  myCost?: number;
+  /** Where the piece ships from (ISO-2). */
+  originCountry?: string;
+  /** Our internal outbound shipping estimate, USD. */
+  estimatedShippingCost?: number;
+  /** Our internal duties/taxes estimate at a typical destination, USD. */
+  estimatedDutiesAndTaxes?: number;
 };
 
 export const products: Product[] = [
