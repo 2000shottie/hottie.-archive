@@ -135,9 +135,13 @@ function CheckoutPage() {
                       </option>
                     ))}
                   </select>
-                  {tier && shipDollars != null ? (
+                  {ship && shipDollars != null ? (
                     <p className="mt-3 text-[12px] text-muted-foreground">
-                      <span className="text-foreground">{tier.label}</span> — ${shipDollars.toFixed(2)} · 3–{tier.flat ? 4 : 5} weeks · {tier.note}
+                      <span className="text-foreground">
+                        {ship.international ? "Worldwide shipping" : "Domestic shipping"}
+                      </span>{" "}
+                      — ${shipDollars.toFixed(2)} · 3–{ship.international ? 5 : 4} weeks
+                      {ship.international ? " · duties & taxes included" : ""}
                     </p>
                   ) : (
                     <p className="mt-3 text-[12px] text-muted-foreground">
@@ -186,11 +190,11 @@ function CheckoutPage() {
             </ul>
             <dl className="mt-6 space-y-2 border-t border-border pt-4 text-[13px]">
               <div className="flex justify-between"><dt className="text-muted-foreground">Subtotal</dt><dd>${subtotal.toLocaleString()}</dd></div>
-              {tier && shipDollars != null ? (
+              {ship && shipDollars != null ? (
                 <>
                   <div className="flex justify-between">
                     <dt className="text-muted-foreground">
-                      Shipping{tier.flat ? "" : " (incl. duties & taxes)"}
+                      Shipping{ship.international ? " (incl. duties & taxes)" : ""}
                     </dt>
                     <dd>${shipDollars.toLocaleString()}</dd>
                   </div>
@@ -201,11 +205,10 @@ function CheckoutPage() {
                 </>
               ) : (
                 <>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">US shipping</dt><dd>$20 flat</dd></div>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">International (incl. duties)</dt><dd>from 12% · min $50</dd></div>
+                  <div className="flex justify-between"><dt className="text-muted-foreground">Shipping</dt><dd>Select country</dd></div>
                   <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
                     <dt>Total</dt>
-                    <dd>from ${(subtotal + 20).toLocaleString()}</dd>
+                    <dd>${subtotal.toLocaleString()}+</dd>
                   </div>
                 </>
               )}
