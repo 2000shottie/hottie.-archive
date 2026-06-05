@@ -26,7 +26,7 @@ const steps: Array<{ n: string; t: string; d: string }> = [
   {
     n: "01",
     t: "Sourced from trusted resellers",
-    d: "Every piece is hand-picked from Vestiaire Collective sellers with strong reputations and verified histories.",
+    d: "Every piece is hand-picked from trusted resellers with strong reputations and verified histories.",
   },
   {
     n: "02",
