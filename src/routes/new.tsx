@@ -133,6 +133,7 @@ function NewCard({ product }: { product: Product }) {
           ${product.price.toLocaleString()}
         </p>
       </div>
+      <ProductQuickActions product={product} soldOut={soldOut} />
     </Link>
   );
 }
