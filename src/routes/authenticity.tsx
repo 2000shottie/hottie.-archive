@@ -9,7 +9,7 @@ export const Route = createFileRoute("/authenticity")({
       {
         name: "description",
         content:
-          "Every piece in the HOTTIE. archive is 100% authentic — sourced through Vestiaire Collective and independently verified before it ships.",
+          "Every piece in the HOTTIE. archive is 100% authentic — sourced through our trusted network and independently verified before it ships.",
       },
       { property: "og:title", content: "Authenticity — HOTTIE." },
       {
