@@ -1,19 +1,21 @@
 import { Link } from "@tanstack/react-router";
 
 
+type FooterLink = { label: string; to: string; hash?: string };
+
 export function Footer() {
-  const columns = [
+  const columns: Array<{ t: string; links: FooterLink[] }> = [
     { t: "Shop", links: [
-      { label: "New", to: "/#shop" as const },
-      { label: "Bags", to: "/#shop" as const },
-      { label: "Sunglasses", to: "/#shop" as const },
-      { label: "Jewelry", to: "/#shop" as const },
-      { label: "Shoes", to: "/#shop" as const },
+      { label: "New", to: "/new" },
+      { label: "Bags", to: "/archive", hash: "bags" },
+      { label: "Sunglasses", to: "/archive", hash: "eyewear" },
+      { label: "Jewelry", to: "/archive", hash: "jewelry" },
+      { label: "Shoes", to: "/archive", hash: "shoes" },
     ]},
     { t: "Care", links: [
-      { label: "Shipping", to: "/shipping" as const },
-      { label: "Authenticity", to: "/contact" as const },
-      { label: "Contact", to: "/contact" as const },
+      { label: "Shipping", to: "/shipping" },
+      { label: "Authenticity", to: "/authenticity" },
+      { label: "Contact", to: "/contact" },
     ]},
   ];
   return (
@@ -25,21 +27,22 @@ export function Footer() {
             <div key={c.t}>
               <p className="text-[10px] tracking-luxe uppercase text-foreground">{c.t}</p>
               <ul className="mt-4 space-y-2.5 text-[13px] text-muted-foreground">
-                {c.links.map((i) =>
-                  i.to.startsWith("/#") ? (
-                    <li key={i.label}>
-                      <a href={i.to} className="transition-colors hover:text-primary">{i.label}</a>
-                    </li>
-                  ) : (
-                    <li key={i.label}>
-                      <Link to={i.to} className="transition-colors hover:text-primary">{i.label}</Link>
-                    </li>
-                  ),
-                )}
+                {c.links.map((i) => (
+                  <li key={i.label}>
+                    <Link
+                      to={i.to}
+                      hash={i.hash}
+                      className="transition-colors hover:text-primary"
+                    >
+                      {i.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           ))}
         </div>
+
         <div className="mt-14 flex flex-col items-center gap-2 border-t border-border pt-10 text-center">
           <p className="font-script text-3xl text-foreground md:text-4xl">Have a question?</p>
           <Link
