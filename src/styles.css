@@ -85,6 +85,7 @@
 
   --blush: oklch(0.92 0.045 12);              /* signature soft blush */
   --blush-deep: oklch(0.78 0.09 15);          /* hover / accent pink */
+  --blush-light: oklch(0.99 0.03 12);         /* airy pink tint for surfaces */
   --cream: oklch(0.98 0.008 70);
   --chrome: oklch(0.86 0.005 250);
 
