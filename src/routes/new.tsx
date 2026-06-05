@@ -118,8 +118,7 @@ function NewCard({ product }: { product: Product }) {
           src={product.img}
           alt={product.name}
           loading="lazy"
-          className="absolute inset-0 size-full object-contain p-6 transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 md:p-10"
-          style={{ filter: "drop-shadow(0 30px 25px rgb(0 0 0 / 0.12))" }}
+          className="absolute inset-0 size-full object-contain transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1"
         />
       </div>
       <div className="mt-4 flex items-start justify-between gap-3">

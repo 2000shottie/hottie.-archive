@@ -108,18 +108,15 @@ function ArchiveCard({ product }: { product: Product }) {
           </span>
         )}
         {soldOut && (
-          <div className="absolute inset-0 z-20 grid place-items-center bg-background/55 backdrop-blur-sm">
-            <span className="rounded-full bg-foreground px-4 py-1.5 text-[10px] tracking-luxe uppercase text-background">
-              Sold out
-            </span>
-          </div>
+          <span className="absolute right-3 top-3 z-20 rounded-full bg-foreground px-2.5 py-1 text-[9px] tracking-luxe uppercase text-background shadow-md">
+            Sold out
+          </span>
         )}
         <img
           src={product.img}
           alt={product.name}
           loading="lazy"
-          className="absolute inset-0 size-full object-contain p-6 transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1 md:p-10"
-          style={{ filter: "drop-shadow(0 30px 25px rgb(0 0 0 / 0.12))" }}
+          className="absolute inset-0 size-full object-contain transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-1"
         />
       </div>
       <div className="mt-4 flex items-start justify-between gap-3">
