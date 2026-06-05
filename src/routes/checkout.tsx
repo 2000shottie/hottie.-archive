@@ -76,8 +76,6 @@ function CheckoutPage() {
     );
   }
 
-  const shipping = 20;
-  const total = subtotal + shipping;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
