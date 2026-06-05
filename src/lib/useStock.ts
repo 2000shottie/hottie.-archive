@@ -37,7 +37,7 @@ export function useStock(url: string | undefined, productId?: string) {
     placeholderData: {
       available: true,
       source: "unknown",
-      reason: "Checking Vestiaire stock…",
+      reason: "Checking stock…",
       checkedAt: new Date().toISOString(),
     },
   });
