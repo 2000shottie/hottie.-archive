@@ -18,14 +18,17 @@ export type Database = {
         Row: {
           product_id: string
           sold_at: string
+          source: string
         }
         Insert: {
           product_id: string
           sold_at?: string
+          source?: string
         }
         Update: {
           product_id?: string
           sold_at?: string
+          source?: string
         }
         Relationships: []
       }
