@@ -55,8 +55,7 @@ export function Footer() {
           </Link>
         </div>
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 text-[11px] tracking-luxe uppercase text-muted-foreground md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} Hottie. Archive — all rights reserved.</p>
-          <p>Soft luxury for internet icons.</p>
+          <p>© {new Date().getFullYear()} Hottie. — all rights reserved.</p>
         </div>
 
       </div>
