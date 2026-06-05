@@ -9,7 +9,7 @@ export const Route = createFileRoute("/authenticity")({
       {
         name: "description",
         content:
-          "Every piece in the HOTTIE. archive is 100% authentic — sourced through Vestiaire Collective and independently verified before it ships.",
+          "Every piece in the HOTTIE. archive is 100% authentic — sourced through our trusted network and independently verified before it ships.",
       },
       { property: "og:title", content: "Authenticity — HOTTIE." },
       {
@@ -26,12 +26,12 @@ const steps: Array<{ n: string; t: string; d: string }> = [
   {
     n: "01",
     t: "Sourced from trusted resellers",
-    d: "Every piece is hand-picked from Vestiaire Collective sellers with strong reputations and verified histories.",
+    d: "Every piece is hand-picked from trusted resellers with strong reputations and verified histories.",
   },
   {
     n: "02",
     t: "Expert-authenticated",
-    d: "Before shipping, items pass through Vestiaire's in-house authentication team — luxury specialists who inspect stitching, hardware, serials, and provenance.",
+    d: "Before shipping, items pass through our authentication team — luxury specialists who inspect stitching, hardware, serials, and provenance.",
   },
   {
     n: "03",
@@ -56,7 +56,7 @@ function AuthenticityPage() {
         </h1>
         <p className="mt-6 max-w-[60ch] text-[15px] leading-relaxed text-muted-foreground">
           The archive is small on purpose. Every bag, top, pair of shoes and piece of
-          jewelry has been authenticated by Vestiaire Collective's expert team before
+          jewelry has been authenticated by our expert team before
           it lands in your hands — and checked again by us. No fakes. No "inspired by."
           No grey-market guessing.
         </p>

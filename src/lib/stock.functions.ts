@@ -10,7 +10,7 @@ export type StockStatus = {
 
 /**
  * Auto out-of-stock checker.
- * Fetches the Vestiaire Collective listing page via Firecrawl (Cloudflare blocks
+ * Fetches the source listing page via Firecrawl (Cloudflare blocks
  * direct server fetches) and looks for sold-out signals. Returns `available:false`
  * when the listing is sold, hidden, or no longer reachable.
  *
@@ -44,7 +44,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
           url: data.url,
           formats: ["markdown"],
           onlyMainContent: false,
-          // Vestiaire renders price / sold badge with JS — wait for it.
+          // The source site renders price / sold badge with JS — wait for it.
           waitFor: 4000,
         }),
       });
@@ -55,7 +55,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
         return {
           available: true,
           source: "firecrawl",
-          reason: `Could not verify Vestiaire stock (${res.status}) — assuming live.`,
+          reason: `Could not verify stock (${res.status}) — assuming live.`,
           checkedAt,
         };
       }
@@ -67,7 +67,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       const markdown = (json.data?.markdown ?? json.markdown ?? "").toLowerCase();
       const statusCode = json.data?.metadata?.statusCode;
 
-      // Definitive Vestiaire sold-out markers (JS-rendered — see waitFor above).
+      // Definitive sold-out markers (JS-rendered — see waitFor above).
       // The product header replaces the price + "Add to bag" with "Sold at $X".
       const soldRegex =
         /\bsold at\b|this item has been sold|item is sold|no longer available|product not found|item sold out|out of stock/i;
@@ -76,7 +76,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
         return {
           available: false,
           source: "firecrawl",
-          reason: "Vestiaire marked this listing as sold.",
+          reason: "This listing has been marked as sold.",
           checkedAt,
         };
       }
@@ -84,7 +84,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       return {
         available: true,
         source: "firecrawl",
-        reason: "Listing is live on Vestiaire.",
+        reason: "Listing is live.",
         checkedAt,
       };
     } catch (err) {
@@ -92,7 +92,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       return {
         available: true,
         source: "firecrawl",
-        reason: `Could not verify Vestiaire stock: ${err instanceof Error ? err.message : "unknown"} — assuming live.`,
+        reason: `Could not verify stock: ${err instanceof Error ? err.message : "unknown"} — assuming live.`,
         checkedAt,
       };
     }

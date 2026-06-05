@@ -20,8 +20,8 @@ export function useLocallySoldIds() {
 }
 
 /**
- * Polls the Vestiaire listing AND merges in the locally-sold list.
- * A piece is "available" only when Vestiaire says so AND it hasn't been
+ * Polls the source listing AND merges in the locally-sold list.
+ * A piece is "available" only when the source says so AND it hasn't been
  * sold through this site. Defaults to available while loading.
  */
 export function useStock(url: string | undefined, productId?: string) {
@@ -37,7 +37,7 @@ export function useStock(url: string | undefined, productId?: string) {
     placeholderData: {
       available: true,
       source: "unknown",
-      reason: "Checking Vestiaire stock…",
+      reason: "Checking stock…",
       checkedAt: new Date().toISOString(),
     },
   });
