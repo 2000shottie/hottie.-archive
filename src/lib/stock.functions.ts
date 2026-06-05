@@ -67,7 +67,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       const markdown = (json.data?.markdown ?? json.markdown ?? "").toLowerCase();
       const statusCode = json.data?.metadata?.statusCode;
 
-      // Definitive Vestiaire sold-out markers (JS-rendered — see waitFor above).
+      // Definitive sold-out markers (JS-rendered — see waitFor above).
       // The product header replaces the price + "Add to bag" with "Sold at $X".
       const soldRegex =
         /\bsold at\b|this item has been sold|item is sold|no longer available|product not found|item sold out|out of stock/i;
