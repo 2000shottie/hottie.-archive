@@ -12,51 +12,82 @@ type CheckoutResult = { clientSecret: string } | { error: string };
 const itemSchema = z.object({
   priceId: z.string().min(1).max(100).regex(/^[a-zA-Z0-9_-]+$/),
   quantity: z.number().int().min(1).max(10),
+  // Origin country of the physical item (ISO-2). Drives import duties.
+  originCountry: z.string().length(2).regex(/^[A-Z]{2}$/).optional(),
 });
 
 const inputSchema = z.object({
   items: z.array(itemSchema).min(1).max(20),
   returnUrl: z.string().url(),
   environment: z.enum(["sandbox", "live"]),
-  country: z.string().length(2).regex(/^[A-Z]{2}$/).optional(),
+  country: z.string().length(2).regex(/^[A-Z]{2}$/),
 });
 
-// Country tiers for shipping + customs (DDP). All non-US tiers are
-// percent-of-subtotal with a $50 floor, calculated server-side at session
-// creation so each region only sees its own option in the Stripe address step.
-const TIERS = {
-  US: { countries: ["US"], flat: 2000, label: "US Standard Shipping" },
-  NA: {
-    countries: ["CA", "MX"],
-    pct: 0.12,
-    label: "North America (incl. duties)",
-  },
-  EU: {
-    countries: [
-      "GB", "IE", "FR", "DE", "IT", "ES", "PT", "NL", "BE", "LU",
-      "SE", "NO", "DK", "FI", "IS", "CH", "AT", "PL", "CZ", "SK",
-      "HU", "RO", "BG", "GR", "HR", "SI", "EE", "LV", "LT", "MT", "CY",
-    ],
-    pct: 0.22,
-    label: "Europe / UK (incl. VAT & duties)",
-  },
-  APAC: {
-    countries: ["AU", "NZ", "JP", "KR", "SG", "HK", "TW", "IL", "AE", "SA"],
-    pct: 0.15,
-    label: "Asia-Pacific / Middle East (incl. duties)",
-  },
-  ROW: {
-    countries: [
-      "TH", "MY", "PH", "ID", "VN", "IN", "TR", "ZA",
-      "BR", "AR", "CL", "CO", "PE", "UY",
-    ],
-    pct: 0.25,
-    label: "Rest of world (incl. duties)",
-  },
-} as const;
+// ---------- Origin-aware shipping + duties (server source of truth) ----------
+// Mirrors src/lib/admin-rates.ts so we don't pull admin tooling into payments.
+// Tune both in sync.
 
-function dutyAmountCents(subtotalCents: number, pct: number): number {
-  return Math.max(5000, Math.round(subtotalCents * pct));
+type Region = "US" | "EU" | "UK" | "NA" | "APAC" | "ROW";
+
+const REGION_BY_COUNTRY: Record<string, Region> = {
+  US: "US",
+  CA: "NA", MX: "NA",
+  GB: "UK",
+  IE: "EU", FR: "EU", DE: "EU", IT: "EU", ES: "EU", PT: "EU", NL: "EU",
+  BE: "EU", LU: "EU", SE: "EU", NO: "EU", DK: "EU", FI: "EU", IS: "EU",
+  CH: "EU", AT: "EU", PL: "EU", CZ: "EU", SK: "EU", HU: "EU", RO: "EU",
+  BG: "EU", GR: "EU", HR: "EU", SI: "EU", EE: "EU", LV: "EU", LT: "EU",
+  MT: "EU", CY: "EU",
+  AU: "APAC", NZ: "APAC", JP: "APAC", KR: "APAC", SG: "APAC", HK: "APAC",
+  TW: "APAC", IL: "APAC", AE: "APAC", SA: "APAC",
+};
+
+function regionOf(cc: string): Region {
+  return REGION_BY_COUNTRY[cc.toUpperCase()] ?? "ROW";
+}
+
+// Outbound shipping (USD) per item, origin region → destination region.
+const SHIP_USD: Record<Region, Record<Region, number>> = {
+  US:   { US: 15, NA: 25, EU: 40, UK: 40, APAC: 55, ROW: 65 },
+  EU:   { US: 25, NA: 30, EU: 15, UK: 18, APAC: 45, ROW: 55 },
+  UK:   { US: 25, NA: 30, EU: 18, UK: 12, APAC: 45, ROW: 55 },
+  NA:   { US: 20, NA: 15, EU: 40, UK: 40, APAC: 55, ROW: 65 },
+  APAC: { US: 45, NA: 50, EU: 45, UK: 45, APAC: 18, ROW: 60 },
+  ROW:  { US: 55, NA: 55, EU: 50, UK: 50, APAC: 55, ROW: 40 },
+};
+
+// Combined import duties + destination VAT/sales tax as a fraction of item value.
+const LANDED_PCT: Record<Region, number> = {
+  US: 0.22,
+  NA: 0.20,
+  EU: 0.24,
+  UK: 0.24,
+  APAC: 0.18,
+  ROW: 0.25,
+};
+
+function isDomestic(origin: Region, dest: Region): boolean {
+  return (
+    origin === dest ||
+    (origin === "EU" && dest === "UK") ||
+    (origin === "UK" && dest === "EU")
+  );
+}
+
+// Per-item landed cost in cents.
+function itemLandedCents(
+  itemValueCents: number,
+  originCC: string | undefined,
+  buyerCC: string,
+): { shipCents: number; dutiesCents: number; international: boolean } {
+  const origin = regionOf(originCC ?? "EU");
+  const dest = regionOf(buyerCC);
+  const shipCents = SHIP_USD[origin][dest] * 100;
+  const international = !isDomestic(origin, dest);
+  const dutiesCents = international
+    ? Math.round(itemValueCents * LANDED_PCT[dest])
+    : 0;
+  return { shipCents, dutiesCents, international };
 }
 
 export const createCartCheckoutSession = createServerFn({ method: "POST" })
@@ -78,66 +109,31 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return { price: price.id, quantity: item.quantity };
       });
 
-      // Sum subtotal in cents from Stripe (authoritative) to drive % rates.
-      const subtotalCents = data.items.reduce((acc, item) => {
+      // Per-item origin → destination shipping + duties. The cart total
+      // shipping line is the sum across line items.
+      let totalShipCents = 0;
+      let totalDutiesCents = 0;
+      let anyInternational = false;
+      for (const item of data.items) {
         const price = byKey.get(item.priceId);
-        return acc + (price?.unit_amount ?? 0) * item.quantity;
-      }, 0);
+        const unitValueCents = price?.unit_amount ?? 0;
+        const lineValueCents = unitValueCents * item.quantity;
+        const { shipCents, dutiesCents, international } = itemLandedCents(
+          lineValueCents,
+          item.originCountry,
+          data.country,
+        );
+        // Shipping cost scales per unit (each piece ships separately from
+        // its own seller); duties scale with declared value.
+        totalShipCents += shipCents * item.quantity;
+        totalDutiesCents += dutiesCents;
+        if (international) anyInternational = true;
+      }
 
-      // Build per-tier shipping options. If a country is selected, only
-      // include the matching tier so the customer never sees rates that
-      // don't apply to them.
-      const allTierKeys = ["US", "NA", "EU", "APAC", "ROW"] as const;
-      type TierKey = typeof allTierKeys[number];
-      const tierForCountry = (cc: string): TierKey | null => {
-        for (const k of allTierKeys) {
-          if ((TIERS[k].countries as readonly string[]).includes(cc)) return k;
-        }
-        return null;
-      };
-
-      const selectedTier = data.country ? tierForCountry(data.country) : null;
-      const activeTiers: readonly TierKey[] = selectedTier ? [selectedTier] : allTierKeys;
-
-      const allowedCountries = selectedTier
-        ? (TIERS[selectedTier].countries as readonly string[]).slice()
-        : Object.values(TIERS).flatMap((t) => t.countries);
-
-      const shipping_options =
-        activeTiers.map((key) => {
-          if (key === "US") {
-            return {
-              shipping_rate_data: {
-                type: "fixed_amount" as const,
-                fixed_amount: { amount: TIERS.US.flat, currency: "usd" },
-                display_name: TIERS.US.label,
-                delivery_estimate: {
-                  minimum: { unit: "week" as const, value: 3 },
-                  maximum: { unit: "week" as const, value: 4 },
-                },
-                metadata: { region: "US", pct: "0", countries: TIERS.US.countries.join(",") },
-              },
-            };
-          }
-          const tier = TIERS[key];
-          const amount = dutyAmountCents(subtotalCents, tier.pct);
-          return {
-            shipping_rate_data: {
-              type: "fixed_amount" as const,
-              fixed_amount: { amount, currency: "usd" },
-              display_name: tier.label,
-              delivery_estimate: {
-                minimum: { unit: "week" as const, value: 3 },
-                maximum: { unit: "week" as const, value: 5 },
-              },
-              metadata: {
-                region: key,
-                pct: String(tier.pct),
-                countries: tier.countries.join(","),
-              },
-            },
-          };
-        });
+      const shippingAmountCents = totalShipCents + totalDutiesCents;
+      const displayName = anyInternational
+        ? "Worldwide shipping (incl. import duties & taxes)"
+        : "Domestic shipping";
 
       const session = await stripe.checkout.sessions.create({
         line_items,
@@ -146,10 +142,29 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return_url: data.returnUrl,
         billing_address_collection: "required",
         shipping_address_collection: {
-          allowed_countries: allowedCountries as unknown as never,
+          // Only ship to the country the buyer selected up-front, so the
+          // rate shown matches what Stripe charges.
+          allowed_countries: [data.country] as unknown as never,
         },
-        shipping_options,
-        // Cards (Apple Pay on supported devices) + Link. Explicitly excludes Amazon Pay.
+        shipping_options: [
+          {
+            shipping_rate_data: {
+              type: "fixed_amount" as const,
+              fixed_amount: { amount: shippingAmountCents, currency: "usd" },
+              display_name: displayName,
+              delivery_estimate: {
+                minimum: { unit: "week" as const, value: 3 },
+                maximum: { unit: "week" as const, value: anyInternational ? 5 : 4 },
+              },
+              metadata: {
+                ship_cents: String(totalShipCents),
+                duties_cents: String(totalDutiesCents),
+                international: anyInternational ? "1" : "0",
+                buyer_country: data.country,
+              },
+            },
+          },
+        ],
         payment_method_types: ["card", "link"],
         phone_number_collection: { enabled: true },
         metadata: {
