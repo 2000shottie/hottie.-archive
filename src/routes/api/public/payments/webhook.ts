@@ -33,7 +33,14 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
 
         try {
           if (event.type === "checkout.session.completed") {
-            const session = event.data.object as { metadata?: Record<string, string> | null };
+            const session = event.data.object as {
+              id: string;
+              amount_total?: number | null;
+              currency?: string | null;
+              customer_details?: { email?: string | null; name?: string | null } | null;
+              shipping_details?: { address?: Record<string, string | null> | null } | null;
+              metadata?: Record<string, string> | null;
+            };
             const csv = session.metadata?.productIds ?? "";
             const productIds = csv
               .split(",")
@@ -45,6 +52,23 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                 .from("sold_products")
                 .upsert(rows, { onConflict: "product_id" });
               if (error) console.error("webhook upsert sold_products error:", error);
+            }
+
+            const buyerEmail = session.customer_details?.email;
+            if (buyerEmail) {
+              try {
+                await sendOrderConfirmationEmail({
+                  to: buyerEmail,
+                  customerName: session.customer_details?.name ?? null,
+                  productIds,
+                  amountTotalCents: session.amount_total ?? null,
+                  currency: session.currency ?? "usd",
+                  shippingAddress: session.shipping_details?.address ?? null,
+                  sessionId: session.id,
+                });
+              } catch (mailErr) {
+                console.error("Order email failed:", mailErr);
+              }
             }
           }
         } catch (err) {
