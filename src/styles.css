@@ -65,6 +65,7 @@
 
   --color-blush: var(--blush);
   --color-blush-deep: var(--blush-deep);
+  --color-blush-light: var(--blush-light);
   --color-cream: var(--cream);
   --color-chrome: var(--chrome);
   --color-ink: var(--ink);
