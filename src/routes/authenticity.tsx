@@ -31,7 +31,7 @@ const steps: Array<{ n: string; t: string; d: string }> = [
   {
     n: "02",
     t: "Expert-authenticated",
-    d: "Before shipping, items pass through Vestiaire's in-house authentication team — luxury specialists who inspect stitching, hardware, serials, and provenance.",
+    d: "Before shipping, items pass through our authentication team — luxury specialists who inspect stitching, hardware, serials, and provenance.",
   },
   {
     n: "03",
