@@ -147,7 +147,10 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
             },
           },
         ],
-        payment_method_types: ["card", "link"],
+        // Omit payment_method_types so Stripe auto-enables all wallets
+        // configured on the account (Apple Pay, Google Pay, Link, cards).
+        // Apple Pay requires the checkout domain to be registered in Stripe.
+        automatic_payment_methods: { enabled: true },
         phone_number_collection: { enabled: true },
         metadata: {
           productIds: data.items.map((i) => i.priceId).join(","),

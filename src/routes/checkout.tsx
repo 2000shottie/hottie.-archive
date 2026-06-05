@@ -104,13 +104,12 @@ function CheckoutPage() {
               </div>
             ) : (
               <>
-                <div className="mb-5 rounded-2xl border border-border bg-card p-5">
-                  <p className="font-display text-[15px] text-foreground">
-                    A boutique experience — not a marketplace.
+                <div className="mb-6 px-1">
+                  <p className="text-[13px] text-foreground/80 leading-relaxed">
+                    Every piece is carefully sourced, hand-selected, and personally cared for.
                   </p>
-                  <p className="mt-2 text-[13px] text-muted-foreground leading-relaxed">
-                    Every piece is hand-picked and personally cared for. Flat <span className="text-foreground">$20 shipping anywhere in the world</span>,
-                    with all customs duties &amp; taxes already covered — never a surprise bill at your door.
+                  <p className="mt-3 text-[13px] text-foreground font-semibold leading-relaxed">
+                    Flat $20 shipping anywhere in the world, with all customs duties &amp; taxes already covered.
                   </p>
                 </div>
 
