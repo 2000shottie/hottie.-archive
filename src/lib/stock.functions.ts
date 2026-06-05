@@ -55,7 +55,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
         return {
           available: true,
           source: "firecrawl",
-          reason: `Could not verify Vestiaire stock (${res.status}) — assuming live.`,
+          reason: `Could not verify stock (${res.status}) — assuming live.`,
           checkedAt,
         };
       }
