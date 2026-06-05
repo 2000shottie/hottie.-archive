@@ -19,13 +19,50 @@ const inputSchema = z.object({
   environment: z.enum(["sandbox", "live"]),
 });
 
+// Country tiers for shipping + customs (DDP). All non-US tiers are
+// percent-of-subtotal with a $50 floor, calculated server-side at session
+// creation so each region only sees its own option in the Stripe address step.
+const TIERS = {
+  US: { countries: ["US"], flat: 2000, label: "US Standard Shipping" },
+  NA: {
+    countries: ["CA", "MX"],
+    pct: 0.12,
+    label: "North America (incl. duties)",
+  },
+  EU: {
+    countries: [
+      "GB", "IE", "FR", "DE", "IT", "ES", "PT", "NL", "BE", "LU",
+      "SE", "NO", "DK", "FI", "IS", "CH", "AT", "PL", "CZ", "SK",
+      "HU", "RO", "BG", "GR", "HR", "SI", "EE", "LV", "LT", "MT", "CY",
+    ],
+    pct: 0.22,
+    label: "Europe / UK (incl. VAT & duties)",
+  },
+  APAC: {
+    countries: ["AU", "NZ", "JP", "KR", "SG", "HK", "TW", "IL", "AE", "SA"],
+    pct: 0.15,
+    label: "Asia-Pacific / Middle East (incl. duties)",
+  },
+  ROW: {
+    countries: [
+      "TH", "MY", "PH", "ID", "VN", "IN", "TR", "ZA",
+      "BR", "AR", "CL", "CO", "PE", "UY",
+    ],
+    pct: 0.25,
+    label: "Rest of world (incl. duties)",
+  },
+} as const;
+
+function dutyAmountCents(subtotalCents: number, pct: number): number {
+  return Math.max(5000, Math.round(subtotalCents * pct));
+}
+
 export const createCartCheckoutSession = createServerFn({ method: "POST" })
   .inputValidator((data: z.infer<typeof inputSchema>) => inputSchema.parse(data))
   .handler(async ({ data }): Promise<CheckoutResult> => {
     try {
       const stripe = createStripeClient(data.environment as StripeEnv);
 
-      // Resolve human-readable priceIds via lookup_keys
       const lookupKeys = data.items.map((i) => i.priceId);
       const prices = await stripe.prices.list({
         lookup_keys: lookupKeys,
@@ -39,54 +76,60 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return { price: price.id, quantity: item.quantity };
       });
 
+      // Sum subtotal in cents from Stripe (authoritative) to drive % rates.
+      const subtotalCents = data.items.reduce((acc, item) => {
+        const price = byKey.get(item.priceId);
+        return acc + (price?.unit_amount ?? 0) * item.quantity;
+      }, 0);
+
+      const allowedCountries = Object.values(TIERS).flatMap((t) => t.countries);
+
+      const shipping_options = [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount" as const,
+            fixed_amount: { amount: TIERS.US.flat, currency: "usd" },
+            display_name: TIERS.US.label,
+            delivery_estimate: {
+              minimum: { unit: "week" as const, value: 3 },
+              maximum: { unit: "week" as const, value: 4 },
+            },
+            metadata: { region: "US", countries: TIERS.US.countries.join(",") },
+          },
+        },
+        ...(["NA", "EU", "APAC", "ROW"] as const).map((key) => {
+          const tier = TIERS[key];
+          const amount = dutyAmountCents(subtotalCents, tier.pct);
+          return {
+            shipping_rate_data: {
+              type: "fixed_amount" as const,
+              fixed_amount: { amount, currency: "usd" },
+              display_name: tier.label,
+              delivery_estimate: {
+                minimum: { unit: "week" as const, value: 3 },
+                maximum: { unit: "week" as const, value: 5 },
+              },
+              metadata: {
+                region: key,
+                pct: String(tier.pct),
+                countries: tier.countries.join(","),
+              },
+            },
+          };
+        }),
+      ];
+
       const session = await stripe.checkout.sessions.create({
         line_items,
         mode: "payment",
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
         billing_address_collection: "required",
-        shipping_address_collection: {
-          // Broad international coverage. Stripe will only show the
-          // shipping options whose `allowed_countries` matches the buyer's
-          // shipping address, so US customers see the $20 rate and
-          // everyone else sees the $170 (incl. $150 customs duties) rate.
-          allowed_countries: [
-            "US", "CA", "MX", "GB", "IE", "FR", "DE", "IT", "ES", "PT",
-            "NL", "BE", "LU", "SE", "NO", "DK", "FI", "IS", "CH", "AT",
-            "PL", "CZ", "SK", "HU", "RO", "BG", "GR", "HR", "SI", "EE",
-            "LV", "LT", "MT", "CY", "AU", "NZ", "JP", "KR", "SG", "HK",
-            "TW", "TH", "MY", "PH", "ID", "VN", "IN", "AE", "SA", "IL",
-            "TR", "ZA", "BR", "AR", "CL", "CO", "PE", "UY",
-          ],
-        },
-        shipping_options: [
-          {
-            shipping_rate_data: {
-              type: "fixed_amount",
-              fixed_amount: {
-                amount: 2000,
-                currency: "usd",
-              },
-              display_name: "US Standard Shipping (3–4 weeks)",
-              metadata: { region: "domestic" },
-            },
-          },
-          {
-            shipping_rate_data: {
-              type: "fixed_amount",
-              fixed_amount: {
-                amount: 17000, // $20 shipping + $150 customs duties
-                currency: "usd",
-              },
-              display_name: "International Shipping (incl. $150 customs duties)",
-              delivery_estimate: {
-                minimum: { unit: "week", value: 3 },
-                maximum: { unit: "week", value: 5 },
-              },
-              metadata: { region: "international" },
-            },
-          },
-        ],
+        shipping_address_collection: { allowed_countries: allowedCountries },
+        shipping_options,
+        // Cards (which carry Apple Pay / Google Pay wallets automatically on
+        // supported devices) + Link. Explicitly excludes Amazon Pay.
+        payment_method_types: ["card", "link"],
         phone_number_collection: { enabled: true },
         metadata: {
           productIds: data.items.map((i) => i.priceId).join(","),

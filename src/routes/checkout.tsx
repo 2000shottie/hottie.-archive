@@ -86,7 +86,7 @@ function CheckoutPage() {
           ← Back to bag
         </Link>
         <h1 className="mt-4 font-display text-4xl md:text-6xl">
-          Soft <span className="font-script text-primary">checkout</span>
+          Check<span className="font-script text-primary">out</span>
         </h1>
 
         <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr,1fr]">
@@ -129,12 +129,13 @@ function CheckoutPage() {
             </ul>
             <dl className="mt-6 space-y-2 border-t border-border pt-4 text-[13px]">
               <div className="flex justify-between"><dt className="text-muted-foreground">Subtotal</dt><dd>${subtotal.toLocaleString()}</dd></div>
-              <div className="flex justify-between"><dt className="text-muted-foreground">US shipping</dt><dd>$20</dd></div>
-              <div className="flex justify-between"><dt className="text-muted-foreground">International (incl. customs)</dt><dd>$170</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">US shipping</dt><dd>$20 flat</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">International (incl. duties)</dt><dd>from 12% · min $50</dd></div>
               <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border"><dt>Total</dt><dd>from ${(subtotal + 20).toLocaleString()}</dd></div>
             </dl>
             <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
-              No US sales tax. International orders include a flat $150 customs &amp; duties fee — no surprise charges on delivery.
+              No US sales tax. International orders are delivered duties-paid — your exact rate (12–25% of subtotal) is shown in checkout before payment. No surprise customs bills.{" "}
+              <Link to="/shipping" className="underline hover:text-primary">Shipping details</Link>
             </p>
           </aside>
         </div>

@@ -11,9 +11,8 @@ export function Footer() {
       { label: "Shoes", to: "/#shop" as const },
     ]},
     { t: "Care", links: [
-      { label: "Shipping", to: "/contact" as const },
+      { label: "Shipping", to: "/shipping" as const },
       { label: "Authenticity", to: "/contact" as const },
-      { label: "Returns", to: "/contact" as const },
       { label: "Contact", to: "/contact" as const },
     ]},
   ];

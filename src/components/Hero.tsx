@@ -42,7 +42,7 @@ export function Hero() {
           <div className="mt-12 hidden grid-cols-3 gap-6 border-t border-border/70 pt-6 md:grid">
             {[
               ["Hand-picked", "Every piece, curated."],
-              ["Worldwide", "Soft, tracked shipping."],
+              ["Ships worldwide", "Duties included — no surprises."],
               ["The 1% edit", "Only what we'd wear."],
             ].map(([t, s]) => (
               <div key={t}>
