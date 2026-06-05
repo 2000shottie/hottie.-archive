@@ -22,7 +22,7 @@ export const markProductsSold = createServerFn({ method: "POST" })
     z.object({ productIds: z.array(z.string().min(1).max(100)).min(1).max(50) }),
   )
   .handler(async ({ data }) => {
-    const rows = data.productIds.map((id) => ({ product_id: id }));
+    const rows = data.productIds.map((id) => ({ product_id: id, source: "local" }));
     const { error } = await supabaseAdmin
       .from("sold_products")
       .upsert(rows, { onConflict: "product_id" });
