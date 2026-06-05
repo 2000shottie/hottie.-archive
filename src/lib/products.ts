@@ -146,6 +146,7 @@ export const products: Product[] = [
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/vivienne-westwood/brown-vegan-leather-vivienne-westwood-handbag-66949891.shtml",
     listedAt: "2024-04-01",
+    originCountry: "FR",
   },
   {
     id: "gucci-abbey-d-ring",
@@ -170,6 +171,7 @@ export const products: Product[] = [
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/gucci/multicolour-cloth-abbey-gucci-handbag-67615661.shtml",
     listedAt: "2024-05-01",
+    originCountry: "BG",
   },
   {
     id: "dior-tiger-tee",
@@ -218,6 +220,7 @@ export const products: Product[] = [
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-clothing/tops/ann-demeulemeester/black-wool-ann-demeulemeester-top-67634392.shtml",
     listedAt: "2024-05-15",
+    originCountry: "PT",
   },
   {
     id: "dg-tiger-cami",
@@ -239,6 +242,7 @@ export const products: Product[] = [
     ],
     gallery: [dgTigerCami2, dgTigerCami3, dgTigerCami4],
     listedAt: "2024-02-15",
+    originCountry: "IT",
   },
   {
     id: "prada-t-strap-kitten",
@@ -260,6 +264,7 @@ export const products: Product[] = [
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-shoes/sandals/prada/black-leather-soft-prada-sandals-67472977.shtml",
     listedAt: "2024-03-15",
+    originCountry: "DE",
   },
   {
     id: "gucci-olive-shield-sun",
@@ -283,6 +288,7 @@ export const products: Product[] = [
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-accessories/sunglasses/gucci/green-plastic-gucci-sunglasses-67258298.shtml",
     listedAt: "2024-03-01",
+    originCountry: "ES",
   },
 ];
 
