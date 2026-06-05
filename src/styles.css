@@ -28,11 +28,11 @@
   src: url("https://fonts.gstatic.com/s/cormorantgaramond/v18/64cEYjpQHRTPCcuhVbVTYj9wQNvJZTvE9LE.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Great Vibes";
+  font-family: "Pinyon Script";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/greatvibes/v19/RWmMoKWR9v4ksMfaWd_JN9XDiaQ.woff2") format("woff2");
+  src: url("https://fonts.gstatic.com/s/pinyonscript/v22/6xKpdSJaJ7SnMcetb0vbHGcj7g.woff2") format("woff2");
 }
 
 @theme inline {
