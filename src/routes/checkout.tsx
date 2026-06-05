@@ -103,8 +103,8 @@ function CheckoutPage() {
           <p className="text-[13px] text-foreground font-semibold leading-relaxed">
             Flat $20 shipping anywhere in the world, with all customs duties &amp; taxes already covered.
           </p>
-          <p className="text-[13px] text-foreground font-semibold leading-relaxed">
-            All sales are final — no returns or refunds.
+          <p className="text-[13px] text-foreground leading-relaxed">
+            ALL SALES ARE FINAL — NO RETURNS OR REFUNDS.
           </p>
         </div>
 
