@@ -187,11 +187,11 @@ function CheckoutLine({
   useEffect(() => onStock(available), [available, onStock]);
 
   return (
-    <li className="flex items-center gap-3">
-      <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-white">
-        <img src={product.img} alt="" className="absolute inset-0 size-full object-contain" />
+    <li className="flex items-center gap-4">
+      <div className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-white border border-border">
+        <img src={product.img} alt={product.name} className="absolute inset-0 size-full object-contain" />
         {!available && product.vestiaireUrl && (
-          <span className="absolute inset-0 grid place-items-center bg-background/55 text-[8px] tracking-luxe uppercase text-foreground">
+          <span className="absolute top-1 right-1 rounded-full bg-background/90 px-1.5 py-0.5 text-[8px] tracking-luxe uppercase text-foreground">
             Sold
           </span>
         )}
