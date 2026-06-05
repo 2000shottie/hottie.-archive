@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { products, type Product } from "@/lib/products";
 import { useStock } from "@/lib/useStock";
+import { ProductQuickActions } from "@/components/ProductQuickActions";
 
 type SortMode = "newest" | "price-desc" | "price-asc";
 
