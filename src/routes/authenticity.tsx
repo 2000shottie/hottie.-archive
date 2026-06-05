@@ -25,8 +25,8 @@ export const Route = createFileRoute("/authenticity")({
 const steps: Array<{ n: string; t: string; d: string }> = [
   {
     n: "01",
-    t: "Sourced from specialist partners",
-    d: "Every piece is hand-selected from a vetted network of luxury resellers with verified histories and proven track records.",
+    t: "Curated from trusted sources",
+    d: "We hand-pick every piece through a network of established luxury partners with long-standing reputations and verified supply chains.",
   },
   {
     n: "02",
@@ -36,12 +36,7 @@ const steps: Array<{ n: string; t: string; d: string }> = [
   {
     n: "03",
     t: "Quality-assured curation",
-    d: "We only partner with facilities that meet our strict authentication and condition standards. If a piece doesn't pass, it never ships — full stop.",
-  },
-  {
-    n: "04",
-    t: "Delivered with paperwork",
-    d: "Your order ships with the authentication certificate and original tags or dust bag when available.",
+    d: "We only partner with facilities that meet our strict authentication and condition standards. If a piece doesn't pass, it never ships.",
   },
 ];
 
@@ -57,8 +52,7 @@ function AuthenticityPage() {
         <p className="mt-6 max-w-[60ch] text-[15px] leading-relaxed text-muted-foreground">
           The archive is small on purpose. Every bag, top, pair of shoes and piece of
           jewelry is hand-checked by certified luxury authenticators before
-          it ever ships. No fakes. No "inspired by."
-          No grey-market guessing.
+          it ever ships.
         </p>
 
         <div className="mt-14 space-y-8">
