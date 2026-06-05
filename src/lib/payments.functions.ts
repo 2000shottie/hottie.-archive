@@ -147,6 +147,9 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
             },
           },
         ],
+        // Include Apple Pay / Google Pay via "card" (wallets ride on card),
+        // plus Link. Apple Pay also requires the checkout domain to be
+        // registered in Stripe Dashboard → Settings → Payment methods.
         payment_method_types: ["card", "link"],
         phone_number_collection: { enabled: true },
         metadata: {
