@@ -31,17 +31,16 @@ export function Navbar() {
           />
         </Link>
         <nav className="hidden items-center gap-7 text-[11px] tracking-luxe uppercase text-foreground/70 md:flex">
-          {links.map((l) =>
-            l.to.startsWith("/#") ? (
-              <a key={l.label} href={l.to} className="transition-colors hover:text-primary">
-                {l.label}
-              </a>
-            ) : (
-              <Link key={l.label} to={l.to} className="transition-colors hover:text-primary">
-                {l.label}
-              </Link>
-            ),
-          )}
+          {links.map((l) => (
+            <Link
+              key={l.label}
+              to={l.to}
+              hash={l.hash}
+              className="transition-colors hover:text-primary"
+            >
+              {l.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center justify-end gap-4 text-foreground/70">
