@@ -58,13 +58,29 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
     // Definitive sold-out markers (JS-rendered — see waitFor above).
     // The product header replaces the price + "Add to bag" with "Sold at $X".
     const soldRegex =
-      /\bsold at\b|this item has been sold|item is sold|no longer available|product not found|item sold out|out of stock/i;
+      /\bsold at\b|this item has been sold|item is sold|no longer available|item sold out|out of stock/i;
 
-    if (statusCode === 404 || soldRegex.test(markdown)) {
+    // Removed / unfindable listing markers — Vestiaire often redirects
+    // delisted items to a "page not found" or generic search page rather
+    // than returning a 404. Treat these as sold so they disappear from buy flow.
+    const removedRegex =
+      /page not found|page you are looking for|couldn't find this page|couldn't find the page|product not found|this product is no longer|item no longer available|listing (?:is )?no longer available|oops[^a-z]{0,5}(?:this )?page/i;
+
+    // A real Vestiaire product page is always thousands of chars of markdown.
+    // If the page resolves but is suspiciously tiny, it's almost certainly
+    // a redirect to an empty/not-found shell.
+    const looksEmpty = markdown.trim().length < 400;
+
+    if (
+      statusCode === 404 ||
+      soldRegex.test(markdown) ||
+      removedRegex.test(markdown) ||
+      (looksEmpty && statusCode && statusCode >= 200 && statusCode < 400)
+    ) {
       return {
         available: false,
         source: "firecrawl",
-        reason: "This listing has been marked as sold.",
+        reason: "This listing is no longer available.",
         checkedAt,
       };
     }
