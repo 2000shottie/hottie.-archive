@@ -5,10 +5,10 @@ import { getProduct } from "@/lib/products";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 
-// Until a custom domain is verified on Resend, send from the shared
-// onboarding sender and route replies to the merchant inbox.
-const FROM = "2000shottie <onboarding@resend.dev>";
+// Send from the merchant's own verified domain on Resend.
+const FROM = "2000shottie <orders@2000shottie.com>";
 const REPLY_TO = "info@2000shottie.com";
+
 
 type OrderEmailInput = {
   to: string;
