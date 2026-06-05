@@ -103,7 +103,7 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         ? (TIERS[selectedTier].countries as readonly string[]).slice()
         : Object.values(TIERS).flatMap((t) => t.countries);
 
-      const shipping_options: Stripe.Checkout.SessionCreateParams.ShippingOption[] =
+      const shipping_options =
         activeTiers.map((key) => {
           if (key === "US") {
             return {
