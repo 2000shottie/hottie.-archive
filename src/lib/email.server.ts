@@ -45,7 +45,7 @@ function renderHtml(input: OrderEmailInput) {
       (p) => `
         <tr>
           <td style="padding:12px 0;border-bottom:1px solid #eee;font-family:Georgia,serif;font-size:15px;color:#111;">
-            ${p.brand ? `<div style="color:#666;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">${p.brand}</div>` : ""}
+            ${p.house ? `<div style="color:#666;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">${p.house}</div>` : ""}
             <div>${p.name}</div>
           </td>
           <td style="padding:12px 0;border-bottom:1px solid #eee;text-align:right;font-family:Georgia,serif;font-size:15px;color:#111;">
