@@ -25,18 +25,18 @@ export const Route = createFileRoute("/authenticity")({
 const steps: Array<{ n: string; t: string; d: string }> = [
   {
     n: "01",
-    t: "Sourced from trusted resellers",
-    d: "Every piece is hand-picked from trusted resellers with strong reputations and verified histories.",
+    t: "Sourced from specialist partners",
+    d: "Every piece is hand-selected from a vetted network of luxury resellers with verified histories and proven track records.",
   },
   {
     n: "02",
-    t: "Expert-authenticated",
-    d: "Before shipping, items pass through our authentication team — luxury specialists who inspect stitching, hardware, serials, and provenance.",
+    t: "Certified expert authentication",
+    d: "Before shipping, each item is hand-inspected by certified luxury authenticators — stitching, hardware, serials, and provenance are all verified in detail.",
   },
   {
     n: "03",
-    t: "Final HOTTIE. review",
-    d: "We do a second visual check on arrival. If anything feels off, it never reaches you — full stop.",
+    t: "Quality-assured curation",
+    d: "We only partner with facilities that meet our strict authentication and condition standards. If a piece doesn't pass, it never ships — full stop.",
   },
   {
     n: "04",
