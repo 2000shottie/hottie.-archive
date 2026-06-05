@@ -190,6 +190,7 @@ export const products: Product[] = [
     gallery: [diorTigerTee2, diorTigerTee3, diorTigerTee4],
     vestiaireUrl: "https://www.vestiairecollective.com/women-clothing/tops/dior/white-cotton-dior-top-67466994.shtml",
     listedAt: "2024-02-01",
+    originCountry: "NL",
   },
   {
     id: "ann-demeulemeester-cowl-top",
