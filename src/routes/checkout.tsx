@@ -152,29 +152,16 @@ function CheckoutPage() {
             </ul>
             <dl className="mt-6 space-y-2 border-t border-border pt-4 text-[13px]">
               <div className="flex justify-between"><dt className="text-muted-foreground">Subtotal</dt><dd>${subtotal.toLocaleString()}</dd></div>
-              {ship && shipDollars != null ? (
-                <>
-                  <div className="flex justify-between">
-                    <dt className="text-muted-foreground">
-                      Shipping{ship.international ? " (incl. duties & taxes)" : ""}
-                    </dt>
-                    <dd>${shipDollars.toLocaleString()}</dd>
-                  </div>
-                  <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
-                    <dt>Total</dt>
-                    <dd>${(subtotal + shipDollars).toLocaleString()}</dd>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Shipping</dt><dd>Select country</dd></div>
-                  <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
-                    <dt>Total</dt>
-                    <dd>${subtotal.toLocaleString()}+</dd>
-                  </div>
-                </>
-              )}
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Shipping (incl. duties &amp; taxes)</dt>
+                <dd>${SHIP_DOLLARS.toLocaleString()}</dd>
+              </div>
+              <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
+                <dt>Total</dt>
+                <dd>${(subtotal + SHIP_DOLLARS).toLocaleString()}</dd>
+              </div>
             </dl>
+
             <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
               Shipping and applicable import duties/taxes are included in your total when required.{" "}
               <Link to="/shipping" className="underline hover:text-primary">Shipping details</Link>
