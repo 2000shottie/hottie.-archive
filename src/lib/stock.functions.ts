@@ -76,7 +76,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
         return {
           available: false,
           source: "firecrawl",
-          reason: "Vestiaire marked this listing as sold.",
+          reason: "This listing has been marked as sold.",
           checkedAt,
         };
       }
