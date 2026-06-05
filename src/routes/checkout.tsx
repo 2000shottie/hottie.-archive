@@ -87,7 +87,7 @@ function CheckoutPage() {
             to="/"
             className="mt-6 inline-block rounded-full bg-foreground px-7 py-3.5 text-[11px] tracking-luxe uppercase text-background hover:bg-primary"
           >
-            Find something soft
+            Find something
           </Link>
         </main>
         <Footer />
