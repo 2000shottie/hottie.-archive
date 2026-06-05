@@ -83,42 +83,59 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return acc + (price?.unit_amount ?? 0) * item.quantity;
       }, 0);
 
-      const allowedCountries = Object.values(TIERS).flatMap((t) => t.countries);
+      // Build per-tier shipping options. If a country is selected, only
+      // include the matching tier so the customer never sees rates that
+      // don't apply to them.
+      const allTierKeys = ["US", "NA", "EU", "APAC", "ROW"] as const;
+      type TierKey = typeof allTierKeys[number];
+      const tierForCountry = (cc: string): TierKey | null => {
+        for (const k of allTierKeys) {
+          if ((TIERS[k].countries as readonly string[]).includes(cc)) return k;
+        }
+        return null;
+      };
 
-      const shipping_options = [
-        {
-          shipping_rate_data: {
-            type: "fixed_amount" as const,
-            fixed_amount: { amount: TIERS.US.flat, currency: "usd" },
-            display_name: TIERS.US.label,
-            delivery_estimate: {
-              minimum: { unit: "week" as const, value: 3 },
-              maximum: { unit: "week" as const, value: 4 },
-            },
-            metadata: { region: "US", countries: TIERS.US.countries.join(",") },
-          },
-        },
-        ...(["NA", "EU", "APAC", "ROW"] as const).map((key) => {
-          const tier = TIERS[key];
-          const amount = dutyAmountCents(subtotalCents, tier.pct);
+      const selectedTier = data.country ? tierForCountry(data.country) : null;
+      const activeTiers: readonly TierKey[] = selectedTier ? [selectedTier] : allTierKeys;
+
+      const allowedCountries = selectedTier
+        ? (TIERS[selectedTier].countries as readonly string[]).slice()
+        : Object.values(TIERS).flatMap((t) => t.countries);
+
+      const shipping_options = activeTiers.map((key) => {
+        if (key === "US") {
           return {
             shipping_rate_data: {
               type: "fixed_amount" as const,
-              fixed_amount: { amount, currency: "usd" },
-              display_name: tier.label,
+              fixed_amount: { amount: TIERS.US.flat, currency: "usd" },
+              display_name: TIERS.US.label,
               delivery_estimate: {
                 minimum: { unit: "week" as const, value: 3 },
-                maximum: { unit: "week" as const, value: 5 },
+                maximum: { unit: "week" as const, value: 4 },
               },
-              metadata: {
-                region: key,
-                pct: String(tier.pct),
-                countries: tier.countries.join(","),
-              },
+              metadata: { region: "US", countries: TIERS.US.countries.join(",") },
             },
           };
-        }),
-      ];
+        }
+        const tier = TIERS[key];
+        const amount = dutyAmountCents(subtotalCents, tier.pct);
+        return {
+          shipping_rate_data: {
+            type: "fixed_amount" as const,
+            fixed_amount: { amount, currency: "usd" },
+            display_name: tier.label,
+            delivery_estimate: {
+              minimum: { unit: "week" as const, value: 3 },
+              maximum: { unit: "week" as const, value: 5 },
+            },
+            metadata: {
+              region: key,
+              pct: String(tier.pct),
+              countries: tier.countries.join(","),
+            },
+          },
+        };
+      });
 
       const session = await stripe.checkout.sessions.create({
         line_items,
@@ -126,7 +143,7 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
         billing_address_collection: "required",
-        shipping_address_collection: { allowed_countries: allowedCountries },
+        shipping_address_collection: { allowed_countries: allowedCountries as string[] },
         shipping_options,
         // Cards (Apple Pay on supported devices) + Link. Explicitly excludes Amazon Pay.
         payment_method_types: ["card", "link"],
