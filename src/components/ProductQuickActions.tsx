@@ -43,7 +43,7 @@ export function ProductQuickActions({
         type="button"
         onClick={onAdd}
         style={{ WebkitTapHighlightColor: "transparent" }}
-        className="flex-1 rounded-full border border-foreground/15 bg-background px-2 py-1 text-[8px] tracking-luxe uppercase text-foreground transition-colors hover:border-foreground hover:bg-foreground hover:text-background active:scale-100 touch-manipulation"
+        className="flex-1 whitespace-nowrap rounded-full border border-foreground/15 bg-background px-2 py-1 text-[8px] tracking-luxe uppercase text-foreground transition-colors hover:border-foreground hover:bg-foreground hover:text-background active:scale-100 touch-manipulation"
       >
         {inBag ? "In bag ✓" : "Add to bag"}
       </button>
