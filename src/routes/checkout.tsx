@@ -86,7 +86,7 @@ function CheckoutPage() {
           ← Back to bag
         </Link>
         <h1 className="mt-4 font-display text-4xl md:text-6xl">
-          Soft <span className="font-script text-primary">checkout</span>
+          Check<span className="font-script text-primary">out</span>
         </h1>
 
         <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr,1fr]">
