@@ -15,7 +15,7 @@ export function Hero() {
               Vol. 01 — Summer Archive
             </p>
             <h1 className="mt-6 font-display text-[44px] leading-[1] text-black md:text-[72px]">
-              Garments for <span className="font-calligraphy text-primary">hot</span> girls.
+              Garments for <span className="font-display italic text-primary">hot</span> girls.
             </h1>
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-muted-foreground">
               A curated collection of vintage designer pieces. Timeless, rare,
