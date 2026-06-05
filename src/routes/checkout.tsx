@@ -10,10 +10,8 @@ import { useStock } from "@/lib/useStock";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCartCheckoutSession } from "@/lib/payments.functions";
 import {
-  TIERS,
   allCountryOptions,
-  shippingCostCents,
-  tierForCountry,
+  cartShipping,
 } from "@/lib/shipping-countries";
 import type { Product } from "@/lib/products";
 
