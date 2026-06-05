@@ -109,31 +109,12 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return { price: price.id, quantity: item.quantity };
       });
 
-      // Per-item origin → destination shipping + duties. The cart total
-      // shipping line is the sum across line items.
-      let totalShipCents = 0;
-      let totalDutiesCents = 0;
-      let anyInternational = false;
-      for (const item of data.items) {
-        const price = byKey.get(item.priceId);
-        const unitValueCents = price?.unit_amount ?? 0;
-        const lineValueCents = unitValueCents * item.quantity;
-        const { shipCents, dutiesCents, international } = itemLandedCents(
-          lineValueCents,
-          item.originCountry,
-          data.country,
-        );
-        // Shipping cost scales per unit (each piece ships separately from
-        // its own seller); duties scale with declared value.
-        totalShipCents += shipCents * item.quantity;
-        totalDutiesCents += dutiesCents;
-        if (international) anyInternational = true;
-      }
-
-      const shippingAmountCents = totalShipCents + totalDutiesCents;
-      const displayName = anyInternational
-        ? "Worldwide shipping (incl. import duties & taxes)"
-        : "Domestic shipping";
+      // Flat $20 worldwide. Customs/duties/taxes are baked into product prices.
+      const totalShipCents = 2000;
+      const totalDutiesCents = 0;
+      const shippingAmountCents = totalShipCents;
+      const displayName = "Worldwide shipping (incl. customs, duties & taxes)";
+      const anyInternational = true;
 
       const session = await stripe.checkout.sessions.create({
         line_items,
