@@ -108,12 +108,12 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
           if (key === "US") {
             return {
               shipping_rate_data: {
-                type: "fixed_amount",
+                type: "fixed_amount" as const,
                 fixed_amount: { amount: TIERS.US.flat, currency: "usd" },
                 display_name: TIERS.US.label,
                 delivery_estimate: {
-                  minimum: { unit: "week", value: 3 },
-                  maximum: { unit: "week", value: 4 },
+                  minimum: { unit: "week" as const, value: 3 },
+                  maximum: { unit: "week" as const, value: 4 },
                 },
                 metadata: { region: "US", pct: "0", countries: TIERS.US.countries.join(",") },
               },
