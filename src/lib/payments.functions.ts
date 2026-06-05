@@ -44,22 +44,46 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         mode: "payment",
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
-        automatic_tax: { enabled: true },
         billing_address_collection: "required",
         shipping_address_collection: {
+          // Broad international coverage. Stripe will only show the
+          // shipping options whose `allowed_countries` matches the buyer's
+          // shipping address, so US customers see the $20 rate and
+          // everyone else sees the $170 (incl. $150 customs duties) rate.
           allowed_countries: [
-            "US", "CA", "GB", "AU", "NZ", "IE", "FR", "DE", "IT", "ES",
-            "NL", "BE", "SE", "NO", "DK", "FI", "CH", "AT", "PT", "JP",
+            "US", "CA", "MX", "GB", "IE", "FR", "DE", "IT", "ES", "PT",
+            "NL", "BE", "LU", "SE", "NO", "DK", "FI", "IS", "CH", "AT",
+            "PL", "CZ", "SK", "HU", "RO", "BG", "GR", "HR", "SI", "EE",
+            "LV", "LT", "MT", "CY", "AU", "NZ", "JP", "KR", "SG", "HK",
+            "TW", "TH", "MY", "PH", "ID", "VN", "IN", "AE", "SA", "IL",
+            "TR", "ZA", "BR", "AR", "CL", "CO", "PE", "UY",
           ],
         },
         shipping_options: [
           {
             shipping_rate_data: {
               type: "fixed_amount",
-              fixed_amount: { amount: 2000, currency: "usd" },
-              display_name: "Standard shipping (3–4 weeks)",
-              tax_behavior: "exclusive",
-              tax_code: "txcd_92010001",
+              fixed_amount: {
+                amount: 2000,
+                currency: "usd",
+              },
+              display_name: "US Standard Shipping (3–4 weeks)",
+              metadata: { region: "domestic" },
+            },
+          },
+          {
+            shipping_rate_data: {
+              type: "fixed_amount",
+              fixed_amount: {
+                amount: 17000, // $20 shipping + $150 customs duties
+                currency: "usd",
+              },
+              display_name: "International Shipping (incl. $150 customs duties)",
+              delivery_estimate: {
+                minimum: { unit: "week", value: 3 },
+                maximum: { unit: "week", value: 5 },
+              },
+              metadata: { region: "international" },
             },
           },
         ],
