@@ -8,9 +8,11 @@ export function Footer() {
     { t: "Shop", links: [
       { label: "New", to: "/new" },
       { label: "Bags", to: "/archive", hash: "bags" },
-      { label: "Sunglasses", to: "/archive", hash: "eyewear" },
-      { label: "Jewelry", to: "/archive", hash: "jewelry" },
+      { label: "Tops", to: "/archive", hash: "tops" },
+      { label: "Bottoms", to: "/archive", hash: "bottoms" },
       { label: "Shoes", to: "/archive", hash: "shoes" },
+      { label: "Jewelry", to: "/archive", hash: "jewelry" },
+      { label: "Sunglasses", to: "/archive", hash: "eyewear" },
     ]},
     { t: "Care", links: [
       { label: "Shipping", to: "/shipping" },
