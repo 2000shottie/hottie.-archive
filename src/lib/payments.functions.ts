@@ -102,40 +102,41 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         ? (TIERS[selectedTier].countries as readonly string[]).slice()
         : Object.values(TIERS).flatMap((t) => t.countries);
 
-      const shipping_options = activeTiers.map((key) => {
-        if (key === "US") {
+      const shipping_options: Stripe.Checkout.SessionCreateParams.ShippingOption[] =
+        activeTiers.map((key) => {
+          if (key === "US") {
+            return {
+              shipping_rate_data: {
+                type: "fixed_amount",
+                fixed_amount: { amount: TIERS.US.flat, currency: "usd" },
+                display_name: TIERS.US.label,
+                delivery_estimate: {
+                  minimum: { unit: "week", value: 3 },
+                  maximum: { unit: "week", value: 4 },
+                },
+                metadata: { region: "US", pct: "0", countries: TIERS.US.countries.join(",") },
+              },
+            };
+          }
+          const tier = TIERS[key];
+          const amount = dutyAmountCents(subtotalCents, tier.pct);
           return {
             shipping_rate_data: {
-              type: "fixed_amount" as const,
-              fixed_amount: { amount: TIERS.US.flat, currency: "usd" },
-              display_name: TIERS.US.label,
+              type: "fixed_amount",
+              fixed_amount: { amount, currency: "usd" },
+              display_name: tier.label,
               delivery_estimate: {
-                minimum: { unit: "week" as const, value: 3 },
-                maximum: { unit: "week" as const, value: 4 },
+                minimum: { unit: "week", value: 3 },
+                maximum: { unit: "week", value: 5 },
               },
-              metadata: { region: "US", countries: TIERS.US.countries.join(",") },
+              metadata: {
+                region: key,
+                pct: String(tier.pct),
+                countries: tier.countries.join(","),
+              },
             },
           };
-        }
-        const tier = TIERS[key];
-        const amount = dutyAmountCents(subtotalCents, tier.pct);
-        return {
-          shipping_rate_data: {
-            type: "fixed_amount" as const,
-            fixed_amount: { amount, currency: "usd" },
-            display_name: tier.label,
-            delivery_estimate: {
-              minimum: { unit: "week" as const, value: 3 },
-              maximum: { unit: "week" as const, value: 5 },
-            },
-            metadata: {
-              region: key,
-              pct: String(tier.pct),
-              countries: tier.countries.join(","),
-            },
-          },
-        };
-      });
+        });
 
       const session = await stripe.checkout.sessions.create({
         line_items,
@@ -143,7 +144,10 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
         billing_address_collection: "required",
-        shipping_address_collection: { allowed_countries: allowedCountries as string[] },
+        shipping_address_collection: {
+          allowed_countries:
+            allowedCountries as unknown as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
+        },
         shipping_options,
         // Cards (Apple Pay on supported devices) + Link. Explicitly excludes Amazon Pay.
         payment_method_types: ["card", "link"],
