@@ -114,15 +114,53 @@ function CheckoutPage() {
                 One or more items in your bag are sold out. Remove them from your bag to continue.
               </div>
             ) : (
-              <div className="rounded-2xl border border-border bg-card overflow-hidden">
-                <EmbeddedCheckoutProvider
-                  key={providerKey}
-                  stripe={getStripe()}
-                  options={{ fetchClientSecret }}
-                >
-                  <EmbeddedCheckout />
-                </EmbeddedCheckoutProvider>
-              </div>
+              <>
+                {/* Country picker controls which shipping rate is shown
+                    inside Stripe checkout — one option, priced for that country. */}
+                <div className="mb-5 rounded-2xl border border-border bg-card p-5">
+                  <label htmlFor="ship-country" className="text-[11px] tracking-luxe uppercase text-muted-foreground">
+                    Ship to
+                  </label>
+                  <select
+                    id="ship-country"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-[14px] focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="">Select your country…</option>
+                    {countryOptions.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  {tier && shipDollars != null ? (
+                    <p className="mt-3 text-[12px] text-muted-foreground">
+                      <span className="text-foreground">{tier.label}</span> — ${shipDollars.toFixed(2)} · 3–{tier.flat ? 4 : 5} weeks · {tier.note}
+                    </p>
+                  ) : (
+                    <p className="mt-3 text-[12px] text-muted-foreground">
+                      Choose a country to see your exact shipping total. All international rates include duties &amp; taxes — no customs bills on delivery.
+                    </p>
+                  )}
+                </div>
+
+                {country ? (
+                  <div className="rounded-2xl border border-border bg-card overflow-hidden">
+                    <EmbeddedCheckoutProvider
+                      key={providerKey}
+                      stripe={getStripe()}
+                      options={{ fetchClientSecret }}
+                    >
+                      <EmbeddedCheckout />
+                    </EmbeddedCheckoutProvider>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-border bg-card/60 p-8 text-center text-[13px] text-muted-foreground">
+                    Select a country above to continue to payment.
+                  </div>
+                )}
+              </>
             )}
             <p className="mt-6 text-[12px] leading-relaxed text-muted-foreground">
               Each item is individually sourced from our exclusive network of designer collections.
@@ -147,16 +185,41 @@ function CheckoutPage() {
             </ul>
             <dl className="mt-6 space-y-2 border-t border-border pt-4 text-[13px]">
               <div className="flex justify-between"><dt className="text-muted-foreground">Subtotal</dt><dd>${subtotal.toLocaleString()}</dd></div>
-              <div className="flex justify-between"><dt className="text-muted-foreground">US shipping</dt><dd>$20 flat</dd></div>
-              <div className="flex justify-between"><dt className="text-muted-foreground">International (incl. duties)</dt><dd>from 12% · min $50</dd></div>
-              <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border"><dt>Total</dt><dd>from ${(subtotal + 20).toLocaleString()}</dd></div>
+              {tier && shipDollars != null ? (
+                <>
+                  <div className="flex justify-between">
+                    <dt className="text-muted-foreground">
+                      Shipping{tier.flat ? "" : " (incl. duties & taxes)"}
+                    </dt>
+                    <dd>${shipDollars.toLocaleString()}</dd>
+                  </div>
+                  <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
+                    <dt>Total</dt>
+                    <dd>${(subtotal + shipDollars).toLocaleString()}</dd>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between"><dt className="text-muted-foreground">US shipping</dt><dd>$20 flat</dd></div>
+                  <div className="flex justify-between"><dt className="text-muted-foreground">International (incl. duties)</dt><dd>from 12% · min $50</dd></div>
+                  <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
+                    <dt>Total</dt>
+                    <dd>from ${(subtotal + 20).toLocaleString()}</dd>
+                  </div>
+                </>
+              )}
             </dl>
             <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
-              No US sales tax. International orders are delivered duties-paid — your exact rate (12–25% of subtotal) is shown in checkout before payment. No surprise customs bills.{" "}
+              {tier
+                ? tier.flat
+                  ? "No US sales tax. Flat $20 tracked shipping, 3–4 weeks."
+                  : `${tier.note} The price you see is the price you pay — no surprise customs bills.`
+                : "No US sales tax. International orders are delivered duties-paid — your exact rate (12–25% of subtotal) is shown once you pick a country. No surprise customs bills."}{" "}
               <Link to="/shipping" className="underline hover:text-primary">Shipping details</Link>
             </p>
           </aside>
         </div>
+
       </main>
       <Footer />
     </div>
