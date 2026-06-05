@@ -21,6 +21,7 @@ import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as AdminSyncRouteImport } from './routes/admin.sync'
 import { Route as AdminPricingRouteImport } from './routes/admin.pricing'
+import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksSyncStockRouteImport } from './routes/api/public/hooks/sync-stock'
 
@@ -84,6 +85,11 @@ const AdminPricingRoute = AdminPricingRouteImport.update({
   path: '/admin/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/admin/orders',
+  path: '/admin/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/orders'
     | '/admin/pricing'
     | '/admin/sync'
     | '/checkout/return'
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/orders'
     | '/admin/pricing'
     | '/admin/sync'
     | '/checkout/return'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/orders'
     | '/admin/pricing'
     | '/admin/sync'
     | '/checkout/return'
@@ -205,6 +217,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   NewRoute: typeof NewRoute
   ShippingRoute: typeof ShippingRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPricingRoute: typeof AdminPricingRoute
   AdminSyncRoute: typeof AdminSyncRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/orders': {
+      id: '/admin/orders'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -336,6 +356,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   NewRoute: NewRoute,
   ShippingRoute: ShippingRoute,
+  AdminOrdersRoute: AdminOrdersRoute,
   AdminPricingRoute: AdminPricingRoute,
   AdminSyncRoute: AdminSyncRoute,
   ProductIdRoute: ProductIdRoute,
@@ -345,3 +366,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
