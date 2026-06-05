@@ -7,10 +7,12 @@ import hottieLogo from "@/assets/hottie-signature-transparent.png.asset.json";
 export function Navbar() {
   const links = [
     { label: "New", to: "/new" },
-    { label: "Bags", to: "/#shop" },
-    { label: "Sunglasses", to: "/#shop" },
-    { label: "Jewelry", to: "/#shop" },
-    { label: "Shoes", to: "/#shop" },
+    { label: "Bags", to: "/archive", hash: "bags" },
+    { label: "Tops", to: "/archive", hash: "tops" },
+    { label: "Bottoms", to: "/archive", hash: "bottoms" },
+    { label: "Shoes", to: "/archive", hash: "shoes" },
+    { label: "Jewelry", to: "/archive", hash: "jewelry" },
+    { label: "Sunglasses", to: "/archive", hash: "eyewear" },
     { label: "Contact", to: "/contact" },
   ];
   const { count } = useCart();
