@@ -51,7 +51,7 @@ export function ProductQuickActions({
         type="button"
         onClick={onBuy}
         style={{ backgroundColor: "#e0a4a6", WebkitTapHighlightColor: "transparent" }}
-        className="flex-1 rounded-full px-2 py-1 text-[8px] tracking-luxe uppercase text-background transition-opacity hover:opacity-90 active:scale-100 touch-manipulation"
+        className="flex-1 whitespace-nowrap rounded-full px-2 py-1 text-[8px] tracking-luxe uppercase text-background transition-opacity hover:opacity-90 active:scale-100 touch-manipulation"
       >
         Buy now
       </button>
