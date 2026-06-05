@@ -38,8 +38,19 @@ function CheckoutPage() {
     ({ product }) => !!product.vestiaireUrl && availableIds[product.id] !== true,
   );
 
-  // Snapshot the cart so the Stripe session is created once for this cart.
+  // Country picked BEFORE the Stripe iframe loads so we can show only the
+  // shipping rate applicable to the customer (and price it correctly).
+  const [country, setCountry] = useState<string>("");
+  const countryOptions = allCountryOptions();
+  const tierKey = country ? tierForCountry(country) : null;
+  const tier = tierKey ? TIERS[tierKey] : null;
+  const shipCents = country ? shippingCostCents(country, subtotal * 100) : null;
+  const shipDollars = shipCents != null ? shipCents / 100 : null;
+
+  // Snapshot the cart + country so the Stripe session is recreated when either
+  // changes.
   const itemsKey = lines.map((l) => `${l.product.id}:${l.qty}`).join("|");
+  const sessionKey = `${itemsKey}__${country || "none"}`;
   const lastKeyRef = useRef<string>("");
 
   const fetchClientSecret = async (): Promise<string> => {
@@ -48,6 +59,7 @@ function CheckoutPage() {
         items: lines.map((l) => ({ priceId: l.product.id, quantity: l.qty })),
         returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
         environment: getStripeEnvironment(),
+        ...(country ? { country } : {}),
       },
     });
     if ("error" in result) throw new Error(result.error);
@@ -55,14 +67,14 @@ function CheckoutPage() {
     return result.clientSecret;
   };
 
-  // Reset Stripe iframe whenever the cart changes
-  const [providerKey, setProviderKey] = useState(itemsKey);
+  // Reset Stripe iframe whenever the cart or selected country changes
+  const [providerKey, setProviderKey] = useState(sessionKey);
   useEffect(() => {
-    if (lastKeyRef.current !== itemsKey) {
-      lastKeyRef.current = itemsKey;
-      setProviderKey(itemsKey);
+    if (lastKeyRef.current !== sessionKey) {
+      lastKeyRef.current = sessionKey;
+      setProviderKey(sessionKey);
     }
-  }, [itemsKey]);
+  }, [sessionKey]);
 
   if (count === 0) {
     return (
