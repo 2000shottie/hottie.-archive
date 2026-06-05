@@ -5,6 +5,7 @@ import {
   createStripeClient,
   getWebhookSecret,
 } from "@/lib/stripe.server";
+import { sendOrderConfirmationEmail } from "@/lib/email.server";
 
 export const Route = createFileRoute("/api/public/payments/webhook")({
   server: {
