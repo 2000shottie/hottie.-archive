@@ -96,41 +96,39 @@ function CheckoutPage() {
           Check<span className="font-script text-primary">out</span>
         </h1>
 
-        <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr,1fr]">
-          <div>
+        <div className="mt-8 px-1 space-y-3 max-w-[800px]">
+          <p className="text-[13px] text-foreground/80 leading-relaxed">
+            Each item is individually sourced from our exclusive network of designer collections. Please allow approximately 3–4 weeks for delivery.
+          </p>
+          <p className="text-[13px] text-foreground font-semibold leading-relaxed">
+            Flat $20 shipping anywhere in the world, with all customs duties &amp; taxes already covered.
+          </p>
+          <p className="text-[13px] text-foreground font-semibold leading-relaxed">
+            All sales are final — no returns or refunds.
+          </p>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr,1fr]">
+          <div className="order-2 md:order-1">
             {checkoutBlocked ? (
               <div className="rounded-2xl border border-border bg-card p-6 text-[13px] text-muted-foreground">
                 One or more items in your bag are sold out. Remove them from your bag to continue.
               </div>
             ) : (
-              <>
-                <div className="mb-6 px-1 space-y-3">
-                  <p className="text-[13px] text-foreground/80 leading-relaxed">
-                    Each item is individually sourced from our exclusive network of designer collections. Please allow approximately 3–4 weeks for delivery.
-                  </p>
-                  <p className="text-[13px] text-foreground font-semibold leading-relaxed">
-                    Flat $20 shipping anywhere in the world, with all customs duties &amp; taxes already covered.
-                  </p>
-                  <p className="text-[11px] tracking-luxe uppercase text-foreground font-semibold">
-                    All sales are final — no returns or refunds.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-border bg-card overflow-hidden">
-                  <EmbeddedCheckoutProvider
-                    key={providerKey}
-                    stripe={getStripe()}
-                    options={{ fetchClientSecret }}
-                  >
-                    <EmbeddedCheckout />
-                  </EmbeddedCheckoutProvider>
-                </div>
-              </>
+              <div className="rounded-2xl border border-border bg-card overflow-hidden">
+                <EmbeddedCheckoutProvider
+                  key={providerKey}
+                  stripe={getStripe()}
+                  options={{ fetchClientSecret }}
+                >
+                  <EmbeddedCheckout />
+                </EmbeddedCheckoutProvider>
+              </div>
             )}
           </div>
 
 
-          <aside className="h-fit rounded-2xl border border-border/70 bg-blush/30 p-6 md:sticky md:top-24">
+          <aside className="order-1 md:order-2 h-fit rounded-2xl border border-border/70 bg-blush/30 p-6 md:sticky md:top-24">
             <h2 className="text-[11px] tracking-luxe uppercase">Order</h2>
             <ul className="mt-5 space-y-4">
               {lines.map(({ product, qty }) => (
