@@ -20,8 +20,9 @@ const inputSchema = z.object({
   items: z.array(itemSchema).min(1).max(20),
   returnUrl: z.string().url(),
   environment: z.enum(["sandbox", "live"]),
-  country: z.string().length(2).regex(/^[A-Z]{2}$/),
+  country: z.string().length(2).regex(/^[A-Z]{2}$/).optional(),
 });
+
 
 // ---------- Origin-aware shipping + duties (server source of truth) ----------
 // Mirrors src/lib/admin-rates.ts so we don't pull admin tooling into payments.
