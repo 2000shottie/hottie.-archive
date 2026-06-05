@@ -27,6 +27,13 @@
   font-display: swap;
   src: url("https://fonts.gstatic.com/s/cormorantgaramond/v18/64cEYjpQHRTPCcuhVbVTYj9wQNvJZTvE9LE.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Great Vibes";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://fonts.gstatic.com/s/greatvibes/v19/RWmMoKWR9v4ksMfaWd_JN9XDiaQ.woff2") format("woff2");
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -133,6 +140,7 @@
 @layer utilities {
   .font-display { font-family: var(--font-display); letter-spacing: -0.01em; }
   .font-script { font-family: var(--font-script); font-style: italic; }
+  .font-calligraphy { font-family: "Great Vibes", "Cormorant", cursive; font-style: normal; }
   .bg-gradient-blush { background: var(--gradient-blush); }
   .bg-gradient-soft { background: var(--gradient-soft); }
   .bg-gradient-chrome { background: var(--gradient-chrome); }
