@@ -127,8 +127,7 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         billing_address_collection: "required",
         shipping_address_collection: { allowed_countries: allowedCountries },
         shipping_options,
-        // Cards (which carry Apple Pay / Google Pay wallets automatically on
-        // supported devices) + Link. Explicitly excludes Amazon Pay.
+        // Cards (Apple Pay on supported devices) + Link. Explicitly excludes Amazon Pay.
         payment_method_types: ["card", "link"],
         phone_number_collection: { enabled: true },
         metadata: {
