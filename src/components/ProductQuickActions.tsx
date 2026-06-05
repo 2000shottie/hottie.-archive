@@ -38,21 +38,23 @@ export function ProductQuickActions({
   if (soldOut) return null;
 
   return (
-    <div className="mt-3 flex gap-2">
+    <div className="mt-2 flex gap-1.5">
       <button
         type="button"
         onClick={onAdd}
-        className="flex-1 rounded-full border border-foreground/15 bg-background py-2 text-[10px] tracking-luxe uppercase text-foreground transition-colors hover:border-foreground hover:bg-foreground hover:text-background"
+        className="flex-1 rounded-full border border-foreground/15 bg-background px-2 py-1 text-[8px] tracking-luxe uppercase text-foreground transition-colors hover:border-foreground hover:bg-foreground hover:text-background"
       >
         {inBag ? "In bag ✓" : "Add to bag"}
       </button>
       <button
         type="button"
         onClick={onBuy}
-        className="flex-1 rounded-full bg-foreground py-2 text-[10px] tracking-luxe uppercase text-background transition-colors hover:bg-primary"
+        style={{ backgroundColor: "#c89299" }}
+        className="flex-1 rounded-full px-2 py-1 text-[8px] tracking-luxe uppercase text-background transition-opacity hover:opacity-90"
       >
         Buy now
       </button>
     </div>
   );
 }
+
