@@ -210,11 +210,7 @@ function CheckoutPage() {
               )}
             </dl>
             <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
-              {tier
-                ? tier.flat
-                  ? "No US sales tax. Flat $20 tracked shipping, 3–4 weeks."
-                  : `${tier.note} The price you see is the price you pay — no surprise customs bills.`
-                : "No US sales tax. International orders are delivered duties-paid — your exact rate (12–25% of subtotal) is shown once you pick a country. No surprise customs bills."}{" "}
+              Shipping and applicable import duties/taxes are included in your total when required.{" "}
               <Link to="/shipping" className="underline hover:text-primary">Shipping details</Link>
             </p>
           </aside>

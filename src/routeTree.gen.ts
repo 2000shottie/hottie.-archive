@@ -19,6 +19,7 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
+import { Route as AdminPricingRouteImport } from './routes/admin.pricing'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const ShippingRoute = ShippingRouteImport.update({
@@ -71,6 +72,11 @@ const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   path: '/return',
   getParentRoute: () => CheckoutRoute,
 } as any)
+const AdminPricingRoute = AdminPricingRouteImport.update({
+  id: '/admin/pricing',
+  path: '/admin/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/pricing': typeof AdminPricingRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/pricing': typeof AdminPricingRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/pricing': typeof AdminPricingRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/pricing'
     | '/checkout/return'
     | '/product/$id'
     | '/api/public/payments/webhook'
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/pricing'
     | '/checkout/return'
     | '/product/$id'
     | '/api/public/payments/webhook'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/pricing'
     | '/checkout/return'
     | '/product/$id'
     | '/api/public/payments/webhook'
@@ -169,6 +181,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   NewRoute: typeof NewRoute
   ShippingRoute: typeof ShippingRoute
+  AdminPricingRoute: typeof AdminPricingRoute
   ProductIdRoute: typeof ProductIdRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutReturnRouteImport
       parentRoute: typeof CheckoutRoute
     }
+    '/admin/pricing': {
+      id: '/admin/pricing'
+      path: '/admin/pricing'
+      fullPath: '/admin/pricing'
+      preLoaderRoute: typeof AdminPricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -276,6 +296,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   NewRoute: NewRoute,
   ShippingRoute: ShippingRoute,
+  AdminPricingRoute: AdminPricingRoute,
   ProductIdRoute: ProductIdRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
