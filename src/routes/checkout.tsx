@@ -104,12 +104,15 @@ function CheckoutPage() {
               </div>
             ) : (
               <>
-                <div className="mb-6 px-1">
+                <div className="mb-6 px-1 space-y-3">
                   <p className="text-[13px] text-foreground/80 leading-relaxed">
-                    Every piece is carefully sourced, hand-selected, and personally cared for.
+                    Each item is individually sourced from our exclusive network of designer collections. Please allow approximately 3–4 weeks for delivery.
                   </p>
-                  <p className="mt-3 text-[13px] text-foreground font-semibold leading-relaxed">
+                  <p className="text-[13px] text-foreground font-semibold leading-relaxed">
                     Flat $20 shipping anywhere in the world, with all customs duties &amp; taxes already covered.
+                  </p>
+                  <p className="text-[11px] tracking-luxe uppercase text-foreground font-semibold">
+                    All sales are final — no returns or refunds.
                   </p>
                 </div>
 
@@ -122,14 +125,6 @@ function CheckoutPage() {
                     <EmbeddedCheckout />
                   </EmbeddedCheckoutProvider>
                 </div>
-
-                <p className="mt-6 text-[12px] leading-relaxed text-muted-foreground">
-                  Each item is individually sourced from our exclusive network of designer collections.
-                  Please allow approximately 3–4 weeks for delivery. Flat $20 worldwide shipping — duties &amp; taxes included, no customs bills on arrival.
-                </p>
-                <p className="mt-2 text-[11px] tracking-luxe uppercase text-muted-foreground">
-                  All sales are final — no returns or refunds.
-                </p>
               </>
             )}
           </div>
