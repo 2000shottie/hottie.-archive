@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      orders: {
+        Row: {
+          amount_total_cents: number | null
+          buyer_email: string
+          buyer_name: string | null
+          carrier: string | null
+          created_at: string
+          currency: string
+          id: string
+          product_ids: string[]
+          shipped_at: string | null
+          shipped_email_sent_at: string | null
+          shipping_address: Json | null
+          stripe_session_id: string
+          tracking_number: string | null
+          tracking_url: string | null
+        }
+        Insert: {
+          amount_total_cents?: number | null
+          buyer_email: string
+          buyer_name?: string | null
+          carrier?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          product_ids?: string[]
+          shipped_at?: string | null
+          shipped_email_sent_at?: string | null
+          shipping_address?: Json | null
+          stripe_session_id: string
+          tracking_number?: string | null
+          tracking_url?: string | null
+        }
+        Update: {
+          amount_total_cents?: number | null
+          buyer_email?: string
+          buyer_name?: string | null
+          carrier?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          product_ids?: string[]
+          shipped_at?: string | null
+          shipped_email_sent_at?: string | null
+          shipping_address?: Json | null
+          stripe_session_id?: string
+          tracking_number?: string | null
+          tracking_url?: string | null
+        }
+        Relationships: []
+      }
       sold_products: {
         Row: {
           product_id: string
