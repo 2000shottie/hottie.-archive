@@ -140,7 +140,7 @@
 @layer utilities {
   .font-display { font-family: var(--font-display); letter-spacing: -0.01em; }
   .font-script { font-family: var(--font-script); font-style: italic; }
-  .font-calligraphy { font-family: "Great Vibes", "Cormorant", cursive; font-style: normal; }
+  .font-calligraphy { font-family: "Pinyon Script", "Allura", cursive; font-style: normal; font-weight: 400; }
   .bg-gradient-blush { background: var(--gradient-blush); }
   .bg-gradient-soft { background: var(--gradient-soft); }
   .bg-gradient-chrome { background: var(--gradient-chrome); }
