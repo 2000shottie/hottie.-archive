@@ -1,5 +1,6 @@
 import { Search, ShoppingBag, User, Home } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import hottieLogo from "@/assets/hottie-signature-transparent.png.asset.json";
 
@@ -16,8 +17,21 @@ export function Navbar() {
     { label: "Contact", to: "/contact" },
   ];
   const { count } = useCart();
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
-    <header className="sticky top-0 z-50 glass border-b border-border/60">
+    <header
+      className={`sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ${
+        scrolled
+          ? "bg-blush/30 border-b border-transparent"
+          : "bg-blush/70 border-b border-border/40"
+      }`}
+    >
       <div className="mx-auto flex max-w-[1480px] items-center justify-between gap-4 px-5 md:px-10">
         <Link
           to="/"
