@@ -10,7 +10,7 @@ export type StockStatus = {
 
 /**
  * Auto out-of-stock checker.
- * Fetches the Vestiaire Collective listing page via Firecrawl (Cloudflare blocks
+ * Fetches the source listing page via Firecrawl (Cloudflare blocks
  * direct server fetches) and looks for sold-out signals. Returns `available:false`
  * when the listing is sold, hidden, or no longer reachable.
  *
