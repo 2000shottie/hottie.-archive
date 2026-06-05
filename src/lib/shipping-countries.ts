@@ -24,61 +24,29 @@ export function regionOf(cc: string): Region {
   return REGION_BY_COUNTRY[cc.toUpperCase()] ?? "ROW";
 }
 
-const SHIP_USD: Record<Region, Record<Region, number>> = {
-  US:   { US: 15, NA: 25, EU: 40, UK: 40, APAC: 55, ROW: 65 },
-  EU:   { US: 25, NA: 30, EU: 15, UK: 18, APAC: 45, ROW: 55 },
-  UK:   { US: 25, NA: 30, EU: 18, UK: 12, APAC: 45, ROW: 55 },
-  NA:   { US: 20, NA: 15, EU: 40, UK: 40, APAC: 55, ROW: 65 },
-  APAC: { US: 45, NA: 50, EU: 45, UK: 45, APAC: 18, ROW: 60 },
-  ROW:  { US: 55, NA: 55, EU: 50, UK: 50, APAC: 55, ROW: 40 },
-};
-
-const LANDED_PCT: Record<Region, number> = {
-  US: 0.22, NA: 0.20, EU: 0.24, UK: 0.24, APAC: 0.18, ROW: 0.25,
-};
-
-function isDomestic(origin: Region, dest: Region): boolean {
-  return (
-    origin === dest ||
-    (origin === "EU" && dest === "UK") ||
-    (origin === "UK" && dest === "EU")
-  );
-}
+// Flat $20 per order, anywhere in the world. Customs/duties/taxes are baked
+// into each product's listed price, so we don't add them here.
+const FLAT_SHIP_USD = 20;
 
 export type CartShipping = {
   shipDollars: number;
   dutiesDollars: number;
   totalDollars: number;
   international: boolean;
-  // Per-line breakdown for debugging / transparency.
   lines: Array<{ id: string; ship: number; duties: number }>;
 };
 
 export function cartShipping(
   lines: Array<{ product: Product; qty: number }>,
-  buyerCountry: string,
+  _buyerCountry: string,
 ): CartShipping {
-  const dest = regionOf(buyerCountry);
-  let ship = 0;
-  let duties = 0;
-  let international = false;
-  const breakdown: CartShipping["lines"] = [];
-  for (const { product, qty } of lines) {
-    const origin = regionOf(product.originCountry ?? "EU");
-    const lineShip = SHIP_USD[origin][dest] * qty;
-    const intl = !isDomestic(origin, dest);
-    const lineDuties = intl ? Math.round(product.price * qty * LANDED_PCT[dest]) : 0;
-    ship += lineShip;
-    duties += lineDuties;
-    if (intl) international = true;
-    breakdown.push({ id: product.id, ship: lineShip, duties: lineDuties });
-  }
+  const ship = lines.length > 0 ? FLAT_SHIP_USD : 0;
   return {
     shipDollars: ship,
-    dutiesDollars: duties,
-    totalDollars: ship + duties,
-    international,
-    lines: breakdown,
+    dutiesDollars: 0,
+    totalDollars: ship,
+    international: true,
+    lines: lines.map(({ product }) => ({ id: product.id, ship, duties: 0 })),
   };
 }
 
