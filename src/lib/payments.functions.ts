@@ -20,8 +20,9 @@ const inputSchema = z.object({
   items: z.array(itemSchema).min(1).max(20),
   returnUrl: z.string().url(),
   environment: z.enum(["sandbox", "live"]),
-  country: z.string().length(2).regex(/^[A-Z]{2}$/),
+  country: z.string().length(2).regex(/^[A-Z]{2}$/).optional(),
 });
+
 
 // ---------- Origin-aware shipping + duties (server source of truth) ----------
 // Mirrors src/lib/admin-rates.ts so we don't pull admin tooling into payments.
@@ -109,12 +110,14 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return { price: price.id, quantity: item.quantity };
       });
 
-      // Flat $20 worldwide. Customs/duties/taxes are baked into product prices.
-      const totalShipCents = 2000;
-      const totalDutiesCents = 0;
-      const shippingAmountCents = totalShipCents;
-      const displayName = "Worldwide shipping (incl. customs, duties & taxes)";
-      const anyInternational = true;
+      // Worldwide shipping — Stripe collects the address in checkout.
+      const allowedCountries = Object.keys({
+        US:1,CA:1,MX:1,GB:1,IE:1,FR:1,DE:1,IT:1,ES:1,PT:1,NL:1,BE:1,LU:1,
+        SE:1,NO:1,DK:1,FI:1,IS:1,CH:1,AT:1,PL:1,CZ:1,SK:1,HU:1,RO:1,BG:1,
+        GR:1,HR:1,SI:1,EE:1,LV:1,LT:1,MT:1,CY:1,AU:1,NZ:1,JP:1,KR:1,SG:1,
+        HK:1,TW:1,IL:1,AE:1,SA:1,TH:1,MY:1,PH:1,ID:1,VN:1,IN:1,TR:1,ZA:1,
+        BR:1,AR:1,CL:1,CO:1,PE:1,UY:1,
+      });
 
       const session = await stripe.checkout.sessions.create({
         line_items,
@@ -123,25 +126,23 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return_url: data.returnUrl,
         billing_address_collection: "required",
         shipping_address_collection: {
-          // Only ship to the country the buyer selected up-front, so the
-          // rate shown matches what Stripe charges.
-          allowed_countries: [data.country] as unknown as never,
+          allowed_countries: allowedCountries as unknown as never,
         },
         shipping_options: [
           {
             shipping_rate_data: {
               type: "fixed_amount" as const,
-              fixed_amount: { amount: shippingAmountCents, currency: "usd" },
-              display_name: displayName,
+              fixed_amount: { amount: 2000, currency: "usd" },
+              display_name: "Worldwide shipping (incl. customs, duties & taxes)",
               delivery_estimate: {
                 minimum: { unit: "week" as const, value: 3 },
-                maximum: { unit: "week" as const, value: anyInternational ? 5 : 4 },
+                maximum: { unit: "week" as const, value: 5 },
               },
               metadata: {
-                ship_cents: String(totalShipCents),
-                duties_cents: String(totalDutiesCents),
-                international: anyInternational ? "1" : "0",
-                buyer_country: data.country,
+                ship_cents: "2000",
+                duties_cents: "0",
+                international: "1",
+                buyer_country: data.country ?? "",
               },
             },
           },
@@ -152,6 +153,7 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
           productIds: data.items.map((i) => i.priceId).join(","),
         },
       });
+
 
       return { clientSecret: session.client_secret ?? "" };
     } catch (error) {

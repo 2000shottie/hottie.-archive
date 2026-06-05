@@ -9,10 +9,8 @@ import { useCart } from "@/lib/cart";
 import { useStock } from "@/lib/useStock";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCartCheckoutSession } from "@/lib/payments.functions";
-import {
-  allCountryOptions,
-  cartShipping,
-} from "@/lib/shipping-countries";
+
+
 import type { Product } from "@/lib/products";
 
 export const Route = createFileRoute("/checkout")({
@@ -36,21 +34,13 @@ function CheckoutPage() {
     ({ product }) => !!product.vestiaireUrl && availableIds[product.id] !== true,
   );
 
-  // Country picked BEFORE the Stripe iframe loads so we can show only the
-  // shipping rate applicable to the customer (and price it correctly).
-  const [country, setCountry] = useState<string>("");
-  const countryOptions = allCountryOptions();
-  const ship = country ? cartShipping(lines, country) : null;
-  const shipDollars = ship?.totalDollars ?? null;
+  const SHIP_DOLLARS = 20;
 
-  // Snapshot the cart + country so the Stripe session is recreated when either
-  // changes.
+  // Re-create the Stripe session whenever the cart changes.
   const itemsKey = lines.map((l) => `${l.product.id}:${l.qty}`).join("|");
-  const sessionKey = `${itemsKey}__${country || "none"}`;
   const lastKeyRef = useRef<string>("");
 
   const fetchClientSecret = async (): Promise<string> => {
-    if (!country) throw new Error("Select a shipping country first");
     const result = await createSession({
       data: {
         items: lines.map((l) => ({
@@ -60,7 +50,6 @@ function CheckoutPage() {
         })),
         returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
         environment: getStripeEnvironment(),
-        country,
       },
     });
     if ("error" in result) throw new Error(result.error);
@@ -68,14 +57,13 @@ function CheckoutPage() {
     return result.clientSecret;
   };
 
-  // Reset Stripe iframe whenever the cart or selected country changes
-  const [providerKey, setProviderKey] = useState(sessionKey);
+  const [providerKey, setProviderKey] = useState(itemsKey);
   useEffect(() => {
-    if (lastKeyRef.current !== sessionKey) {
-      lastKeyRef.current = sessionKey;
-      setProviderKey(sessionKey);
+    if (lastKeyRef.current !== itemsKey) {
+      lastKeyRef.current = itemsKey;
+      setProviderKey(itemsKey);
     }
-  }, [sessionKey]);
+  }, [itemsKey]);
 
   if (count === 0) {
     return (
@@ -116,74 +104,37 @@ function CheckoutPage() {
               </div>
             ) : (
               <>
-                {/* Country picker controls which shipping rate is shown
-                    inside Stripe checkout — one option, priced for that country. */}
                 <div className="mb-5 rounded-2xl border border-border bg-card p-5">
-                  <label htmlFor="ship-country" className="text-[11px] tracking-luxe uppercase text-muted-foreground">
-                    Ship to
-                  </label>
-                  <select
-                    id="ship-country"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-[14px] focus:outline-none focus:ring-1 focus:ring-primary"
-                  >
-                    <option value="">Select your country…</option>
-                    {countryOptions.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                  {ship && shipDollars != null ? (
-                    <p className="mt-3 text-[12px] text-muted-foreground">
-                      <span className="text-foreground">
-                        {ship.international ? "Worldwide shipping" : "Domestic shipping"}
-                      </span>{" "}
-                      — ${shipDollars.toFixed(2)} · 3–{ship.international ? 5 : 4} weeks
-                      {ship.international ? " · duties & taxes included" : ""}
-                    </p>
-                  ) : (
-                    <p className="mt-3 text-[12px] text-muted-foreground">
-                      Choose a country to see your exact shipping total. All international rates include duties &amp; taxes — no customs bills on delivery.
-                    </p>
-                  )}
+                  <p className="font-display text-[15px] text-foreground">
+                    A boutique experience — not a marketplace.
+                  </p>
+                  <p className="mt-2 text-[13px] text-muted-foreground leading-relaxed">
+                    Every piece is hand-picked and personally cared for. Flat <span className="text-foreground">$20 shipping anywhere in the world</span>,
+                    with all customs duties &amp; taxes already covered — never a surprise bill at your door.
+                  </p>
                 </div>
 
-                {country ? (
-                  <div className="rounded-2xl border border-border bg-card overflow-hidden">
-                    <EmbeddedCheckoutProvider
-                      key={providerKey}
-                      stripe={getStripe()}
-                      options={{ fetchClientSecret }}
-                    >
-                      <EmbeddedCheckout />
-                    </EmbeddedCheckoutProvider>
-                  </div>
-                ) : (
-                  <div className="rounded-2xl border border-dashed border-border bg-card/60 p-8 text-center text-[13px] text-muted-foreground">
-                    <p className="font-display text-[15px] text-foreground">A boutique experience — not a marketplace.</p>
-                    <p className="mt-2">
-                      Every piece is hand-picked and personally cared for. Flat $20 shipping anywhere in the world,
-                      with all customs duties &amp; taxes already covered — never a surprise bill at your door.
-                    </p>
-                    <p className="mt-3 text-[11px] tracking-luxe uppercase">Select a country above to continue to payment.</p>
-                  </div>
-                )}
-                {country ? (
-                  <>
-                    <p className="mt-6 text-[12px] leading-relaxed text-muted-foreground">
-                      Each item is individually sourced from our exclusive network of designer collections.
-                      Please allow approximately 3–4 weeks for delivery. Flat $20 worldwide shipping — duties &amp; taxes included, no customs bills on arrival.
-                    </p>
-                    <p className="mt-2 text-[11px] tracking-luxe uppercase text-muted-foreground">
-                      All sales are final — no returns or refunds.
-                    </p>
-                  </>
-                ) : null}
+                <div className="rounded-2xl border border-border bg-card overflow-hidden">
+                  <EmbeddedCheckoutProvider
+                    key={providerKey}
+                    stripe={getStripe()}
+                    options={{ fetchClientSecret }}
+                  >
+                    <EmbeddedCheckout />
+                  </EmbeddedCheckoutProvider>
+                </div>
+
+                <p className="mt-6 text-[12px] leading-relaxed text-muted-foreground">
+                  Each item is individually sourced from our exclusive network of designer collections.
+                  Please allow approximately 3–4 weeks for delivery. Flat $20 worldwide shipping — duties &amp; taxes included, no customs bills on arrival.
+                </p>
+                <p className="mt-2 text-[11px] tracking-luxe uppercase text-muted-foreground">
+                  All sales are final — no returns or refunds.
+                </p>
               </>
             )}
           </div>
+
 
           <aside className="h-fit rounded-2xl border border-border/70 bg-blush/30 p-6 md:sticky md:top-24">
             <h2 className="text-[11px] tracking-luxe uppercase">Order</h2>
@@ -199,29 +150,16 @@ function CheckoutPage() {
             </ul>
             <dl className="mt-6 space-y-2 border-t border-border pt-4 text-[13px]">
               <div className="flex justify-between"><dt className="text-muted-foreground">Subtotal</dt><dd>${subtotal.toLocaleString()}</dd></div>
-              {ship && shipDollars != null ? (
-                <>
-                  <div className="flex justify-between">
-                    <dt className="text-muted-foreground">
-                      Shipping{ship.international ? " (incl. duties & taxes)" : ""}
-                    </dt>
-                    <dd>${shipDollars.toLocaleString()}</dd>
-                  </div>
-                  <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
-                    <dt>Total</dt>
-                    <dd>${(subtotal + shipDollars).toLocaleString()}</dd>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Shipping</dt><dd>Select country</dd></div>
-                  <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
-                    <dt>Total</dt>
-                    <dd>${subtotal.toLocaleString()}+</dd>
-                  </div>
-                </>
-              )}
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Shipping (incl. duties &amp; taxes)</dt>
+                <dd>${SHIP_DOLLARS.toLocaleString()}</dd>
+              </div>
+              <div className="flex justify-between font-display text-[16px] pt-2 border-t border-border">
+                <dt>Total</dt>
+                <dd>${(subtotal + SHIP_DOLLARS).toLocaleString()}</dd>
+              </div>
             </dl>
+
             <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
               Shipping and applicable import duties/taxes are included in your total when required.{" "}
               <Link to="/shipping" className="underline hover:text-primary">Shipping details</Link>
