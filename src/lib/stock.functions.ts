@@ -84,7 +84,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       return {
         available: true,
         source: "firecrawl",
-        reason: "Listing is live on Vestiaire.",
+        reason: "Listing is live.",
         checkedAt,
       };
     } catch (err) {
