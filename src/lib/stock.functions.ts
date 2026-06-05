@@ -92,7 +92,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
       return {
         available: true,
         source: "firecrawl",
-        reason: `Could not verify Vestiaire stock: ${err instanceof Error ? err.message : "unknown"} — assuming live.`,
+        reason: `Could not verify stock: ${err instanceof Error ? err.message : "unknown"} — assuming live.`,
         checkedAt,
       };
     }
