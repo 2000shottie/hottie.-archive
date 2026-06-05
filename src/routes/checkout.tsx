@@ -162,18 +162,27 @@ function CheckoutPage() {
                   </div>
                 ) : (
                   <div className="rounded-2xl border border-dashed border-border bg-card/60 p-8 text-center text-[13px] text-muted-foreground">
-                    Select a country above to continue to payment.
+                    <p className="font-display text-[15px] text-foreground">A boutique experience — not a marketplace.</p>
+                    <p className="mt-2">
+                      Every piece is hand-picked and personally cared for. Flat $20 shipping anywhere in the world,
+                      with all customs duties &amp; taxes already covered — never a surprise bill at your door.
+                    </p>
+                    <p className="mt-3 text-[11px] tracking-luxe uppercase">Select a country above to continue to payment.</p>
                   </div>
                 )}
+                {country ? (
+                  <>
+                    <p className="mt-6 text-[12px] leading-relaxed text-muted-foreground">
+                      Each item is individually sourced from our exclusive network of designer collections.
+                      Please allow approximately 3–4 weeks for delivery. Flat $20 worldwide shipping — duties &amp; taxes included, no customs bills on arrival.
+                    </p>
+                    <p className="mt-2 text-[11px] tracking-luxe uppercase text-muted-foreground">
+                      All sales are final — no returns or refunds.
+                    </p>
+                  </>
+                ) : null}
               </>
             )}
-            <p className="mt-6 text-[12px] leading-relaxed text-muted-foreground">
-              Each item is individually sourced from our exclusive network of designer collections.
-              Please allow approximately 3–4 weeks for delivery.
-            </p>
-            <p className="mt-2 text-[11px] tracking-luxe uppercase text-muted-foreground">
-              All sales are final — no returns or refunds.
-            </p>
           </div>
 
           <aside className="h-fit rounded-2xl border border-border/70 bg-blush/30 p-6 md:sticky md:top-24">
