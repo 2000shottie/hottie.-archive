@@ -115,7 +115,7 @@ function CheckoutPage() {
                 One or more items in your bag are sold out. Remove them from your bag to continue.
               </div>
             ) : (
-              <div className="rounded-2xl border border-border bg-card overflow-hidden">
+              <div className="rounded-2xl border border-border bg-card overflow-hidden min-h-[600px]">
                 <EmbeddedCheckoutProvider
                   key={providerKey}
                   stripe={getStripe()}
