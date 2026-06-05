@@ -17,6 +17,7 @@ const inputSchema = z.object({
   items: z.array(itemSchema).min(1).max(20),
   returnUrl: z.string().url(),
   environment: z.enum(["sandbox", "live"]),
+  country: z.string().length(2).regex(/^[A-Z]{2}$/).optional(),
 });
 
 // Country tiers for shipping + customs (DDP). All non-US tiers are
