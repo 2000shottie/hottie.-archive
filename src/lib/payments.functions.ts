@@ -123,12 +123,12 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
           const amount = dutyAmountCents(subtotalCents, tier.pct);
           return {
             shipping_rate_data: {
-              type: "fixed_amount",
+              type: "fixed_amount" as const,
               fixed_amount: { amount, currency: "usd" },
               display_name: tier.label,
               delivery_estimate: {
-                minimum: { unit: "week", value: 3 },
-                maximum: { unit: "week", value: 5 },
+                minimum: { unit: "week" as const, value: 3 },
+                maximum: { unit: "week" as const, value: 5 },
               },
               metadata: {
                 region: key,
