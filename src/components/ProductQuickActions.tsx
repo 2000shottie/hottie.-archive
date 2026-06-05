@@ -49,7 +49,7 @@ export function ProductQuickActions({
       <button
         type="button"
         onClick={onBuy}
-        style={{ backgroundColor: "#c89299" }}
+        style={{ backgroundColor: "#dfacb1" }}
         className="flex-1 rounded-full px-2 py-1 text-[8px] tracking-luxe uppercase text-background transition-opacity hover:opacity-90"
       >
         Buy now
