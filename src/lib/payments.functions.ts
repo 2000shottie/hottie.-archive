@@ -146,8 +146,7 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         return_url: data.returnUrl,
         billing_address_collection: "required",
         shipping_address_collection: {
-          allowed_countries:
-            allowedCountries as unknown as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
+          allowed_countries: allowedCountries as unknown as never,
         },
         shipping_options,
         // Cards (Apple Pay on supported devices) + Link. Explicitly excludes Amazon Pay.
