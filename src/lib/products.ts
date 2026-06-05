@@ -115,6 +115,7 @@ export const products: Product[] = [
     vestiaireUrl:
       "https://www.vestiairecollective.com/women-bags/handbags/louis-vuitton/beige-denim-jeans-idylle-louis-vuitton-handbag-64583267.shtml",
     listedAt: "2024-01-15",
+    originCountry: "FR",
   },
   {
     id: "vw-tartan-yasmine-bag",
