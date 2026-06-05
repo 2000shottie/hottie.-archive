@@ -55,7 +55,25 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
             }
 
             const buyerEmail = session.customer_details?.email;
+
+            // Persist order so admin can later send shipping email.
             if (buyerEmail) {
+              const { error: orderErr } = await supabaseAdmin
+                .from("orders")
+                .upsert(
+                  {
+                    stripe_session_id: session.id,
+                    buyer_email: buyerEmail,
+                    buyer_name: session.customer_details?.name ?? null,
+                    product_ids: productIds,
+                    amount_total_cents: session.amount_total ?? null,
+                    currency: session.currency ?? "usd",
+                    shipping_address: session.shipping_details?.address ?? null,
+                  },
+                  { onConflict: "stripe_session_id" },
+                );
+              if (orderErr) console.error("webhook insert orders error:", orderErr);
+
               try {
                 await sendOrderConfirmationEmail({
                   to: buyerEmail,
