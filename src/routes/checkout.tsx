@@ -40,10 +40,8 @@ function CheckoutPage() {
   // shipping rate applicable to the customer (and price it correctly).
   const [country, setCountry] = useState<string>("");
   const countryOptions = allCountryOptions();
-  const tierKey = country ? tierForCountry(country) : null;
-  const tier = tierKey ? TIERS[tierKey] : null;
-  const shipCents = country ? shippingCostCents(country, subtotal * 100) : null;
-  const shipDollars = shipCents != null ? shipCents / 100 : null;
+  const ship = country ? cartShipping(lines, country) : null;
+  const shipDollars = ship?.totalDollars ?? null;
 
   // Snapshot the cart + country so the Stripe session is recreated when either
   // changes.
@@ -52,12 +50,17 @@ function CheckoutPage() {
   const lastKeyRef = useRef<string>("");
 
   const fetchClientSecret = async (): Promise<string> => {
+    if (!country) throw new Error("Select a shipping country first");
     const result = await createSession({
       data: {
-        items: lines.map((l) => ({ priceId: l.product.id, quantity: l.qty })),
+        items: lines.map((l) => ({
+          priceId: l.product.id,
+          quantity: l.qty,
+          ...(l.product.originCountry ? { originCountry: l.product.originCountry } : {}),
+        })),
         returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
         environment: getStripeEnvironment(),
-        ...(country ? { country } : {}),
+        country,
       },
     });
     if ("error" in result) throw new Error(result.error);
