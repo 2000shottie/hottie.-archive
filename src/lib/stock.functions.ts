@@ -44,7 +44,7 @@ export const checkVestiaireStock = createServerFn({ method: "POST" })
           url: data.url,
           formats: ["markdown"],
           onlyMainContent: false,
-          // Vestiaire renders price / sold badge with JS — wait for it.
+          // The source site renders price / sold badge with JS — wait for it.
           waitFor: 4000,
         }),
       });
