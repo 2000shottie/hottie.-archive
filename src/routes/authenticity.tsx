@@ -56,7 +56,7 @@ function AuthenticityPage() {
         </h1>
         <p className="mt-6 max-w-[60ch] text-[15px] leading-relaxed text-muted-foreground">
           The archive is small on purpose. Every bag, top, pair of shoes and piece of
-          jewelry has been authenticated by Vestiaire Collective's expert team before
+          jewelry has been authenticated by our expert team before
           it lands in your hands — and checked again by us. No fakes. No "inspired by."
           No grey-market guessing.
         </p>
