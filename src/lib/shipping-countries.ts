@@ -1,60 +1,88 @@
-// Country tiers mirrored from src/lib/payments.functions.ts so the client can
-// show per-country shipping pricing before opening the Stripe iframe.
+// Origin → destination shipping + duties calculator used both client-side
+// (sidebar preview in checkout) and as the source-of-truth shape for what
+// payments.functions.ts charges. Keep tables in sync with
+// src/lib/payments.functions.ts and src/lib/admin-rates.ts.
 
-export type TierKey = "US" | "NA" | "EU" | "APAC" | "ROW";
+import type { Product } from "@/lib/products";
 
-export const TIERS: Record<
-  TierKey,
-  { countries: readonly string[]; flat?: number; pct?: number; label: string; note: string }
-> = {
-  US: { countries: ["US"], flat: 2000, label: "US Standard Shipping", note: "No US sales tax." },
-  NA: {
-    countries: ["CA", "MX"],
-    pct: 0.12,
-    label: "North America",
-    note: "Duties & taxes included.",
-  },
-  EU: {
-    countries: [
-      "GB","IE","FR","DE","IT","ES","PT","NL","BE","LU",
-      "SE","NO","DK","FI","IS","CH","AT","PL","CZ","SK",
-      "HU","RO","BG","GR","HR","SI","EE","LV","LT","MT","CY",
-    ],
-    pct: 0.22,
-    label: "Europe / UK",
-    note: "VAT, duties & handling included.",
-  },
-  APAC: {
-    countries: ["AU","NZ","JP","KR","SG","HK","TW","IL","AE","SA"],
-    pct: 0.15,
-    label: "Asia-Pacific / Middle East",
-    note: "Duties & taxes included.",
-  },
-  ROW: {
-    countries: ["TH","MY","PH","ID","VN","IN","TR","ZA","BR","AR","CL","CO","PE","UY"],
-    pct: 0.25,
-    label: "Rest of world",
-    note: "Duties & taxes included.",
-  },
+export type Region = "US" | "EU" | "UK" | "NA" | "APAC" | "ROW";
+
+const REGION_BY_COUNTRY: Record<string, Region> = {
+  US: "US",
+  CA: "NA", MX: "NA",
+  GB: "UK",
+  IE: "EU", FR: "EU", DE: "EU", IT: "EU", ES: "EU", PT: "EU", NL: "EU",
+  BE: "EU", LU: "EU", SE: "EU", NO: "EU", DK: "EU", FI: "EU", IS: "EU",
+  CH: "EU", AT: "EU", PL: "EU", CZ: "EU", SK: "EU", HU: "EU", RO: "EU",
+  BG: "EU", GR: "EU", HR: "EU", SI: "EU", EE: "EU", LV: "EU", LT: "EU",
+  MT: "EU", CY: "EU",
+  AU: "APAC", NZ: "APAC", JP: "APAC", KR: "APAC", SG: "APAC", HK: "APAC",
+  TW: "APAC", IL: "APAC", AE: "APAC", SA: "APAC",
 };
 
-export function tierForCountry(cc: string): TierKey | null {
-  for (const k of Object.keys(TIERS) as TierKey[]) {
-    if (TIERS[k].countries.includes(cc)) return k;
+export function regionOf(cc: string): Region {
+  return REGION_BY_COUNTRY[cc.toUpperCase()] ?? "ROW";
+}
+
+const SHIP_USD: Record<Region, Record<Region, number>> = {
+  US:   { US: 15, NA: 25, EU: 40, UK: 40, APAC: 55, ROW: 65 },
+  EU:   { US: 25, NA: 30, EU: 15, UK: 18, APAC: 45, ROW: 55 },
+  UK:   { US: 25, NA: 30, EU: 18, UK: 12, APAC: 45, ROW: 55 },
+  NA:   { US: 20, NA: 15, EU: 40, UK: 40, APAC: 55, ROW: 65 },
+  APAC: { US: 45, NA: 50, EU: 45, UK: 45, APAC: 18, ROW: 60 },
+  ROW:  { US: 55, NA: 55, EU: 50, UK: 50, APAC: 55, ROW: 40 },
+};
+
+const LANDED_PCT: Record<Region, number> = {
+  US: 0.22, NA: 0.20, EU: 0.24, UK: 0.24, APAC: 0.18, ROW: 0.25,
+};
+
+function isDomestic(origin: Region, dest: Region): boolean {
+  return (
+    origin === dest ||
+    (origin === "EU" && dest === "UK") ||
+    (origin === "UK" && dest === "EU")
+  );
+}
+
+export type CartShipping = {
+  shipDollars: number;
+  dutiesDollars: number;
+  totalDollars: number;
+  international: boolean;
+  // Per-line breakdown for debugging / transparency.
+  lines: Array<{ id: string; ship: number; duties: number }>;
+};
+
+export function cartShipping(
+  lines: Array<{ product: Product; qty: number }>,
+  buyerCountry: string,
+): CartShipping {
+  const dest = regionOf(buyerCountry);
+  let ship = 0;
+  let duties = 0;
+  let international = false;
+  const breakdown: CartShipping["lines"] = [];
+  for (const { product, qty } of lines) {
+    const origin = regionOf(product.originCountry ?? "EU");
+    const lineShip = SHIP_USD[origin][dest] * qty;
+    const intl = !isDomestic(origin, dest);
+    const lineDuties = intl ? Math.round(product.price * qty * LANDED_PCT[dest]) : 0;
+    ship += lineShip;
+    duties += lineDuties;
+    if (intl) international = true;
+    breakdown.push({ id: product.id, ship: lineShip, duties: lineDuties });
   }
-  return null;
+  return {
+    shipDollars: ship,
+    dutiesDollars: duties,
+    totalDollars: ship + duties,
+    international,
+    lines: breakdown,
+  };
 }
 
-export function shippingCostCents(cc: string, subtotalCents: number): number | null {
-  const key = tierForCountry(cc);
-  if (!key) return null;
-  const t = TIERS[key];
-  if (t.flat != null) return t.flat;
-  if (t.pct != null) return Math.max(5000, Math.round(subtotalCents * t.pct));
-  return null;
-}
-
-// Display names for the country dropdown.
+// Country picker options — every destination region we support, sorted by name.
 export const COUNTRY_NAMES: Record<string, string> = {
   US: "United States",
   CA: "Canada", MX: "Mexico",
@@ -75,12 +103,8 @@ export const COUNTRY_NAMES: Record<string, string> = {
   PE: "Peru", UY: "Uruguay",
 };
 
-export function allCountryOptions(): Array<{ code: string; name: string; tier: TierKey }> {
-  const out: Array<{ code: string; name: string; tier: TierKey }> = [];
-  for (const tier of Object.keys(TIERS) as TierKey[]) {
-    for (const cc of TIERS[tier].countries) {
-      out.push({ code: cc, name: COUNTRY_NAMES[cc] ?? cc, tier });
-    }
-  }
-  return out.sort((a, b) => a.name.localeCompare(b.name));
+export function allCountryOptions(): Array<{ code: string; name: string }> {
+  return Object.keys(COUNTRY_NAMES)
+    .map((code) => ({ code, name: COUNTRY_NAMES[code] }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
