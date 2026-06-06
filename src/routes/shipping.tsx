@@ -40,9 +40,8 @@ function ShippingPage() {
           Ships <span className="font-script text-primary">worldwide</span>
         </h1>
         <p className="mt-6 max-w-[640px] text-[15px] leading-relaxed text-muted-foreground">
-          Every HOTTIE piece is hand-packed and shipped tracked from our archive.
-          International orders are sent <em>delivered duties paid</em> — the price you
-          see in checkout is the price you pay. No customs invoice at the door.
+          Every HOTTIE piece is prepared with care and shipped with full tracking from our archive.
+          For both U.S. &amp; international orders, all duties and taxes are prepaid. The price you see at checkout is the final price you pay, no customs invoices, import fees, or unexpected charges upon delivery.
         </p>
 
         <section className="mt-12">
