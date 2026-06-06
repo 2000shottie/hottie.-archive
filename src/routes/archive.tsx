@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { products, CATEGORY_LABELS, type Category, type Product } from "@/lib/products";
-import { useStock } from "@/lib/useStock";
+import { useStock, useStockMap, sortProductsByAvailability } from "@/lib/useStock";
 import { ProductQuickActions } from "@/components/ProductQuickActions";
 
 const ORDER: Category[] = ["bags", "tops", "bottoms", "shoes", "jewelry", "eyewear"];
