@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      import_jobs: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          product_id: string | null
+          progress_current: number
+          progress_total: number
+          source_url: string
+          status: string
+          step_label: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          product_id?: string | null
+          progress_current?: number
+          progress_total?: number
+          source_url: string
+          status?: string
+          step_label?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          product_id?: string | null
+          progress_current?: number
+          progress_total?: number
+          source_url?: string
+          status?: string
+          step_label?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_jobs_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           amount_total_cents: number | null
@@ -65,6 +112,47 @@ export type Database = {
         }
         Relationships: []
       }
+      product_images: {
+        Row: {
+          created_at: string
+          id: string
+          needs_review: boolean
+          original_storage_path: string | null
+          original_url: string | null
+          position: number
+          processed_url: string
+          product_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          needs_review?: boolean
+          original_storage_path?: string | null
+          original_url?: string | null
+          position?: number
+          processed_url: string
+          product_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          needs_review?: boolean
+          original_storage_path?: string | null
+          original_url?: string | null
+          position?: number
+          processed_url?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_stock: {
         Row: {
           available: boolean
@@ -92,6 +180,72 @@ export type Database = {
           reason?: string
           source?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string | null
+          condition: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          house: string
+          id: string
+          listed_at: string
+          name: string
+          needs_image_review: boolean
+          price: number
+          seller_country: string | null
+          size: string | null
+          slug: string
+          status: string
+          tag: string | null
+          updated_at: string
+          vestiaire_id: string | null
+          vestiaire_url: string | null
+        }
+        Insert: {
+          category?: string | null
+          condition?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          house: string
+          id?: string
+          listed_at?: string
+          name: string
+          needs_image_review?: boolean
+          price?: number
+          seller_country?: string | null
+          size?: string | null
+          slug: string
+          status?: string
+          tag?: string | null
+          updated_at?: string
+          vestiaire_id?: string | null
+          vestiaire_url?: string | null
+        }
+        Update: {
+          category?: string | null
+          condition?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          house?: string
+          id?: string
+          listed_at?: string
+          name?: string
+          needs_image_review?: boolean
+          price?: number
+          seller_country?: string | null
+          size?: string | null
+          slug?: string
+          status?: string
+          tag?: string | null
+          updated_at?: string
+          vestiaire_id?: string | null
+          vestiaire_url?: string | null
         }
         Relationships: []
       }
