@@ -1,65 +1,53 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { checkVestiaireStock, type StockStatus } from "@/lib/stock.functions";
-import { getSoldProductIds } from "@/lib/sold.functions";
+import { getStockMap, type StockMap, type StockMapEntry } from "@/lib/stock-cache.functions";
 
 /**
- * Returns the set of product IDs sold through this site.
- * Refetches on focus so the grid updates after a checkout in another tab.
+ * One shared query that loads the whole stock map. Every product card
+ * subscribes to this — React Query dedupes so the network request only fires
+ * once per refresh window.
  */
-export function useLocallySoldIds() {
-  const fetchIds = useServerFn(getSoldProductIds);
-  return useQuery<string[]>({
-    queryKey: ["sold-products"],
-    queryFn: () => fetchIds(),
-    refetchInterval: 5000,
+function useStockMap() {
+  const fetchMap = useServerFn(getStockMap);
+  return useQuery<StockMap>({
+    queryKey: ["stock-map"],
+    queryFn: () => fetchMap(),
+    // The backend cron + on-load refresh keep this fresh; the frontend just
+    // re-reads every 30s and on focus so updates show without a hard reload.
+    refetchInterval: 30_000,
     refetchOnWindowFocus: true,
-    staleTime: 0,
-    placeholderData: [],
+    staleTime: 15_000,
+    placeholderData: (prev) => prev ?? {},
   });
 }
 
 /**
- * Polls the source listing AND merges in the locally-sold list.
- * A piece is "available" only when the source says so AND it hasn't been
- * sold through this site. Defaults to available while loading.
+ * Returns the cached stock status for a single product. Strict default:
+ * while the map is still loading and we have no entry yet, we treat the
+ * product as available so the page doesn't flash "Sold out" before the
+ * data arrives. Once an entry is present, we trust it.
  */
 export function useStock(url: string | undefined, productId?: string) {
-  const check = useServerFn(checkVestiaireStock);
-  const stockQuery = useQuery<StockStatus>({
-    queryKey: ["stock", url, productId],
-    enabled: !!url,
-    queryFn: () => check({ data: { url: url!, productId } }),
-    refetchInterval: 1000 * 60,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    staleTime: 1000 * 30,
-    placeholderData: {
-      available: true,
-      source: "unknown",
-      reason: "Checking stock…",
-      checkedAt: new Date().toISOString(),
-    },
-  });
+  const query = useStockMap();
+  const entry: StockMapEntry | undefined = productId ? query.data?.[productId] : undefined;
 
-  const soldQuery = useLocallySoldIds();
-  const soldLocally = !!productId && (soldQuery.data ?? []).includes(productId);
-
-  const base = stockQuery.data ?? {
+  const data: StockMapEntry = entry ?? {
     available: true,
-    source: "unknown" as const,
     reason: "Checking stock…",
     checkedAt: new Date().toISOString(),
   };
 
-  const merged: StockStatus = soldLocally
-    ? {
-        available: false,
-        source: base.source,
-        reason: "Sold through HOTTIE.",
-        checkedAt: base.checkedAt,
-      }
-    : base;
+  return { ...query, data };
+}
 
-  return { ...stockQuery, data: merged };
+/**
+ * Kept for back-compat with anything that imported the old helper.
+ * Returns the list of product IDs currently marked unavailable.
+ */
+export function useLocallySoldIds() {
+  const query = useStockMap();
+  const data = Object.entries(query.data ?? {})
+    .filter(([, v]) => !v.available)
+    .map(([k]) => k);
+  return { ...query, data };
 }
