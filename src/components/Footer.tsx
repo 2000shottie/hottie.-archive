@@ -17,6 +17,8 @@ export function Footer() {
     { t: "Care", links: [
       { label: "Shipping", to: "/shipping" },
       { label: "Authenticity", to: "/authenticity" },
+    ]},
+    { t: "Support", links: [
       { label: "Contact", to: "/contact" },
     ]},
   ];
@@ -27,7 +29,7 @@ export function Footer() {
 
           {columns.map((c) => (
             <div key={c.t}>
-              <p className="text-[10px] tracking-luxe uppercase text-foreground">{c.t}</p>
+              <p className="text-[10px] font-semibold tracking-luxe uppercase text-foreground">{c.t}</p>
               <ul className="mt-4 space-y-2.5 text-[13px] text-muted-foreground">
                 {c.links.map((i) => (
                   <li key={i.label}>
