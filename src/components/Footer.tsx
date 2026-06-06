@@ -25,10 +25,10 @@ export function Footer() {
     ]},
   ];
 
-  const renderItem = (item: FooterLink | FooterGroup) => {
+  const renderItem = (item: FooterLink | FooterGroup, index: number) => {
     if ("links" in item) {
       return (
-        <li key={item.label}>
+        <li key={item.label} className={index > 0 ? "mt-3" : ""}>
           <p className="text-[10px] font-semibold tracking-luxe uppercase text-foreground">{item.label}</p>
           <ul className="mt-2 space-y-2">
             {item.links.map((link) => (
