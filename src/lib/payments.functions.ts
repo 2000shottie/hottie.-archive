@@ -152,6 +152,12 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         // registered in Stripe Dashboard → Settings → Payment methods.
         payment_method_types: ["card", "link"],
         phone_number_collection: { enabled: true },
+        // Stripe will email a branded receipt to the buyer's email collected
+        // at checkout (requires "Successful payments" emails enabled in
+        // Stripe Dashboard → Settings → Emails — on by default).
+        payment_intent_data: {
+          description: `HOTTIE. order — ${data.items.length} item${data.items.length === 1 ? "" : "s"}`,
+        },
         metadata: {
           productIds: data.items.map((i) => i.priceId).join(","),
         },
