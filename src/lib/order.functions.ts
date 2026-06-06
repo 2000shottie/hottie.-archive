@@ -53,7 +53,7 @@ export const getOrderSummary = createServerFn({ method: "POST" })
         currency: (li.currency ?? session.currency ?? "usd").toLowerCase(),
       }));
 
-      const shipping = session.shipping_details ?? session.collected_information?.shipping_details ?? null;
+      const shipping = session.collected_information?.shipping_details ?? null;
 
       const order: OrderSummary = {
         status: session.status ?? "unknown",
