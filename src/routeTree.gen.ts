@@ -22,6 +22,7 @@ import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as AdminSyncRouteImport } from './routes/admin.sync'
 import { Route as AdminPricingRouteImport } from './routes/admin.pricing'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
+import { Route as AdminImportRouteImport } from './routes/admin.import'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksSyncStockRouteImport } from './routes/api/public/hooks/sync-stock'
 
@@ -90,6 +91,11 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminImportRoute = AdminImportRouteImport.update({
+  id: '/admin/import',
+  path: '/admin/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/sync': typeof AdminSyncRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/sync': typeof AdminSyncRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/new': typeof NewRoute
   '/shipping': typeof ShippingRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/sync': typeof AdminSyncRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/import'
     | '/admin/orders'
     | '/admin/pricing'
     | '/admin/sync'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/import'
     | '/admin/orders'
     | '/admin/pricing'
     | '/admin/sync'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/new'
     | '/shipping'
+    | '/admin/import'
     | '/admin/orders'
     | '/admin/pricing'
     | '/admin/sync'
@@ -217,6 +229,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   NewRoute: typeof NewRoute
   ShippingRoute: typeof ShippingRoute
+  AdminImportRoute: typeof AdminImportRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPricingRoute: typeof AdminPricingRoute
   AdminSyncRoute: typeof AdminSyncRoute
@@ -318,6 +331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/import': {
+      id: '/admin/import'
+      path: '/admin/import'
+      fullPath: '/admin/import'
+      preLoaderRoute: typeof AdminImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -356,6 +376,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   NewRoute: NewRoute,
   ShippingRoute: ShippingRoute,
+  AdminImportRoute: AdminImportRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPricingRoute: AdminPricingRoute,
   AdminSyncRoute: AdminSyncRoute,
