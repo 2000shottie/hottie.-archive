@@ -120,7 +120,13 @@ function classify(
     return { available: false, reason: "Page redirected away from this listing." };
   }
 
-  const hasBuyAction = /\badd to bag\b|\badd to cart\b|\bmake an offer\b/i.test(markdown);
+  // Firecrawl's markdown can merge adjacent button labels, e.g.
+  // "add to bagmake an offer", so use direct phrase detection instead of
+  // strict word-boundary regexes. Sold/removed markers above still win first.
+  const hasBuyAction =
+    markdown.includes("add to bag") ||
+    markdown.includes("add to cart") ||
+    markdown.includes("make an offer");
   if (!hasBuyAction) {
     return { available: false, reason: "No purchase button rendered on the listing." };
   }
