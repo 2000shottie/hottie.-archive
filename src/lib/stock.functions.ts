@@ -57,7 +57,7 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
     }
 
     const json = (await res.json()) as {
-      data?: { markdown?: string; metadata?: { statusCode?: number } };
+      data?: { markdown?: string; metadata?: { statusCode?: number; title?: string } };
       markdown?: string;
     };
     const markdown = (json.data?.markdown ?? json.markdown ?? "").toLowerCase();
@@ -81,10 +81,11 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
     // If the page resolves but is suspiciously tiny, it's almost certainly
     // a redirect to an empty/not-found shell.
     const looksEmpty = markdown.trim().length < 400;
+    const hasLivePurchaseAction = /\badd to bag\b|\badd to cart\b|\bmake an offer\b/i.test(sourceText);
     const missingRequestedProduct =
       !!vestiaireProductId &&
       !sourceText.includes(vestiaireProductId) &&
-      !/\badd to bag\b|\badd to cart\b|\bmake an offer\b/i.test(sourceText);
+      !hasLivePurchaseAction;
     const genericRedirect =
       missingRequestedProduct &&
       /buy \/ sell|vestiaire collective|handbag|shoes|clothing|accessories/.test(title);
@@ -94,7 +95,8 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
       soldRegex.test(markdown) ||
       removedRegex.test(markdown) ||
       (looksEmpty && statusCode && statusCode >= 200 && statusCode < 400) ||
-      genericRedirect
+      genericRedirect ||
+      !hasLivePurchaseAction
     ) {
       return {
         available: false,
