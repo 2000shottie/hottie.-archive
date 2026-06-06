@@ -77,7 +77,7 @@ function ShippingPage() {
             <h2 className="text-[11px] tracking-luxe uppercase">Transit time</h2>
             <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
               Each piece is individually sourced from our exclusive designer network.
-              Please allow 3–4 weeks for US &amp; international delivery.
+              Please allow 3–4 weeks for U.S. &amp; international delivery.
               You&rsquo;ll receive tracking as soon as your order ships.
             </p>
           </div>
