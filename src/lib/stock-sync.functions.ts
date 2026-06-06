@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { products } from "@/lib/products";
-import { fetchVestiaireStockStatus } from "@/lib/stock.functions";
+import { fetchVestiaireStockStatus, isConfirmedLiveStock } from "@/lib/stock.functions";
 
 export type StockSyncResult = {
   ok: boolean;
@@ -27,7 +27,7 @@ export async function runStockSync(): Promise<StockSyncResult> {
   for (const product of vestiaireProducts) {
     const stock = await fetchVestiaireStockStatus(product.vestiaireUrl!);
     checked.push({ id: product.id, available: stock.available, reason: stock.reason });
-    if (stock.available) availableIds.push(product.id);
+    if (isConfirmedLiveStock(stock)) availableIds.push(product.id);
     else markedSold.push(product.id);
   }
 
