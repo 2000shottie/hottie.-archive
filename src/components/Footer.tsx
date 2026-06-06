@@ -17,8 +17,6 @@ export function Footer() {
     { t: "Care", links: [
       { label: "Shipping", to: "/shipping" },
       { label: "Authenticity", to: "/authenticity" },
-    ]},
-    { t: "Support", links: [
       { label: "Contact", to: "/contact" },
     ]},
   ];
