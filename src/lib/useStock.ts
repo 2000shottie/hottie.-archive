@@ -27,9 +27,9 @@ export function useLocallySoldIds() {
 export function useStock(url: string | undefined, productId?: string) {
   const check = useServerFn(checkVestiaireStock);
   const stockQuery = useQuery<StockStatus>({
-    queryKey: ["stock", url],
+    queryKey: ["stock", url, productId],
     enabled: !!url,
-    queryFn: () => check({ data: { url: url! } }),
+    queryFn: () => check({ data: { url: url!, productId } }),
     refetchInterval: 1000 * 60,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
