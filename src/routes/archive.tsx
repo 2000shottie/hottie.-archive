@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { products, CATEGORY_LABELS, type Category, type Product } from "@/lib/products";
+import { CATEGORY_LABELS, type Category, type Product } from "@/lib/products";
 import { useStock, useStockMap, sortProductsByAvailability } from "@/lib/useStock";
+import { useAllProducts } from "@/lib/useAllProducts";
 import { ProductQuickActions } from "@/components/ProductQuickActions";
 
 const ORDER: Category[] = ["bags", "tops", "bottoms", "shoes", "jewelry", "eyewear"];
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/archive")({
 
 function ArchivePage() {
   const { data: stockMap } = useStockMap();
+  const { data: products } = useAllProducts();
   const grouped = ORDER.map((cat) => ({
     cat,
     items: sortProductsByAvailability(

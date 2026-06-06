@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { products, type Product } from "@/lib/products";
+import { type Product } from "@/lib/products";
 import { useStock, useStockMap, sortProductsByAvailability } from "@/lib/useStock";
+import { useAllProducts } from "@/lib/useAllProducts";
 import { ProductQuickActions } from "@/components/ProductQuickActions";
 
 export function ProductGrid() {
   const { data: stockMap } = useStockMap();
+  const { data: products } = useAllProducts();
   const sorted = sortProductsByAvailability(products, stockMap ?? {});
 
   return (

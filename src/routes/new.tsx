@@ -2,8 +2,9 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { products, type Product } from "@/lib/products";
+import { type Product } from "@/lib/products";
 import { useStock, useStockMap, sortProductsByAvailability } from "@/lib/useStock";
+import { useAllProducts } from "@/lib/useAllProducts";
 import { ProductQuickActions } from "@/components/ProductQuickActions";
 
 type SortMode = "newest" | "price-desc" | "price-asc";
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/new")({
 function NewPage() {
   const [sort, setSort] = useState<SortMode>("newest");
   const { data: stockMap } = useStockMap();
+  const { data: products } = useAllProducts();
+
 
   const sorted = sortProductsByAvailability(products, stockMap ?? {}).sort((a, b) => {
     const aEntry = stockMap?.[a.id];

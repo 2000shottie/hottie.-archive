@@ -1,24 +1,21 @@
-import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { getProduct, products } from "@/lib/products";
+import { getProduct } from "@/lib/products";
+import { useAllProducts, useProductById } from "@/lib/useAllProducts";
 import { useCart } from "@/lib/cart";
 import { useStock } from "@/lib/useStock";
 
 export const Route = createFileRoute("/product/$id")({
-  loader: ({ params }) => {
-    const product = getProduct(params.id);
-    if (!product) throw notFound();
-    return { product };
-  },
+  loader: ({ params }) => ({ id: params.id, product: getProduct(params.id) ?? null }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: loaderData ? `${loaderData.product.name} — HOTTIE.` : "HOTTIE." },
+      { title: loaderData?.product ? `${loaderData.product.name} — HOTTIE.` : "HOTTIE." },
       {
         name: "description",
-        content: loaderData?.product.description ?? "A curated piece from the HOTTIE archive.",
+        content: loaderData?.product?.description ?? "A curated piece from the HOTTIE archive.",
       },
     ],
   }),
@@ -42,8 +39,24 @@ export const Route = createFileRoute("/product/$id")({
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
-  const more = products.filter((p) => p.id !== product.id).slice(0, 4);
+  const { id, product: hardcoded } = Route.useLoaderData();
+  const dbProduct = useProductById(id);
+  const product = dbProduct ?? hardcoded;
+  const { data: allProducts } = useAllProducts();
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <Navbar />
+        <main className="mx-auto max-w-[800px] px-5 py-32 text-center">
+          <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">Loading…</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const more = allProducts.filter((p) => p.id !== product.id).slice(0, 4);
   const { add } = useCart();
   const navigate = useNavigate();
   const { data: stock } = useStock(product.vestiaireUrl, product.id);
