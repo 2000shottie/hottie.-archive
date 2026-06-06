@@ -42,6 +42,9 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
         onlyMainContent: false,
         // The source site renders price / sold badge with JS — wait for it.
         waitFor: 4000,
+        // Pin to a consistent locale so we hit the same product page every time
+        // (Vestiaire geo-redirects between regional mirrors otherwise).
+        location: { country: "US", languages: ["en"] },
       }),
     });
 
@@ -61,9 +64,7 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
       markdown?: string;
     };
     const markdown = (json.data?.markdown ?? json.markdown ?? "").toLowerCase();
-    const sourceText = markdown;
     const statusCode = json.data?.metadata?.statusCode;
-    const title = json.data?.metadata?.title?.toLowerCase() ?? "";
     const vestiaireProductId = getVestiaireProductId(url);
 
     // Definitive sold-out markers (JS-rendered — see waitFor above).
@@ -71,32 +72,25 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
     const soldRegex =
       /\bsold at\b|this item has been sold|item is sold|no longer available|item sold out|out of stock/i;
 
-    // Removed / unfindable listing markers — Vestiaire often redirects
-    // delisted items to a "page not found" or generic search page rather
-    // than returning a 404. Treat these as sold so they disappear from buy flow.
+    // Removed / unfindable listing markers.
     const removedRegex =
-      /page not found|page you are looking for|couldn't find this page|couldn't find the page|product not found|this product is no longer|item no longer available|listing (?:is )?no longer available|oops[^a-z]{0,5}(?:this )?page/i;
+      /page not found|page you are looking for|couldn't find this page|couldn't find the page|product not found|this product is no longer|item no longer available|listing (?:is )?no longer available/i;
 
-    // A real Vestiaire product page is always thousands of chars of markdown.
-    // If the page resolves but is suspiciously tiny, it's almost certainly
-    // a redirect to an empty/not-found shell.
-    const looksEmpty = markdown.trim().length < 400;
-    const hasLivePurchaseAction = /\badd to bag\b|\badd to cart\b|\bmake an offer\b/i.test(sourceText);
-    const missingRequestedProduct =
-      !!vestiaireProductId &&
-      !sourceText.includes(vestiaireProductId) &&
-      !hasLivePurchaseAction;
-    const genericRedirect =
-      missingRequestedProduct &&
-      /buy \/ sell|vestiaire collective|handbag|shoes|clothing|accessories/.test(title);
+    // Vestiaire sometimes redirects delisted items to a category / search page
+    // instead of returning a 404. Detect this by checking for category-page
+    // signals (lots of results, sort/filter chrome) AND the absence of the
+    // specific product id we asked for.
+    const looksLikeCategoryPage =
+      /\bresults\b[\s\S]{0,40}sort by|save this search|all filters/i.test(markdown);
+    const productIdMissing =
+      !!vestiaireProductId && !markdown.includes(vestiaireProductId);
+    const redirectedAway = productIdMissing && looksLikeCategoryPage;
 
     if (
       statusCode === 404 ||
       soldRegex.test(markdown) ||
       removedRegex.test(markdown) ||
-      (looksEmpty && statusCode && statusCode >= 200 && statusCode < 400) ||
-      genericRedirect ||
-      !hasLivePurchaseAction
+      redirectedAway
     ) {
       return {
         available: false,
@@ -105,6 +99,7 @@ export async function fetchVestiaireStockStatus(url: string): Promise<StockStatu
         checkedAt,
       };
     }
+
 
     return {
       available: true,
