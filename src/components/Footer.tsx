@@ -2,10 +2,12 @@ import { Link } from "@tanstack/react-router";
 
 
 type FooterLink = { label: string; to: string; hash?: string };
+type FooterGroup = { label: string; links: FooterLink[] };
+type FooterColumn = { t: string; items: Array<FooterLink | FooterGroup> };
 
 export function Footer() {
-  const columns: Array<{ t: string; links: FooterLink[] }> = [
-    { t: "Shop", links: [
+  const columns: FooterColumn[] = [
+    { t: "Shop", items: [
       { label: "New", to: "/new" },
       { label: "Bags", to: "/archive", hash: "bags" },
       { label: "Tops", to: "/archive", hash: "tops" },
@@ -14,12 +16,49 @@ export function Footer() {
       { label: "Jewelry", to: "/archive", hash: "jewelry" },
       { label: "Sunglasses", to: "/archive", hash: "eyewear" },
     ]},
-    { t: "Care", links: [
+    { t: "Care", items: [
       { label: "Shipping", to: "/shipping" },
       { label: "Authenticity", to: "/authenticity" },
-      { label: "Contact", to: "/contact" },
+      { label: "Support", links: [
+        { label: "Contact", to: "/contact" },
+      ]},
     ]},
   ];
+
+  const renderItem = (item: FooterLink | FooterGroup) => {
+    if ("links" in item) {
+      return (
+        <li key={item.label}>
+          <p className="text-[10px] font-semibold tracking-luxe uppercase text-foreground">{item.label}</p>
+          <ul className="mt-2 space-y-2">
+            {item.links.map((link) => (
+              <li key={link.label}>
+                <Link
+                  to={link.to}
+                  hash={link.hash}
+                  className="transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </li>
+      );
+    }
+    return (
+      <li key={item.label}>
+        <Link
+          to={item.to}
+          hash={item.hash}
+          className="transition-colors hover:text-primary"
+        >
+          {item.label}
+        </Link>
+      </li>
+    );
+  };
+
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto max-w-[1480px] px-5 py-16 md:px-10">
@@ -29,17 +68,7 @@ export function Footer() {
             <div key={c.t}>
               <p className="text-[10px] font-semibold tracking-luxe uppercase text-foreground">{c.t}</p>
               <ul className="mt-4 space-y-2.5 text-[13px] text-muted-foreground">
-                {c.links.map((i) => (
-                  <li key={i.label}>
-                    <Link
-                      to={i.to}
-                      hash={i.hash}
-                      className="transition-colors hover:text-primary"
-                    >
-                      {i.label}
-                    </Link>
-                  </li>
-                ))}
+                {c.items.map(renderItem)}
               </ul>
             </div>
           ))}
