@@ -41,7 +41,7 @@ function ShippingPage() {
         </h1>
         <p className="mt-6 max-w-[640px] text-[15px] leading-relaxed text-muted-foreground">
           Every HOTTIE piece is prepared with care and shipped with full tracking from our archive.
-          For both U.S. &amp; international orders, all duties and taxes are prepaid. The price you see at checkout is the final price you pay, no customs invoices, import fees, or unexpected charges upon delivery.
+          For both U.S. &amp; international orders, all duties and taxes are prepaid. The price you see at checkout is the final price you pay. No customs invoices, import fees, or unexpected charges upon delivery.
         </p>
 
         <section className="mt-12">
@@ -66,10 +66,6 @@ function ShippingPage() {
               </tbody>
             </table>
           </div>
-          <p className="mt-3 text-[11px] text-muted-foreground">
-            Your exact total — including the duty calculation for your country — is shown
-            in checkout before you pay.
-          </p>
         </section>
 
         <section className="mt-14 grid gap-8 md:grid-cols-2">
