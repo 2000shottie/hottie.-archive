@@ -1,9 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { products, type Product } from "@/lib/products";
-import { useStock } from "@/lib/useStock";
+import { useStock, useStockMap, sortProductsByAvailability } from "@/lib/useStock";
 import { ProductQuickActions } from "@/components/ProductQuickActions";
 
 export function ProductGrid() {
+  const { data: stockMap } = useStockMap();
+  const sorted = sortProductsByAvailability(products, stockMap ?? {});
+
   return (
     <section id="shop" className="bg-background py-20 md:py-28">
       <div className="mx-auto max-w-[1480px] px-5 md:px-10">
@@ -25,7 +28,7 @@ export function ProductGrid() {
         </div>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-4 md:gap-x-6 md:gap-y-16">
-          {products.map((p) => (
+          {sorted.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>

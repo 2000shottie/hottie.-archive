@@ -7,7 +7,7 @@ import { getStockMap, type StockMap, type StockMapEntry } from "@/lib/stock-cach
  * subscribes to this — React Query dedupes so the network request only fires
  * once per refresh window.
  */
-function useStockMap() {
+export function useStockMap() {
   const fetchMap = useServerFn(getStockMap);
   return useQuery<StockMap>({
     queryKey: ["stock-map"],
@@ -18,6 +18,27 @@ function useStockMap() {
     refetchOnWindowFocus: true,
     staleTime: 15_000,
     placeholderData: (prev) => prev ?? {},
+  });
+}
+
+/**
+ * Sort products so buyable items appear first and sold-out items below.
+ * Within each group, sort newest-to-oldest by `listedAt`.
+ */
+export function sortProductsByAvailability<T extends { id: string; listedAt: string }>(
+  items: T[],
+  stockMap: StockMap,
+): T[] {
+  return [...items].sort((a, b) => {
+    const aEntry = stockMap[a.id];
+    const bEntry = stockMap[b.id];
+    const aAvailable = aEntry ? aEntry.available : true;
+    const bAvailable = bEntry ? bEntry.available : true;
+
+    if (aAvailable && !bAvailable) return -1;
+    if (!aAvailable && bAvailable) return 1;
+
+    return new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime();
   });
 }
 
