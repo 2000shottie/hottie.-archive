@@ -129,6 +129,19 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  // Fire a non-blocking backend stock refresh once per session/tab.
+  // The server fn returns immediately and re-checks Vestiaire in the background;
+  // it's also internally rate-limited so frequent reloads don't hammer Firecrawl.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const KEY = "hottie:stock-refresh-fired";
+    if (sessionStorage.getItem(KEY)) return;
+    sessionStorage.setItem(KEY, "1");
+    import("@/lib/stock-cache.functions")
+      .then(({ refreshStockInBackground }) => refreshStockInBackground())
+      .catch((err) => console.warn("background stock refresh skipped", err));
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <CartProvider>
@@ -139,3 +152,4 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+

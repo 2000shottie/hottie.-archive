@@ -65,6 +65,36 @@ export type Database = {
         }
         Relationships: []
       }
+      product_stock: {
+        Row: {
+          available: boolean
+          checked_at: string
+          consecutive_failures: number
+          product_id: string
+          reason: string
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          available: boolean
+          checked_at?: string
+          consecutive_failures?: number
+          product_id: string
+          reason: string
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean
+          checked_at?: string
+          consecutive_failures?: number
+          product_id?: string
+          reason?: string
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sold_products: {
         Row: {
           product_id: string
@@ -80,6 +110,36 @@ export type Database = {
           product_id?: string
           sold_at?: string
           source?: string
+        }
+        Relationships: []
+      }
+      stock_check_log: {
+        Row: {
+          available: boolean
+          checked_at: string
+          duration_ms: number | null
+          id: number
+          product_id: string
+          reason: string
+          status_code: number | null
+        }
+        Insert: {
+          available: boolean
+          checked_at?: string
+          duration_ms?: number | null
+          id?: number
+          product_id: string
+          reason: string
+          status_code?: number | null
+        }
+        Update: {
+          available?: boolean
+          checked_at?: string
+          duration_ms?: number | null
+          id?: number
+          product_id?: string
+          reason?: string
+          status_code?: number | null
         }
         Relationships: []
       }
