@@ -67,7 +67,7 @@ export function Footer() {
           {columns.map((c) => (
             <div key={c.t}>
               <p className="text-[10px] font-semibold tracking-luxe uppercase text-foreground">{c.t}</p>
-              <ul className="mt-4 space-y-2.5 text-[13px] text-muted-foreground">
+              <ul className="mt-5 space-y-3.5 text-[13px] text-muted-foreground">
                 {c.items.map(renderItem)}
               </ul>
             </div>
