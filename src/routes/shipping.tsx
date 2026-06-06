@@ -23,11 +23,11 @@ export const Route = createFileRoute("/shipping")({
 });
 
 const tiers: Array<{ region: string; rate: string; note: string }> = [
-  { region: "United States", rate: "$20 flat", note: "No sales tax. Tracked, 3–4 weeks." },
-  { region: "Canada & Mexico", rate: "12% of subtotal · min $50", note: "Duties & taxes included." },
-  { region: "Europe & UK", rate: "22% of subtotal · min $50", note: "VAT, duties & handling included." },
-  { region: "Asia-Pacific & Middle East", rate: "15% of subtotal · min $50", note: "Duties & taxes included." },
-  { region: "Rest of world", rate: "25% of subtotal · min $50", note: "Duties & taxes included." },
+  { region: "United States", rate: "$20 flat", note: "Tracked, 3–4 weeks. Duties included." },
+  { region: "Canada & Mexico", rate: "$20 flat", note: "Duties & taxes included." },
+  { region: "Europe & UK", rate: "$20 flat", note: "VAT, duties & handling included." },
+  { region: "Asia-Pacific & Middle East", rate: "$20 flat", note: "Duties & taxes included." },
+  { region: "Rest of world", rate: "$20 flat", note: "Duties & taxes included." },
 ];
 
 function ShippingPage() {
@@ -78,7 +78,7 @@ function ShippingPage() {
             <h2 className="text-[11px] tracking-luxe uppercase">Transit time</h2>
             <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
               Each piece is individually sourced from our exclusive designer network.
-              Please allow 3–4 weeks for US delivery and 3–5 weeks internationally.
+              Please allow 3–4 weeks for US &amp; international delivery.
               You&rsquo;ll receive tracking as soon as your order ships.
             </p>
           </div>
