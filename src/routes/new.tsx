@@ -23,8 +23,16 @@ export const Route = createFileRoute("/new")({
 
 function NewPage() {
   const [sort, setSort] = useState<SortMode>("newest");
+  const { data: stockMap } = useStockMap();
 
-  const sorted = [...products].sort((a, b) => {
+  const sorted = sortProductsByAvailability(products, stockMap ?? {}).sort((a, b) => {
+    const aEntry = stockMap?.[a.id];
+    const bEntry = stockMap?.[b.id];
+    const aAvailable = aEntry ? aEntry.available : true;
+    const bAvailable = bEntry ? bEntry.available : true;
+
+    if (aAvailable !== bAvailable) return 0; // already grouped by availability
+
     if (sort === "price-asc") return a.price - b.price;
     if (sort === "price-desc") return b.price - a.price;
     return new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime();

@@ -22,9 +22,13 @@ export const Route = createFileRoute("/archive")({
 });
 
 function ArchivePage() {
+  const { data: stockMap } = useStockMap();
   const grouped = ORDER.map((cat) => ({
     cat,
-    items: products.filter((p) => p.category === cat),
+    items: sortProductsByAvailability(
+      products.filter((p) => p.category === cat),
+      stockMap ?? {},
+    ),
   }));
 
   return (
