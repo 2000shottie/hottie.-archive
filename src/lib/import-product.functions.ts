@@ -11,6 +11,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireAdminToken } from "@/lib/admin-auth";
 
 const MAX_IMAGES = 6;
 
@@ -40,6 +41,7 @@ function categoryFor(brand: string, title: string): string {
 }
 
 export const startImport = createServerFn({ method: "POST" })
+  .middleware([requireAdminToken])
   .inputValidator((input: unknown) => StartInput.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -68,6 +70,7 @@ export const startImport = createServerFn({ method: "POST" })
   });
 
 export const getImportJob = createServerFn({ method: "GET" })
+  .middleware([requireAdminToken])
   .inputValidator((input: unknown) => JobIdInput.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -96,6 +99,7 @@ export const getImportJob = createServerFn({ method: "GET" })
   });
 
 export const publishProduct = createServerFn({ method: "POST" })
+  .middleware([requireAdminToken])
   .inputValidator((input: unknown) => PublishInput.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -108,6 +112,7 @@ export const publishProduct = createServerFn({ method: "POST" })
   });
 
 export const archiveProduct = createServerFn({ method: "POST" })
+  .middleware([requireAdminToken])
   .inputValidator((input: unknown) => PublishInput.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -119,7 +124,9 @@ export const archiveProduct = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-export const listDraftProducts = createServerFn({ method: "GET" }).handler(async () => {
+export const listDraftProducts = createServerFn({ method: "GET" })
+  .middleware([requireAdminToken])
+  .handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: products } = await supabaseAdmin
     .from("products")

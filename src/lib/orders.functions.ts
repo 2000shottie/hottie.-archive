@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireAdminToken } from "@/lib/admin-auth";
 
 export type AdminOrder = {
   id: string;
