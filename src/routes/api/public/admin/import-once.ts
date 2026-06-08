@@ -18,7 +18,7 @@ export const Route = createFileRoute("/api/public/admin/import-once")({
     handlers: {
       POST: async ({ request }) => {
         const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
-        const expected = process.env.PAYMENTS_SANDBOX_WEBHOOK_SECRET;
+        const expected = process.env.SUPABASE_SERVICE_ROLE_KEY;
         if (!expected || token !== expected) {
           return new Response("Unauthorized", { status: 401 });
         }
