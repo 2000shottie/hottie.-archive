@@ -190,6 +190,13 @@ async function checkOne(product: Product): Promise<CheckResult> {
 export async function checkAll(): Promise<BatchResult> {
   const startedAt = new Date().toISOString();
   const list = products.filter((p) => p.vestiaireUrl);
+  const unmonitored = products.filter((p) => !p.vestiaireUrl);
+  if (unmonitored.length > 0) {
+    console.warn(
+      `[stock-check] WARNING: ${unmonitored.length} product(s) have no vestiaireUrl and will NOT be monitored:`,
+      unmonitored.map((p) => p.id).join(", "),
+    );
+  }
   const results: CheckResult[] = [];
 
   for (let i = 0; i < list.length; i++) {
