@@ -41,7 +41,9 @@ function buildTrackingUrl(carrier: string, num: string): string {
   }
 }
 
-export const listOrders = createServerFn({ method: "GET" }).handler(async (): Promise<AdminOrder[]> => {
+export const listOrders = createServerFn({ method: "GET" })
+  .middleware([requireAdminToken])
+  .handler(async (): Promise<AdminOrder[]> => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("orders")
@@ -74,6 +76,7 @@ const sendSchema = z.object({
 });
 
 export const sendTrackingEmail = createServerFn({ method: "POST" })
+  .middleware([requireAdminToken])
   .inputValidator((input: z.infer<typeof sendSchema>) => sendSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

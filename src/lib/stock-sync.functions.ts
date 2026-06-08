@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireAdminToken } from "@/lib/admin-auth";
 
 export type StockSyncResult = {
   ok: boolean;
@@ -12,7 +13,9 @@ export type StockSyncResult = {
  * Manual trigger for the admin "Re-run detection" button.
  * Delegates to the strict backend checker.
  */
-export const triggerStockSync = createServerFn({ method: "POST" }).handler(
+export const triggerStockSync = createServerFn({ method: "POST" })
+  .middleware([requireAdminToken])
+  .handler(
   async (): Promise<StockSyncResult> => {
     try {
       const { checkAll } = await import("@/lib/stock-checker.server");
