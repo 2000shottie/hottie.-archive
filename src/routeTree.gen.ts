@@ -25,6 +25,7 @@ import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksSyncStockRouteImport } from './routes/api/public/hooks/sync-stock'
+import { Route as ApiPublicAdminImportOnceRouteImport } from './routes/api/public/admin/import-once'
 
 const ShippingRoute = ShippingRouteImport.update({
   id: '/shipping',
@@ -107,6 +108,12 @@ const ApiPublicHooksSyncStockRoute = ApiPublicHooksSyncStockRouteImport.update({
   path: '/api/public/hooks/sync-stock',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAdminImportOnceRoute =
+  ApiPublicAdminImportOnceRouteImport.update({
+    id: '/api/public/admin/import-once',
+    path: '/api/public/admin/import-once',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
+  '/api/public/admin/import-once': typeof ApiPublicAdminImportOnceRoute
   '/api/public/hooks/sync-stock': typeof ApiPublicHooksSyncStockRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -141,6 +149,7 @@ export interface FileRoutesByTo {
   '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
+  '/api/public/admin/import-once': typeof ApiPublicAdminImportOnceRoute
   '/api/public/hooks/sync-stock': typeof ApiPublicHooksSyncStockRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -160,6 +169,7 @@ export interface FileRoutesById {
   '/admin/sync': typeof AdminSyncRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/product/$id': typeof ProductIdRoute
+  '/api/public/admin/import-once': typeof ApiPublicAdminImportOnceRoute
   '/api/public/hooks/sync-stock': typeof ApiPublicHooksSyncStockRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/admin/sync'
     | '/checkout/return'
     | '/product/$id'
+    | '/api/public/admin/import-once'
     | '/api/public/hooks/sync-stock'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/admin/sync'
     | '/checkout/return'
     | '/product/$id'
+    | '/api/public/admin/import-once'
     | '/api/public/hooks/sync-stock'
     | '/api/public/payments/webhook'
   id:
@@ -216,6 +228,7 @@ export interface FileRouteTypes {
     | '/admin/sync'
     | '/checkout/return'
     | '/product/$id'
+    | '/api/public/admin/import-once'
     | '/api/public/hooks/sync-stock'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
@@ -234,6 +247,7 @@ export interface RootRouteChildren {
   AdminPricingRoute: typeof AdminPricingRoute
   AdminSyncRoute: typeof AdminSyncRoute
   ProductIdRoute: typeof ProductIdRoute
+  ApiPublicAdminImportOnceRoute: typeof ApiPublicAdminImportOnceRoute
   ApiPublicHooksSyncStockRoute: typeof ApiPublicHooksSyncStockRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
@@ -352,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksSyncStockRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/admin/import-once': {
+      id: '/api/public/admin/import-once'
+      path: '/api/public/admin/import-once'
+      fullPath: '/api/public/admin/import-once'
+      preLoaderRoute: typeof ApiPublicAdminImportOnceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -381,6 +402,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPricingRoute: AdminPricingRoute,
   AdminSyncRoute: AdminSyncRoute,
   ProductIdRoute: ProductIdRoute,
+  ApiPublicAdminImportOnceRoute: ApiPublicAdminImportOnceRoute,
   ApiPublicHooksSyncStockRoute: ApiPublicHooksSyncStockRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
