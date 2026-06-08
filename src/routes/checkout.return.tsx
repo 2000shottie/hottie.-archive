@@ -5,7 +5,6 @@ import { useServerFn } from "@tanstack/react-start";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
-import { markProductsSold } from "@/lib/sold.functions";
 import { getOrderSummary, type OrderSummary } from "@/lib/order.functions";
 import { getStripeEnvironment } from "@/lib/stripe";
 
@@ -31,8 +30,7 @@ function formatMoney(cents: number, currency: string) {
 
 function CheckoutReturn() {
   const { session_id } = Route.useSearch();
-  const { lines, clear } = useCart();
-  const markSold = useServerFn(markProductsSold);
+  const { clear } = useCart();
   const fetchOrder = useServerFn(getOrderSummary);
   const queryClient = useQueryClient();
   const done = useRef(false);
@@ -44,20 +42,12 @@ function CheckoutReturn() {
   useEffect(() => {
     if (done.current || !session_id) return;
     done.current = true;
-    const ids = lines.map((l) => l.product.id);
+    // The Stripe webhook (verified signature) is the only writer for
+    // `sold_products`. Just clear the local cart and refresh the cached
+    // stock map so the storefront reflects the sale on next load.
+    clear();
+    queryClient.invalidateQueries({ queryKey: ["sold-products"] });
     (async () => {
-      // Mark sold + clear cart
-      if (ids.length > 0) {
-        try {
-          await markSold({ data: { productIds: ids } });
-          await queryClient.invalidateQueries({ queryKey: ["sold-products"] });
-        } catch (e) {
-          console.error("markProductsSold failed:", e);
-        }
-      }
-      clear();
-
-      // Load order summary from Stripe
       try {
         const res = await fetchOrder({
           data: { sessionId: session_id, environment: getStripeEnvironment() },
@@ -70,7 +60,7 @@ function CheckoutReturn() {
         setLoading(false);
       }
     })();
-  }, [session_id, lines, markSold, clear, queryClient, fetchOrder]);
+  }, [session_id, clear, queryClient, fetchOrder]);
 
   if (!session_id) {
     return (
