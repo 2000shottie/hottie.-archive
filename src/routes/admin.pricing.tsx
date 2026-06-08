@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { products } from "@/lib/products";
 import {
   computeInternalPricing,
@@ -8,12 +8,11 @@ import {
   MINIMUM_PROFIT_USD,
 } from "@/lib/admin-pricing";
 import { ALL_DESTINATIONS } from "@/lib/admin-rates";
+import { AdminGate, adminSignOut } from "@/components/AdminGate";
 
-// Unlisted admin route. Not in nav, not in sitemap. Gated by a passphrase
-// stored in localStorage so customers can never stumble onto cost data.
-const KEY = "hottie.admin.v1";
-const PASS = "hottie-admin"; // rotate by clearing localStorage
-
+// Unlisted admin route. Not in nav, not in sitemap. Gated by AdminGate,
+// which verifies an admin token server-side before any of the internal
+// cost / margin data renders.
 export const Route = createFileRoute("/admin/pricing")({
   head: () => ({
     meta: [
@@ -21,19 +20,15 @@ export const Route = createFileRoute("/admin/pricing")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: AdminPricing,
+  component: () => (
+    <AdminGate>
+      <AdminPricing />
+    </AdminGate>
+  ),
 });
 
 function AdminPricing() {
-  const [ok, setOk] = useState(false);
-  const [input, setInput] = useState("");
   const [buyer, setBuyer] = useState<string>("US");
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.localStorage.getItem(KEY) === PASS) {
-      setOk(true);
-    }
-  }, []);
 
   const rows = useMemo(
     () =>
@@ -46,34 +41,6 @@ function AdminPricing() {
     [buyer],
   );
 
-  if (!ok) {
-    return (
-      <main className="mx-auto max-w-md p-10">
-        <h1 className="font-display text-3xl">Admin</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Enter passphrase.</p>
-        <form
-          className="mt-4 flex gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (input === PASS) {
-              window.localStorage.setItem(KEY, PASS);
-              setOk(true);
-            }
-          }}
-        >
-          <input
-            type="password"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm"
-          />
-          <button className="rounded-lg bg-foreground px-4 py-2 text-sm text-background">
-            Enter
-          </button>
-        </form>
-      </main>
-    );
-  }
 
   const blocked = rows.filter((x) => x.warn).length;
 
@@ -103,10 +70,7 @@ function AdminPricing() {
             ))}
           </select>
           <button
-            onClick={() => {
-              window.localStorage.removeItem(KEY);
-              setOk(false);
-            }}
+            onClick={adminSignOut}
             className="text-[11px] uppercase tracking-luxe text-muted-foreground hover:text-primary"
           >
             Lock
