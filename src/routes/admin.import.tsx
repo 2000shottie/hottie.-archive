@@ -9,9 +9,14 @@ import {
   archiveProduct,
   listDraftProducts,
 } from "@/lib/import-product.functions";
+import { AdminGate } from "@/components/AdminGate";
 
 export const Route = createFileRoute("/admin/import")({
-  component: AdminImportPage,
+  component: () => (
+    <AdminGate>
+      <AdminImportPage />
+    </AdminGate>
+  ),
   head: () => ({
     meta: [{ title: "Import product" }, { name: "robots", content: "noindex" }],
   }),

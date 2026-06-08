@@ -3,9 +3,14 @@ import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { listOrders, sendTrackingEmail, type AdminOrder } from "@/lib/orders.functions";
 import { getProduct } from "@/lib/products";
+import { AdminGate } from "@/components/AdminGate";
 
 export const Route = createFileRoute("/admin/orders")({
-  component: AdminOrdersPage,
+  component: () => (
+    <AdminGate>
+      <AdminOrdersPage />
+    </AdminGate>
+  ),
   head: () => ({
     meta: [
       { title: "Orders — send tracking" },
