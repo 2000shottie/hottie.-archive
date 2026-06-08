@@ -4,9 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { triggerStockSync, type StockSyncResult } from "@/lib/stock-sync.functions";
 import { getRecentStockChecks } from "@/lib/stock-cache.functions";
+import { AdminGate } from "@/components/AdminGate";
 
 export const Route = createFileRoute("/admin/sync")({
-  component: AdminSyncPage,
+  component: () => (
+    <AdminGate>
+      <AdminSyncPage />
+    </AdminGate>
+  ),
   head: () => ({ meta: [{ title: "Stock detection" }, { name: "robots", content: "noindex" }] }),
 });
 

@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 /** Returns the list of product IDs that have been sold via this site. */
@@ -16,19 +15,9 @@ export const getSoldProductIds = createServerFn({ method: "GET" }).handler(
   },
 );
 
-/** Marks one or more products as sold via this site (called on successful checkout). */
-export const markProductsSold = createServerFn({ method: "POST" })
-  .inputValidator(
-    z.object({ productIds: z.array(z.string().min(1).max(100)).min(1).max(50) }),
-  )
-  .handler(async ({ data }) => {
-    const rows = data.productIds.map((id) => ({ product_id: id, source: "local" }));
-    const { error } = await supabaseAdmin
-      .from("sold_products")
-      .upsert(rows, { onConflict: "product_id" });
-    if (error) {
-      console.error("markProductsSold error:", error);
-      throw new Error("Could not mark products as sold");
-    }
-    return { ok: true };
-  });
+// NOTE: `markProductsSold` was removed. It was previously called from the
+// browser on the checkout return page, which allowed any anonymous caller
+// to mark arbitrary products as sold and effectively delist the catalog.
+// `sold_products` is now written exclusively by the Stripe webhook
+// (`src/routes/api/public/payments/webhook.ts`) after the signature is
+// verified — that's the only trusted "this order was actually paid" signal.
