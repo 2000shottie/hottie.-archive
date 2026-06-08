@@ -241,6 +241,8 @@ export const products: Product[] = [
       { label: "Condition", value: "Very good · pre-loved" },
     ],
     gallery: [dgTigerCami2, dgTigerCami3, dgTigerCami4],
+    vestiaireUrl:
+      "https://www.vestiairecollective.com/women-clothing/tops/dolce-gabbana/brown-polyamide-dolce-gabbana-top-67070568.shtml",
     listedAt: "2024-02-15",
     originCountry: "IT",
   },
