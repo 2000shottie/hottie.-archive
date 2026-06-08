@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Import jobs readable by everyone" ON public.import_jobs;
