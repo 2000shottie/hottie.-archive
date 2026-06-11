@@ -47,7 +47,7 @@ function sleep(ms: number) {
 async function firecrawlOnce(
   url: string,
   apiKey: string,
-): Promise<{ statusCode?: number; markdown: string; ok: boolean; error?: string }> {
+): Promise<{ statusCode?: number; content: string; ok: boolean; error?: string }> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), FIRECRAWL_TIMEOUT_MS);
   try {
@@ -59,23 +59,27 @@ async function firecrawlOnce(
       },
       body: JSON.stringify({
         url,
-        formats: ["markdown"],
+        formats: ["markdown", "html"],
         onlyMainContent: false,
         waitFor: 4000,
+        maxAge: 0,
+        storeInCache: false,
         location: { country: "US", languages: ["en"] },
       }),
       signal: ctrl.signal,
     });
     if (!res.ok) {
-      return { ok: false, error: `firecrawl_${res.status}`, statusCode: res.status, markdown: "" };
+      return { ok: false, error: `firecrawl_${res.status}`, statusCode: res.status, content: "" };
     }
     const json = (await res.json()) as {
-      data?: { markdown?: string; metadata?: { statusCode?: number } };
+      data?: { html?: string; markdown?: string; metadata?: { statusCode?: number } };
     };
+    const markdown = json.data?.markdown ?? "";
+    const html = json.data?.html ?? "";
     return {
       ok: true,
       statusCode: json.data?.metadata?.statusCode,
-      markdown: (json.data?.markdown ?? "").toLowerCase(),
+      content: `${markdown}\n${html}`.toLowerCase(),
     };
   } catch (err) {
     const message =
@@ -84,7 +88,7 @@ async function firecrawlOnce(
           ? "firecrawl_timeout"
           : err.message
         : "firecrawl_unknown_error";
-    return { ok: false, error: message, markdown: "" };
+    return { ok: false, error: message, content: "" };
   } finally {
     clearTimeout(timer);
   }
@@ -94,29 +98,29 @@ async function firecrawlOnce(
  * Classify a Vestiaire page. Strict: any uncertainty → OUT OF STOCK.
  */
 function classify(
-  markdown: string,
+  content: string,
   statusCode: number | undefined,
   productId: string | undefined,
 ): { available: boolean; reason: string } {
   if (statusCode === 404) return { available: false, reason: "Listing returned 404." };
 
-  if (markdown.trim().length < 400) {
+  if (content.trim().length < 400) {
     return { available: false, reason: "Page response was empty or blocked." };
   }
 
   const soldRegex =
-    /\bsold at\b|this item has been sold|item is sold|no longer available|item sold out|out of stock|seller on vacation|on vacation/i;
-  if (soldRegex.test(markdown)) {
+    /\bsold at\b|this item has been sold|item is sold|no longer available|item sold out|out of stock|seller on vacation|on vacation|seller is away|seller away|seller is currently away|away until|on holiday|seller holiday|temporarily unavailable|currently unavailable|purchase unavailable|cannot be purchased/i;
+  if (soldRegex.test(content)) {
     return { available: false, reason: "Vestiaire marks this item as sold or unavailable." };
   }
 
   const removedRegex =
     /page not found|page you are looking for|couldn't find this page|couldn't find the page|product not found|listing (?:is )?no longer available/i;
-  if (removedRegex.test(markdown)) {
+  if (removedRegex.test(content)) {
     return { available: false, reason: "Listing has been removed." };
   }
 
-  if (productId && !markdown.includes(productId)) {
+  if (productId && !content.includes(productId)) {
     return { available: false, reason: "Page redirected away from this listing." };
   }
 
@@ -124,9 +128,9 @@ function classify(
   // "add to bagmake an offer", so use direct phrase detection instead of
   // strict word-boundary regexes. Sold/removed markers above still win first.
   const hasBuyAction =
-    markdown.includes("add to bag") ||
-    markdown.includes("add to cart") ||
-    markdown.includes("make an offer");
+    content.includes("add to bag") ||
+    content.includes("add to cart") ||
+    content.includes("make an offer");
   if (!hasBuyAction) {
     return { available: false, reason: "No purchase button rendered on the listing." };
   }
@@ -172,7 +176,7 @@ async function checkOne(product: Product): Promise<CheckResult> {
     };
   }
 
-  const verdict = classify(attempt.markdown, attempt.statusCode, productId);
+  const verdict = classify(attempt.content, attempt.statusCode, productId);
   return {
     productId: product.id,
     available: verdict.available,
