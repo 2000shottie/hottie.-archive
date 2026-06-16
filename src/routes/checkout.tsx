@@ -175,7 +175,10 @@ function CheckoutLine({
   onStock: (available: boolean) => void;
 }) {
   const { data: stock } = useStock(product.vestiaireUrl, product.id);
-  const available = stock ? stock.available : false;
+  // Treat the buyer's own pending-checkout reservation as available — only
+  // real sold-outs (sold_products / stock checker) should block here.
+  const isReservationOnly = stock?.reason?.startsWith("Reserved") ?? false;
+  const available = stock ? stock.available || isReservationOnly : false;
 
   useEffect(() => onStock(available), [available, onStock]);
 
