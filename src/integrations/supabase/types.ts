@@ -156,6 +156,27 @@ export type Database = {
           },
         ]
       }
+      product_reservations: {
+        Row: {
+          created_at: string
+          expires_at: string
+          product_id: string
+          stripe_session_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          product_id: string
+          stripe_session_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          product_id?: string
+          stripe_session_id?: string
+        }
+        Relationships: []
+      }
       product_stock: {
         Row: {
           available: boolean
@@ -305,7 +326,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      try_reserve_product: {
+        Args: { _expires_at: string; _product_id: string; _session_id: string }
+        Returns: {
+          created_at: string
+          expires_at: string
+          product_id: string
+          stripe_session_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "product_reservations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
