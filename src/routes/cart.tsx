@@ -137,7 +137,12 @@ function CartLine({
   onStock: (sold: boolean) => void;
 }) {
   const { data: stock } = useStock(product.vestiaireUrl, product.id);
-  const soldOut = stock ? !stock.available : false;
+  // A pending-checkout reservation is almost always THIS buyer's own hold
+  // (creating a Stripe session reserves the item for 30 min). Don't surface
+  // that as "sold" in the bag — only real sold-outs (sold_products / stock
+  // checker) should block checkout here.
+  const isReservationOnly = stock?.reason?.startsWith("Reserved") ?? false;
+  const soldOut = stock ? !stock.available && !isReservationOnly : false;
   // Notify parent so the checkout button can react.
   useEffect(() => onStock(soldOut), [onStock, soldOut]);
   return (
