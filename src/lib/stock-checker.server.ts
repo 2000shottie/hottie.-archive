@@ -14,6 +14,7 @@ import { products, type Product } from "@/lib/products";
 
 const FIRECRAWL_ENDPOINT = "https://api.firecrawl.dev/v2/scrape";
 const FIRECRAWL_TIMEOUT_MS = 20_000;
+const FIRECRAWL_CACHE_MAX_AGE_MS = 60 * 60 * 1000;
 const RETRY_DELAY_MS = 1_500;
 const BETWEEN_REQUESTS_MS = 1_000;
 
@@ -21,6 +22,7 @@ export type CheckResult = {
   productId: string;
   available: boolean;
   reason: string;
+  authoritative: boolean;
   statusCode?: number;
   durationMs: number;
 };
@@ -59,11 +61,11 @@ async function firecrawlOnce(
       },
       body: JSON.stringify({
         url,
-        formats: ["markdown", "html"],
-        onlyMainContent: false,
+        formats: ["markdown"],
+        onlyMainContent: true,
         waitFor: 4000,
-        maxAge: 0,
-        storeInCache: false,
+        maxAge: FIRECRAWL_CACHE_MAX_AGE_MS,
+        storeInCache: true,
         location: { country: "US", languages: ["en"] },
       }),
       signal: ctrl.signal,
@@ -72,14 +74,13 @@ async function firecrawlOnce(
       return { ok: false, error: `firecrawl_${res.status}`, statusCode: res.status, content: "" };
     }
     const json = (await res.json()) as {
-      data?: { html?: string; markdown?: string; metadata?: { statusCode?: number } };
+      data?: { markdown?: string; metadata?: { statusCode?: number } };
     };
     const markdown = json.data?.markdown ?? "";
-    const html = json.data?.html ?? "";
     return {
       ok: true,
       statusCode: json.data?.metadata?.statusCode,
-      content: `${markdown}\n${html}`.toLowerCase(),
+      content: markdown.toLowerCase(),
     };
   } catch (err) {
     const message =
@@ -149,6 +150,7 @@ async function checkOne(product: Product): Promise<CheckResult> {
       productId: product.id,
       available: false,
       reason: "Stock checker not configured (missing FIRECRAWL_API_KEY).",
+      authoritative: false,
       durationMs: Date.now() - start,
     };
   }
@@ -170,7 +172,8 @@ async function checkOne(product: Product): Promise<CheckResult> {
     return {
       productId: product.id,
       available: false,
-      reason: `Could not verify stock (${attempt.error ?? "unknown"}) — marked unavailable.`,
+      reason: `Could not verify stock (${attempt.error ?? "unknown"}) — kept previous status.`,
+      authoritative: false,
       statusCode: attempt.statusCode,
       durationMs: Date.now() - start,
     };
@@ -181,6 +184,7 @@ async function checkOne(product: Product): Promise<CheckResult> {
     productId: product.id,
     available: verdict.available,
     reason: verdict.reason,
+    authoritative: true,
     statusCode: attempt.statusCode,
     durationMs: Date.now() - start,
   };
@@ -212,24 +216,29 @@ export async function checkAll(): Promise<BatchResult> {
       result = {
         productId: product.id,
         available: false,
-        reason: `Checker error: ${err instanceof Error ? err.message : "unknown"} — marked unavailable.`,
+        reason: `Checker error: ${err instanceof Error ? err.message : "unknown"} — kept previous status.`,
+        authoritative: false,
         durationMs: 0,
       };
     }
     results.push(result);
 
-    const { error: upsertErr } = await supabaseAdmin.from("product_stock").upsert(
-      {
-        product_id: result.productId,
-        available: result.available,
-        reason: result.reason,
-        source: "vestiaire",
-        checked_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "product_id" },
-    );
-    if (upsertErr) console.error("product_stock upsert error", result.productId, upsertErr);
+    if (result.authoritative) {
+      const { error: upsertErr } = await supabaseAdmin.from("product_stock").upsert(
+        {
+          product_id: result.productId,
+          available: result.available,
+          reason: result.reason,
+          source: "vestiaire",
+          checked_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "product_id" },
+      );
+      if (upsertErr) console.error("product_stock upsert error", result.productId, upsertErr);
+    } else {
+      console.warn(`[stock-check] ${result.productId} skipped cache update — ${result.reason}`);
+    }
 
     const { error: logErr } = await supabaseAdmin.from("stock_check_log").insert({
       product_id: result.productId,
