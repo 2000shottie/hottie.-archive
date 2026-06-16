@@ -18,6 +18,7 @@ export const Route = createFileRoute("/admin/sync")({
 function AdminSyncPage() {
   const run = useServerFn(triggerStockSync);
   const fetchRecent = useServerFn(getRecentStockChecks);
+  const fetchReservations = useServerFn(getActiveReservations);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<StockSyncResult | null>(null);
 
@@ -25,6 +26,12 @@ function AdminSyncPage() {
     queryKey: ["admin-stock-cache"],
     queryFn: () => fetchRecent(),
     refetchInterval: 15_000,
+  });
+
+  const reservations = useQuery({
+    queryKey: ["admin-reservations"],
+    queryFn: () => fetchReservations(),
+    refetchInterval: 10_000,
   });
 
   const onClick = async () => {
