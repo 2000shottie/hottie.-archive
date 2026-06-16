@@ -94,12 +94,18 @@ function CheckoutReturn() {
               Your order confirmation has been sent to{" "}
               <span className="text-foreground">{order.email}</span>.
               Thank you for your order ~ we can't wait for this special piece to join your collection :)
+              <br /><br />
+              Can't find it? Please check your junk or spam folder, and mark it as "Not Spam" so future updates land in your inbox.
+              Tracking info will be sent the same way once your piece ships.
             </p>
           )}
           {!order?.email && (
             <p className="mt-6 text-[14px] text-muted-foreground">
               Your order is in. Your order confirmation will be sent to your email.
               Thank you for your order ~ we can't wait for this special piece to join your collection :)
+              <br /><br />
+              Can't find it? Please check your junk or spam folder, and mark it as "Not Spam" so future updates land in your inbox.
+              Tracking info will be sent the same way once your piece ships.
             </p>
           )}
         </header>
