@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
@@ -24,6 +24,7 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function CheckoutPage() {
+  const location = useLocation();
   const { lines, subtotal, count } = useCart();
   const createSession = useServerFn(createCartCheckoutSession);
   const [availableIds, setAvailableIds] = useState<Record<string, boolean>>({});
@@ -64,6 +65,10 @@ function CheckoutPage() {
       setProviderKey(itemsKey);
     }
   }, [itemsKey]);
+
+  if (location.pathname !== "/checkout") {
+    return <Outlet />;
+  }
 
   if (count === 0) {
     return (
