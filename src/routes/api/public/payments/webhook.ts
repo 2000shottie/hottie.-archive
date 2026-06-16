@@ -5,7 +5,7 @@ import {
   createStripeClient,
   getWebhookSecret,
 } from "@/lib/stripe.server";
-import { sendOrderConfirmationEmail } from "@/lib/email.server";
+import { sendOrderConfirmationEmail, sendAdminOrderNotification } from "@/lib/email.server";
 
 export const Route = createFileRoute("/api/public/payments/webhook")({
   server: {
@@ -86,6 +86,22 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                 });
               } catch (mailErr) {
                 console.error("Order email failed:", mailErr);
+              }
+
+              // Always notify the store owner — uses Resend's default sender,
+              // so it works without any DNS changes.
+              try {
+                await sendAdminOrderNotification({
+                  productIds,
+                  amountTotalCents: session.amount_total ?? null,
+                  currency: session.currency ?? "usd",
+                  buyerEmail,
+                  buyerName: session.customer_details?.name ?? null,
+                  shippingAddress: session.shipping_details?.address ?? null,
+                  sessionId: session.id,
+                });
+              } catch (notifyErr) {
+                console.error("Admin notification failed:", notifyErr);
               }
             }
           }

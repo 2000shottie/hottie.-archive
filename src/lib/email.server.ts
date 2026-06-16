@@ -228,3 +228,86 @@ export async function sendShippedEmail(input: ShippedEmailInput) {
     console.error("Resend shipped send failed:", res.status, text);
   }
 }
+
+// ---------- Admin "new order" notification ----------
+// Uses Resend's default verified sender (onboarding@resend.dev) so this works
+// WITHOUT any DNS changes. Delivers to the store owner's verified inbox.
+
+const ADMIN_NOTIFY_TO = "a2000shottie@hotmail.com";
+const ADMIN_FROM = "2000shottie Orders <onboarding@resend.dev>";
+
+type AdminOrderInput = {
+  productIds: string[];
+  amountTotalCents: number | null;
+  currency: string;
+  buyerEmail: string;
+  buyerName?: string | null;
+  shippingAddress?: OrderEmailInput["shippingAddress"];
+  sessionId: string;
+};
+
+function renderAdminHtml(input: AdminOrderInput) {
+  const items = input.productIds
+    .map((id) => getProduct(id))
+    .filter((p): p is NonNullable<ReturnType<typeof getProduct>> => Boolean(p));
+
+  const itemsHtml = items
+    .map(
+      (p) =>
+        `<li style="font-family:Georgia,serif;font-size:14px;color:#111;margin:4px 0;">
+          <strong>${p.house ?? ""}</strong> — ${p.name} ($${p.price.toLocaleString()})
+        </li>`,
+    )
+    .join("");
+
+  const addr = input.shippingAddress;
+  const addrHtml = addr
+    ? `${[addr.line1, addr.line2].filter(Boolean).join(", ")}<br/>
+       ${[addr.city, addr.state, addr.postal_code].filter(Boolean).join(" ")}<br/>
+       ${addr.country ?? ""}`
+    : "—";
+
+  const total = fmtMoney(input.amountTotalCents, input.currency);
+
+  return `<!doctype html><html><body style="font-family:Georgia,serif;color:#111;padding:24px;background:#fafaf7;">
+    <h2 style="margin:0 0 16px 0;">🛍️ New order on 2000shottie</h2>
+    <p style="margin:0 0 8px 0;"><strong>Total:</strong> ${total || "—"}</p>
+    <p style="margin:0 0 8px 0;"><strong>Buyer:</strong> ${input.buyerName ?? ""} &lt;${input.buyerEmail}&gt;</p>
+    <p style="margin:16px 0 4px 0;"><strong>Items:</strong></p>
+    <ul style="padding-left:20px;margin:0;">${itemsHtml || "<li>(no items resolved)</li>"}</ul>
+    <p style="margin:16px 0 4px 0;"><strong>Ship to:</strong></p>
+    <p style="margin:0;font-size:14px;line-height:1.5;">${addrHtml}</p>
+    <p style="margin:20px 0 0 0;font-size:12px;color:#888;">Stripe session: ${input.sessionId}</p>
+  </body></html>`;
+}
+
+export async function sendAdminOrderNotification(input: AdminOrderInput) {
+  const lovableKey = process.env.LOVABLE_API_KEY;
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!lovableKey || !resendKey) {
+    console.error("Admin email skipped: missing LOVABLE_API_KEY or RESEND_API_KEY");
+    return;
+  }
+
+  const total = fmtMoney(input.amountTotalCents, input.currency);
+  const res = await fetch(`${GATEWAY_URL}/emails`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${lovableKey}`,
+      "X-Connection-Api-Key": resendKey,
+    },
+    body: JSON.stringify({
+      from: ADMIN_FROM,
+      to: [ADMIN_NOTIFY_TO],
+      reply_to: input.buyerEmail,
+      subject: `🛍️ New order ${total ? `(${total})` : ""} — ${input.buyerEmail}`,
+      html: renderAdminHtml(input),
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    console.error("Admin notification send failed:", res.status, text);
+  }
+}
