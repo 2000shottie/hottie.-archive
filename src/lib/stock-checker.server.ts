@@ -14,6 +14,7 @@ import { products, type Product } from "@/lib/products";
 
 const FIRECRAWL_ENDPOINT = "https://api.firecrawl.dev/v2/scrape";
 const FIRECRAWL_TIMEOUT_MS = 20_000;
+const FIRECRAWL_CACHE_MAX_AGE_MS = 60 * 60 * 1000;
 const RETRY_DELAY_MS = 1_500;
 const BETWEEN_REQUESTS_MS = 1_000;
 
@@ -21,6 +22,7 @@ export type CheckResult = {
   productId: string;
   available: boolean;
   reason: string;
+  authoritative: boolean;
   statusCode?: number;
   durationMs: number;
 };
@@ -59,11 +61,11 @@ async function firecrawlOnce(
       },
       body: JSON.stringify({
         url,
-        formats: ["markdown", "html"],
-        onlyMainContent: false,
+        formats: ["markdown"],
+        onlyMainContent: true,
         waitFor: 4000,
-        maxAge: 0,
-        storeInCache: false,
+        maxAge: FIRECRAWL_CACHE_MAX_AGE_MS,
+        storeInCache: true,
         location: { country: "US", languages: ["en"] },
       }),
       signal: ctrl.signal,
@@ -72,14 +74,13 @@ async function firecrawlOnce(
       return { ok: false, error: `firecrawl_${res.status}`, statusCode: res.status, content: "" };
     }
     const json = (await res.json()) as {
-      data?: { html?: string; markdown?: string; metadata?: { statusCode?: number } };
+      data?: { markdown?: string; metadata?: { statusCode?: number } };
     };
     const markdown = json.data?.markdown ?? "";
-    const html = json.data?.html ?? "";
     return {
       ok: true,
       statusCode: json.data?.metadata?.statusCode,
-      content: `${markdown}\n${html}`.toLowerCase(),
+      content: markdown.toLowerCase(),
     };
   } catch (err) {
     const message =
