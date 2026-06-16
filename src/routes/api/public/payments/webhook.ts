@@ -37,8 +37,18 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
               id: string;
               amount_total?: number | null;
               currency?: string | null;
-              customer_details?: { email?: string | null; name?: string | null } | null;
-              shipping_details?: { address?: Record<string, string | null> | null } | null;
+              created?: number | null;
+              payment_intent?: string | null;
+              customer_details?: {
+                email?: string | null;
+                name?: string | null;
+                phone?: string | null;
+              } | null;
+              shipping_details?: {
+                address?: Record<string, string | null> | null;
+                name?: string | null;
+                phone?: string | null;
+              } | null;
               metadata?: Record<string, string> | null;
             };
             const csv = session.metadata?.productIds ?? "";
@@ -46,8 +56,14 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
               .split(",")
               .map((s) => s.trim())
               .filter(Boolean);
+
+            // Build quantity map (productIds CSV may repeat ids).
+            const quantities: Record<string, number> = {};
+            for (const id of productIds) quantities[id] = (quantities[id] ?? 0) + 1;
+
             if (productIds.length > 0) {
-              const rows = productIds.map((id) => ({ product_id: id, source: "local" }));
+              const uniqueIds = Array.from(new Set(productIds));
+              const rows = uniqueIds.map((id) => ({ product_id: id, source: "local" }));
               const { error } = await supabaseAdmin
                 .from("sold_products")
                 .upsert(rows, { onConflict: "product_id" });
@@ -55,6 +71,13 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
             }
 
             const buyerEmail = session.customer_details?.email;
+            const buyerPhone =
+              session.customer_details?.phone ?? session.shipping_details?.phone ?? null;
+            const orderDate = session.created
+              ? new Date(session.created * 1000).toISOString()
+              : new Date().toISOString();
+            const paymentIntentId =
+              typeof session.payment_intent === "string" ? session.payment_intent : null;
 
             // Persist order so admin can later send shipping email.
             if (buyerEmail) {
@@ -65,6 +88,7 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                     stripe_session_id: session.id,
                     buyer_email: buyerEmail,
                     buyer_name: session.customer_details?.name ?? null,
+                    buyer_phone: buyerPhone,
                     product_ids: productIds,
                     amount_total_cents: session.amount_total ?? null,
                     currency: session.currency ?? "usd",
@@ -79,6 +103,7 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                   to: buyerEmail,
                   customerName: session.customer_details?.name ?? null,
                   productIds,
+                  quantities,
                   amountTotalCents: session.amount_total ?? null,
                   currency: session.currency ?? "usd",
                   shippingAddress: session.shipping_details?.address ?? null,
@@ -88,17 +113,19 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                 console.error("Order email failed:", mailErr);
               }
 
-              // Always notify the store owner — uses Resend's default sender,
-              // so it works without any DNS changes.
               try {
                 await sendAdminOrderNotification({
                   productIds,
+                  quantities,
                   amountTotalCents: session.amount_total ?? null,
                   currency: session.currency ?? "usd",
                   buyerEmail,
                   buyerName: session.customer_details?.name ?? null,
+                  buyerPhone,
                   shippingAddress: session.shipping_details?.address ?? null,
                   sessionId: session.id,
+                  paymentIntentId,
+                  orderDate,
                 });
               } catch (notifyErr) {
                 console.error("Admin notification failed:", notifyErr);
