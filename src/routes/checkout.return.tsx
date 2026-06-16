@@ -93,13 +93,13 @@ function CheckoutReturn() {
             <p className="mt-6 text-[14px] text-muted-foreground">
               Your order confirmation has been sent to{" "}
               <span className="text-foreground">{order.email}</span>.
-              Each piece is individually sourced — please allow 3–4 weeks for delivery.
+              Thank you for your order ~ we can't wait for this special piece to join your collection :)
             </p>
           )}
           {!order?.email && (
             <p className="mt-6 text-[14px] text-muted-foreground">
               Your order is in. Your order confirmation will be sent to your email.
-              Each piece is individually sourced — please allow 3–4 weeks for delivery.
+              Thank you for your order ~ we can't wait for this special piece to join your collection :)
             </p>
           )}
         </header>

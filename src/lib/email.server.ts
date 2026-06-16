@@ -50,6 +50,14 @@ function resolveItems(productIds: string[], quantities?: Record<string, number>)
     .filter((r): r is { p: NonNullable<ReturnType<typeof getProduct>>; qty: number } => Boolean(r));
 }
 
+const SITE_ORIGIN = "https://www.2000shottie.com";
+
+function absoluteImg(img: string) {
+  if (!img) return "";
+  if (/^https?:\/\//i.test(img)) return img;
+  return `${SITE_ORIGIN}${img.startsWith("/") ? "" : "/"}${img}`;
+}
+
 function renderHtml(input: OrderEmailInput) {
   const items = resolveItems(input.productIds, input.quantities);
 
@@ -57,12 +65,15 @@ function renderHtml(input: OrderEmailInput) {
     .map(
       ({ p, qty }) => `
         <tr>
-          <td style="padding:12px 0;border-bottom:1px solid #eee;font-family:Georgia,serif;font-size:15px;color:#111;">
+          <td width="96" valign="top" style="padding:12px 14px 12px 0;border-bottom:1px solid #eee;">
+            <img src="${absoluteImg(p.img)}" alt="${p.name}" width="96" height="96" style="display:block;width:96px;height:96px;object-fit:contain;background:#ffffff;border:1px solid #eee;border-radius:6px;" />
+          </td>
+          <td valign="top" style="padding:12px 0;border-bottom:1px solid #eee;font-family:Georgia,serif;font-size:15px;color:#111;">
             ${p.house ? `<div style="color:#666;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">${p.house}</div>` : ""}
             <div>${p.name}</div>
             <div style="color:#888;font-size:12px;">Qty: ${qty}</div>
           </td>
-          <td style="padding:12px 0;border-bottom:1px solid #eee;text-align:right;font-family:Georgia,serif;font-size:15px;color:#111;">
+          <td valign="top" style="padding:12px 0;border-bottom:1px solid #eee;text-align:right;font-family:Georgia,serif;font-size:15px;color:#111;">
             $${(p.price * qty).toLocaleString()}
           </td>
         </tr>`,
@@ -88,7 +99,7 @@ function renderHtml(input: OrderEmailInput) {
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;padding:40px;border:1px solid #eee;">
         <tr><td>
           <div style="font-family:Georgia,serif;font-size:22px;letter-spacing:0.06em;color:#111;margin-bottom:8px;">2000shottie</div>
-          <div style="font-family:Georgia,serif;font-size:13px;color:#888;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:28px;">Thank you for your order</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#888;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:28px;">Thank you for your order!</div>
 
           <p style="font-family:Georgia,serif;font-size:15px;color:#111;line-height:1.6;">${hello}</p>
           <p style="font-family:Georgia,serif;font-size:15px;color:#111;line-height:1.6;">
@@ -148,7 +159,7 @@ export async function sendOrderConfirmationEmail(input: OrderEmailInput) {
       from: FROM,
       to: [input.to],
       reply_to: REPLY_TO,
-      subject: "Thank you for your 2000shottie order",
+      subject: "Thank you for your order!",
       html: renderHtml(input),
     }),
   });
