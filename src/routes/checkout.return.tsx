@@ -87,17 +87,19 @@ function CheckoutReturn() {
         <header className="text-center">
           <p className="text-[11px] tracking-luxe uppercase text-muted-foreground">Confirmed</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl">
-            Thank you, <span className="font-script text-primary">babe</span>.
+            Thank you for shopping <span className="font-script text-primary">Hottie</span>!
           </h1>
           {order?.email && (
             <p className="mt-6 text-[14px] text-muted-foreground">
-              A confirmation has been sent to <span className="text-foreground">{order.email}</span>.
+              Your order confirmation has been sent to{" "}
+              <span className="text-foreground">{order.email}</span>.
               Each piece is individually sourced — please allow 3–4 weeks for delivery.
             </p>
           )}
           {!order?.email && (
             <p className="mt-6 text-[14px] text-muted-foreground">
-              Your order is in. Each piece is individually sourced — please allow 3–4 weeks for delivery.
+              Your order is in. Your order confirmation will be sent to your email.
+              Each piece is individually sourced — please allow 3–4 weeks for delivery.
             </p>
           )}
         </header>
