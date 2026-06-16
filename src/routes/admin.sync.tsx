@@ -72,6 +72,39 @@ function AdminSyncPage() {
       </button>
 
       <div className="mt-10">
+        <h2 className="uppercase tracking-luxe text-xs mb-3">
+          Active reservations ({reservations.data?.length ?? 0})
+        </h2>
+        <p className="text-xs text-foreground/60 mb-3">
+          Items currently held by buyers in Stripe checkout. Auto-expire after 30 minutes.
+        </p>
+        {reservations.data && reservations.data.length === 0 && (
+          <p className="text-sm text-foreground/60">No active reservations.</p>
+        )}
+        <ul className="space-y-2 text-sm">
+          {(reservations.data ?? []).map((row) => (
+            <li
+              key={row.product_id}
+              className="flex items-start justify-between gap-3 border-b border-foreground/10 pb-2 text-amber-700"
+            >
+              <div className="min-w-0">
+                <p className="font-medium truncate">{row.product_id}</p>
+                <p className="text-[10px] text-foreground/60 truncate">
+                  session {row.stripe_session_id}
+                </p>
+              </div>
+              <div className="shrink-0 text-right">
+                <p className="uppercase tracking-luxe text-[10px]">Reserved</p>
+                <p className="text-[10px] text-foreground/50">
+                  expires {new Date(row.expires_at).toLocaleTimeString()}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-10">
         <h2 className="uppercase tracking-luxe text-xs mb-3">Current cached status</h2>
         {cache.isLoading && <p className="text-sm text-foreground/60">Loading…</p>}
         {cache.data && cache.data.length === 0 && (
