@@ -68,6 +68,13 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                 .from("sold_products")
                 .upsert(rows, { onConflict: "product_id" });
               if (error) console.error("webhook upsert sold_products error:", error);
+
+              // Reservation served its purpose — clear it.
+              const { error: relErr } = await supabaseAdmin
+                .from("product_reservations")
+                .delete()
+                .in("product_id", uniqueIds);
+              if (relErr) console.error("webhook release reservations error:", relErr);
             }
 
             const buyerEmail = session.customer_details?.email;
@@ -131,6 +138,17 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                 console.error("Admin notification failed:", notifyErr);
               }
             }
+          } else if (
+            event.type === "checkout.session.expired" ||
+            event.type === "checkout.session.async_payment_failed"
+          ) {
+            // Release any reservations held by this abandoned session.
+            const session = event.data.object as { id: string };
+            const { error: relErr } = await supabaseAdmin
+              .from("product_reservations")
+              .delete()
+              .eq("stripe_session_id", session.id);
+            if (relErr) console.error("webhook release-on-expire error:", relErr);
           }
         } catch (err) {
           console.error("Webhook handler error:", err);
