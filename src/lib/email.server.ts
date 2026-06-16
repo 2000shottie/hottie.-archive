@@ -5,25 +5,28 @@ import { getProduct } from "@/lib/products";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 
-// Send from the merchant's own verified domain on Resend.
-const FROM = "2000shottie <orders@2000shottie.com>";
-const REPLY_TO = "info@2000shottie.com";
+// Custom domain not yet verified on Resend — use the default verified sender
+// so emails actually deliver. Replies route to the store inbox.
+const FROM = "2000shottie <onboarding@resend.dev>";
+const REPLY_TO = "a2000shottie@hotmail.com";
 
+type ShippingAddress = {
+  line1?: string | null;
+  line2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postal_code?: string | null;
+  country?: string | null;
+} | null;
 
 type OrderEmailInput = {
   to: string;
   customerName?: string | null;
   productIds: string[];
+  quantities?: Record<string, number>;
   amountTotalCents: number | null;
   currency: string;
-  shippingAddress?: {
-    line1?: string | null;
-    line2?: string | null;
-    city?: string | null;
-    state?: string | null;
-    postal_code?: string | null;
-    country?: string | null;
-  } | null;
+  shippingAddress?: ShippingAddress;
   sessionId: string;
 };
 
@@ -35,21 +38,31 @@ function fmtMoney(cents: number | null, currency: string) {
   }).format(cents / 100);
 }
 
+function resolveItems(productIds: string[], quantities?: Record<string, number>) {
+  const uniqueIds = Array.from(new Set(productIds));
+  return uniqueIds
+    .map((id) => {
+      const p = getProduct(id);
+      const qty = quantities?.[id] ?? productIds.filter((x) => x === id).length;
+      return p ? { p, qty } : null;
+    })
+    .filter((r): r is { p: NonNullable<ReturnType<typeof getProduct>>; qty: number } => Boolean(r));
+}
+
 function renderHtml(input: OrderEmailInput) {
-  const items = input.productIds
-    .map((id) => getProduct(id))
-    .filter((p): p is NonNullable<ReturnType<typeof getProduct>> => Boolean(p));
+  const items = resolveItems(input.productIds, input.quantities);
 
   const itemsHtml = items
     .map(
-      (p) => `
+      ({ p, qty }) => `
         <tr>
           <td style="padding:12px 0;border-bottom:1px solid #eee;font-family:Georgia,serif;font-size:15px;color:#111;">
             ${p.house ? `<div style="color:#666;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">${p.house}</div>` : ""}
             <div>${p.name}</div>
+            <div style="color:#888;font-size:12px;">Qty: ${qty}</div>
           </td>
           <td style="padding:12px 0;border-bottom:1px solid #eee;text-align:right;font-family:Georgia,serif;font-size:15px;color:#111;">
-            $${p.price.toLocaleString()}
+            $${(p.price * qty).toLocaleString()}
           </td>
         </tr>`,
     )
@@ -74,18 +87,18 @@ function renderHtml(input: OrderEmailInput) {
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;padding:40px;border:1px solid #eee;">
         <tr><td>
           <div style="font-family:Georgia,serif;font-size:22px;letter-spacing:0.06em;color:#111;margin-bottom:8px;">2000shottie</div>
-          <div style="font-family:Georgia,serif;font-size:13px;color:#888;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:28px;">Order confirmed</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#888;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:28px;">Thank you for your order</div>
 
           <p style="font-family:Georgia,serif;font-size:15px;color:#111;line-height:1.6;">${hello}</p>
           <p style="font-family:Georgia,serif;font-size:15px;color:#111;line-height:1.6;">
-            Thank you for your order. Each piece is hand-prepared and shipped within 2–3 business days. You'll receive tracking as soon as it leaves us.
+            Thank you for your order — we're so glad it's going to a good home. Here's your order summary.
           </p>
 
           <table width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0;">
             ${itemsHtml}
             ${
               total
-                ? `<tr><td style="padding:14px 0 0 0;font-family:Georgia,serif;font-size:15px;color:#111;">Total (incl. shipping)</td>
+                ? `<tr><td style="padding:14px 0 0 0;font-family:Georgia,serif;font-size:15px;color:#111;">Order total</td>
                    <td style="padding:14px 0 0 0;font-family:Georgia,serif;font-size:15px;color:#111;text-align:right;"><strong>${total}</strong></td></tr>`
                 : ""
             }
@@ -100,8 +113,13 @@ function renderHtml(input: OrderEmailInput) {
               : ""
           }
 
+          <div style="margin-top:28px;padding:18px 20px;background:#fafaf7;border:1px solid #eee;font-family:Georgia,serif;font-size:14px;color:#111;line-height:1.6;">
+            <strong>Estimated delivery:</strong> 3–4 weeks.<br/>
+            <strong>Customs duties &amp; taxes are already covered</strong> — nothing extra to pay on delivery.
+          </div>
+
           <p style="font-family:Georgia,serif;font-size:13px;color:#888;line-height:1.6;margin-top:36px;">
-            Questions? Just reply to this email — it goes straight to ${REPLY_TO}.<br/>
+            Questions about your order? Email <a href="mailto:a2000shottie@hotmail.com" style="color:#888;">a2000shottie@hotmail.com</a>.<br/>
             Order ref: ${input.sessionId}
           </p>
         </td></tr>
@@ -130,7 +148,7 @@ export async function sendOrderConfirmationEmail(input: OrderEmailInput) {
       from: FROM,
       to: [input.to],
       reply_to: REPLY_TO,
-      subject: "Your 2000shottie order is confirmed",
+      subject: "Thank you for your 2000shottie order",
       html: renderHtml(input),
     }),
   });
@@ -230,32 +248,32 @@ export async function sendShippedEmail(input: ShippedEmailInput) {
 }
 
 // ---------- Admin "new order" notification ----------
-// Uses Resend's default verified sender (onboarding@resend.dev) so this works
-// WITHOUT any DNS changes. Delivers to the store owner's verified inbox.
 
 const ADMIN_NOTIFY_TO = "a2000shottie@hotmail.com";
 const ADMIN_FROM = "2000shottie Orders <onboarding@resend.dev>";
 
 type AdminOrderInput = {
   productIds: string[];
+  quantities?: Record<string, number>;
   amountTotalCents: number | null;
   currency: string;
   buyerEmail: string;
   buyerName?: string | null;
-  shippingAddress?: OrderEmailInput["shippingAddress"];
+  buyerPhone?: string | null;
+  shippingAddress?: ShippingAddress;
   sessionId: string;
+  paymentIntentId?: string | null;
+  orderDate?: string | null;
 };
 
 function renderAdminHtml(input: AdminOrderInput) {
-  const items = input.productIds
-    .map((id) => getProduct(id))
-    .filter((p): p is NonNullable<ReturnType<typeof getProduct>> => Boolean(p));
+  const items = resolveItems(input.productIds, input.quantities);
 
   const itemsHtml = items
     .map(
-      (p) =>
+      ({ p, qty }) =>
         `<li style="font-family:Georgia,serif;font-size:14px;color:#111;margin:4px 0;">
-          <strong>${p.house ?? ""}</strong> — ${p.name} ($${p.price.toLocaleString()})
+          <strong>${p.house ?? ""}</strong> — ${p.name} · Qty ${qty} · $${p.price.toLocaleString()} ea · Line $${(p.price * qty).toLocaleString()}
         </li>`,
     )
     .join("");
@@ -268,16 +286,26 @@ function renderAdminHtml(input: AdminOrderInput) {
     : "—";
 
   const total = fmtMoney(input.amountTotalCents, input.currency);
+  const when = input.orderDate ? new Date(input.orderDate).toUTCString() : new Date().toUTCString();
 
   return `<!doctype html><html><body style="font-family:Georgia,serif;color:#111;padding:24px;background:#fafaf7;">
     <h2 style="margin:0 0 16px 0;">🛍️ New order on 2000shottie</h2>
-    <p style="margin:0 0 8px 0;"><strong>Total:</strong> ${total || "—"}</p>
-    <p style="margin:0 0 8px 0;"><strong>Buyer:</strong> ${input.buyerName ?? ""} &lt;${input.buyerEmail}&gt;</p>
+    <p style="margin:0 0 6px 0;"><strong>Total:</strong> ${total || "—"}</p>
+    <p style="margin:0 0 6px 0;"><strong>Order date:</strong> ${when}</p>
+    <p style="margin:16px 0 4px 0;"><strong>Customer:</strong></p>
+    <p style="margin:0;font-size:14px;line-height:1.6;">
+      ${input.buyerName ?? "—"}<br/>
+      ${input.buyerEmail}<br/>
+      ${input.buyerPhone ?? "(no phone)"}
+    </p>
     <p style="margin:16px 0 4px 0;"><strong>Items:</strong></p>
     <ul style="padding-left:20px;margin:0;">${itemsHtml || "<li>(no items resolved)</li>"}</ul>
     <p style="margin:16px 0 4px 0;"><strong>Ship to:</strong></p>
     <p style="margin:0;font-size:14px;line-height:1.5;">${addrHtml}</p>
-    <p style="margin:20px 0 0 0;font-size:12px;color:#888;">Stripe session: ${input.sessionId}</p>
+    <p style="margin:20px 0 0 0;font-size:12px;color:#888;">
+      Stripe session: ${input.sessionId}<br/>
+      ${input.paymentIntentId ? `Stripe payment: ${input.paymentIntentId}` : ""}
+    </p>
   </body></html>`;
 }
 
