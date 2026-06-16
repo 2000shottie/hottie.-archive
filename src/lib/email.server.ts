@@ -5,9 +5,10 @@ import { getProduct } from "@/lib/products";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 
-// Custom domain not yet verified on Resend — use the default verified sender
-// so emails actually deliver. Replies route to the store inbox.
-const FROM = "2000shottie <onboarding@resend.dev>";
+// Customer emails must use a Resend-verified domain sender.
+// Resend's onboarding sender only delivers to the Resend account owner.
+const FROM_EMAIL = "orders@2000shottie.com";
+const FROM = `2000shottie <${FROM_EMAIL}>`;
 const REPLY_TO = "a2000shottie@hotmail.com";
 
 type ShippingAddress = {
@@ -133,8 +134,7 @@ export async function sendOrderConfirmationEmail(input: OrderEmailInput) {
   const lovableKey = process.env.LOVABLE_API_KEY;
   const resendKey = process.env.RESEND_API_KEY;
   if (!lovableKey || !resendKey) {
-    console.error("Email skipped: missing LOVABLE_API_KEY or RESEND_API_KEY");
-    return;
+    throw new Error("Email skipped: missing LOVABLE_API_KEY or RESEND_API_KEY");
   }
 
   const res = await fetch(`${GATEWAY_URL}/emails`, {
@@ -155,7 +155,7 @@ export async function sendOrderConfirmationEmail(input: OrderEmailInput) {
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    console.error("Resend send failed:", res.status, text);
+    throw new Error(`Resend order confirmation failed: ${res.status} ${text}`);
   }
 }
 
@@ -221,8 +221,7 @@ export async function sendShippedEmail(input: ShippedEmailInput) {
   const lovableKey = process.env.LOVABLE_API_KEY;
   const resendKey = process.env.RESEND_API_KEY;
   if (!lovableKey || !resendKey) {
-    console.error("Email skipped: missing LOVABLE_API_KEY or RESEND_API_KEY");
-    return;
+    throw new Error("Email skipped: missing LOVABLE_API_KEY or RESEND_API_KEY");
   }
 
   const res = await fetch(`${GATEWAY_URL}/emails`, {
@@ -243,14 +242,14 @@ export async function sendShippedEmail(input: ShippedEmailInput) {
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    console.error("Resend shipped send failed:", res.status, text);
+    throw new Error(`Resend shipped email failed: ${res.status} ${text}`);
   }
 }
 
 // ---------- Admin "new order" notification ----------
 
 const ADMIN_NOTIFY_TO = "a2000shottie@hotmail.com";
-const ADMIN_FROM = "2000shottie Orders <onboarding@resend.dev>";
+const ADMIN_FROM = `2000shottie Orders <${FROM_EMAIL}>`;
 
 type AdminOrderInput = {
   productIds: string[];
@@ -313,8 +312,7 @@ export async function sendAdminOrderNotification(input: AdminOrderInput) {
   const lovableKey = process.env.LOVABLE_API_KEY;
   const resendKey = process.env.RESEND_API_KEY;
   if (!lovableKey || !resendKey) {
-    console.error("Admin email skipped: missing LOVABLE_API_KEY or RESEND_API_KEY");
-    return;
+    throw new Error("Admin email skipped: missing LOVABLE_API_KEY or RESEND_API_KEY");
   }
 
   const total = fmtMoney(input.amountTotalCents, input.currency);
@@ -336,6 +334,6 @@ export async function sendAdminOrderNotification(input: AdminOrderInput) {
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    console.error("Admin notification send failed:", res.status, text);
+    throw new Error(`Admin notification send failed: ${res.status} ${text}`);
   }
 }
