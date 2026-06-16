@@ -66,6 +66,7 @@ export type Database = {
           amount_total_cents: number | null
           buyer_email: string
           buyer_name: string | null
+          buyer_phone: string | null
           carrier: string | null
           created_at: string
           currency: string
@@ -82,6 +83,7 @@ export type Database = {
           amount_total_cents?: number | null
           buyer_email: string
           buyer_name?: string | null
+          buyer_phone?: string | null
           carrier?: string | null
           created_at?: string
           currency?: string
@@ -98,6 +100,7 @@ export type Database = {
           amount_total_cents?: number | null
           buyer_email?: string
           buyer_name?: string | null
+          buyer_phone?: string | null
           carrier?: string | null
           created_at?: string
           currency?: string
