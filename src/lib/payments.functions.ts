@@ -119,11 +119,44 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         BR:1,AR:1,CL:1,CO:1,PE:1,UY:1,
       });
 
+      // --- Reservation pre-check: refuse if any item is already sold or
+      // actively reserved by another in-flight checkout. ---
+      const uniqueProductIds = Array.from(new Set(data.items.map((i) => i.priceId)));
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+      const [{ data: soldRows }, { data: stockRows }, { data: resRows }] = await Promise.all([
+        supabaseAdmin.from("sold_products").select("product_id").in("product_id", uniqueProductIds),
+        supabaseAdmin
+          .from("product_stock")
+          .select("product_id, available")
+          .in("product_id", uniqueProductIds),
+        supabaseAdmin
+          .from("product_reservations")
+          .select("product_id, expires_at")
+          .in("product_id", uniqueProductIds)
+          .gt("expires_at", new Date().toISOString()),
+      ]);
+
+      const blocked = new Set<string>();
+      for (const r of soldRows ?? []) blocked.add(r.product_id);
+      for (const r of stockRows ?? []) if (r.available === false) blocked.add(r.product_id);
+      for (const r of resRows ?? []) blocked.add(r.product_id);
+      if (blocked.size > 0) {
+        return { error: "This item is no longer available." };
+      }
+
+      // Stripe Checkout minimum `expires_at` is 30 minutes from now, so the
+      // DB reservation window aligns with the Stripe session window.
+      const RESERVATION_MINUTES = 30;
+      const expiresAtDate = new Date(Date.now() + RESERVATION_MINUTES * 60 * 1000);
+      const expiresAtUnix = Math.floor(expiresAtDate.getTime() / 1000);
+
       const session = await stripe.checkout.sessions.create({
         line_items,
         mode: "payment",
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
+        expires_at: expiresAtUnix,
         billing_address_collection: "required",
         shipping_address_collection: {
           allowed_countries: allowedCountries as unknown as never,
@@ -147,14 +180,8 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
             },
           },
         ],
-        // Include Apple Pay / Google Pay via "card" (wallets ride on card),
-        // plus Link. Apple Pay also requires the checkout domain to be
-        // registered in Stripe Dashboard → Settings → Payment methods.
         payment_method_types: ["card", "link"],
         phone_number_collection: { enabled: true },
-        // Stripe will email a branded receipt to the buyer's email collected
-        // at checkout (requires "Successful payments" emails enabled in
-        // Stripe Dashboard → Settings → Emails — on by default).
         payment_intent_data: {
           description: `HOTTIE. order — ${data.items.length} item${data.items.length === 1 ? "" : "s"}`,
         },
@@ -163,6 +190,45 @@ export const createCartCheckoutSession = createServerFn({ method: "POST" })
         },
       });
 
+      // --- Atomic reservation claim ---
+      // Each RPC only succeeds if the row is new OR the existing one has
+      // already expired. If any claim fails, expire the Stripe session,
+      // release the rows we did claim, and bail out.
+      const claimed: string[] = [];
+      let lostRace = false;
+      for (const productId of uniqueProductIds) {
+        const { data: row, error: claimErr } = await supabaseAdmin.rpc("try_reserve_product", {
+          _product_id: productId,
+          _session_id: session.id,
+          _expires_at: expiresAtDate.toISOString(),
+        });
+        if (claimErr) {
+          console.error("try_reserve_product error", productId, claimErr);
+          lostRace = true;
+          break;
+        }
+        if (!row) {
+          lostRace = true;
+          break;
+        }
+        claimed.push(productId);
+      }
+
+      if (lostRace) {
+        try {
+          await stripe.checkout.sessions.expire(session.id);
+        } catch (e) {
+          console.error("Failed to expire Stripe session after lost race:", e);
+        }
+        if (claimed.length > 0) {
+          await supabaseAdmin
+            .from("product_reservations")
+            .delete()
+            .in("product_id", claimed)
+            .eq("stripe_session_id", session.id);
+        }
+        return { error: "This item is no longer available." };
+      }
 
       return { clientSecret: session.client_secret ?? "" };
     } catch (error) {
