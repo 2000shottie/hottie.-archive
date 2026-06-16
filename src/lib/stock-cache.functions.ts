@@ -119,3 +119,23 @@ export const getRecentStockChecks = createServerFn({ method: "GET" }).handler(
     return data ?? [];
   },
 );
+
+/**
+ * Returns active (not yet expired) reservations — admin use.
+ */
+export const getActiveReservations = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const nowIso = new Date().toISOString();
+    const { data, error } = await supabaseAdmin
+      .from("product_reservations")
+      .select("product_id, stripe_session_id, expires_at, created_at")
+      .gt("expires_at", nowIso)
+      .order("expires_at", { ascending: true });
+    if (error) {
+      console.error("getActiveReservations error", error);
+      return [];
+    }
+    return data ?? [];
+  },
+);
