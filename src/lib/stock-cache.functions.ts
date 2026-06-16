@@ -31,14 +31,23 @@ export const getStockMap = createServerFn({ method: "GET" }).handler(
   async (): Promise<StockMap> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const [{ data: stockRows, error: stockErr }, { data: soldRows, error: soldErr }] =
-      await Promise.all([
-        supabaseAdmin.from("product_stock").select("product_id, available, reason, checked_at"),
-        supabaseAdmin.from("sold_products").select("product_id, sold_at"),
-      ]);
+    const nowIso = new Date().toISOString();
+    const [
+      { data: stockRows, error: stockErr },
+      { data: soldRows, error: soldErr },
+      { data: resRows, error: resErr },
+    ] = await Promise.all([
+      supabaseAdmin.from("product_stock").select("product_id, available, reason, checked_at"),
+      supabaseAdmin.from("sold_products").select("product_id, sold_at"),
+      supabaseAdmin
+        .from("product_reservations")
+        .select("product_id, expires_at")
+        .gt("expires_at", nowIso),
+    ]);
 
     if (stockErr) console.error("getStockMap product_stock error", stockErr);
     if (soldErr) console.error("getStockMap sold_products error", soldErr);
+    if (resErr) console.error("getStockMap product_reservations error", resErr);
 
     const map: StockMap = {};
     for (const row of stockRows ?? []) {
@@ -46,6 +55,14 @@ export const getStockMap = createServerFn({ method: "GET" }).handler(
         available: row.available,
         reason: row.reason,
         checkedAt: row.checked_at,
+      };
+    }
+    // Active reservation = temporarily held by another buyer in checkout.
+    for (const row of resRows ?? []) {
+      map[row.product_id] = {
+        available: false,
+        reason: "Reserved — pending checkout",
+        checkedAt: row.expires_at,
       };
     }
     // sold_products always wins — a real paid order is the strongest signal.
