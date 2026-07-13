@@ -139,5 +139,4 @@ export const getActiveReservations = createServerFn({ method: "GET" })
       return [];
     }
     return data ?? [];
-  },
-);
+  });
