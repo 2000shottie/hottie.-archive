@@ -11,12 +11,11 @@ export const Route = createFileRoute("/api/public/hooks/sync-stock")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const expected = process.env.ADMIN_TOKEN;
+        const expected = process.env.STOCK_SYNC_SECRET;
         if (!expected) {
           return Response.json({ ok: false, error: "server_misconfigured" }, { status: 500 });
         }
-        const provided = request.headers.get("x-admin-token") ?? "";
-        // constant-time compare
+        const provided = request.headers.get("x-sync-secret") ?? "";
         if (provided.length !== expected.length) {
           return Response.json({ ok: false, error: "unauthorized" }, { status: 401 });
         }
