@@ -43,11 +43,19 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                 email?: string | null;
                 name?: string | null;
                 phone?: string | null;
+                address?: Record<string, string | null> | null;
               } | null;
               shipping_details?: {
                 address?: Record<string, string | null> | null;
                 name?: string | null;
                 phone?: string | null;
+              } | null;
+              collected_information?: {
+                shipping_details?: {
+                  address?: Record<string, string | null> | null;
+                  name?: string | null;
+                  phone?: string | null;
+                } | null;
               } | null;
               metadata?: Record<string, string> | null;
             };
@@ -77,9 +85,16 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
               if (relErr) console.error("webhook release reservations error:", relErr);
             }
 
+            const shippingDetails =
+              session.shipping_details ?? session.collected_information?.shipping_details ?? null;
+            const shippingAddress =
+              shippingDetails?.address ?? session.customer_details?.address ?? null;
+            const shippingName =
+              shippingDetails?.name ?? session.customer_details?.name ?? null;
+
             const buyerEmail = session.customer_details?.email;
             const buyerPhone =
-              session.customer_details?.phone ?? session.shipping_details?.phone ?? null;
+              session.customer_details?.phone ?? shippingDetails?.phone ?? null;
             const orderDate = session.created
               ? new Date(session.created * 1000).toISOString()
               : new Date().toISOString();
@@ -99,7 +114,7 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                     product_ids: productIds,
                     amount_total_cents: session.amount_total ?? null,
                     currency: session.currency ?? "usd",
-                    shipping_address: session.shipping_details?.address ?? null,
+                    shipping_address: shippingAddress,
                   },
                   { onConflict: "stripe_session_id" },
                 );
@@ -108,12 +123,12 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
               try {
                 await sendOrderConfirmationEmail({
                   to: buyerEmail,
-                  customerName: session.customer_details?.name ?? null,
+                  customerName: session.customer_details?.name ?? shippingName,
                   productIds,
                   quantities,
                   amountTotalCents: session.amount_total ?? null,
                   currency: session.currency ?? "usd",
-                  shippingAddress: session.shipping_details?.address ?? null,
+                  shippingAddress,
                   sessionId: session.id,
                 });
               } catch (mailErr) {
@@ -127,9 +142,10 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
                   amountTotalCents: session.amount_total ?? null,
                   currency: session.currency ?? "usd",
                   buyerEmail,
-                  buyerName: session.customer_details?.name ?? null,
+                  buyerName: session.customer_details?.name ?? shippingName,
                   buyerPhone,
-                  shippingAddress: session.shipping_details?.address ?? null,
+                  shippingAddress,
+                  shippingName,
                   sessionId: session.id,
                   paymentIntentId,
                   orderDate,
