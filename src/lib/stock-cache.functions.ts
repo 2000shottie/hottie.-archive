@@ -10,6 +10,7 @@
  */
 
 import { createServerFn } from "@tanstack/react-start";
+import { requireAdminToken } from "@/lib/admin-auth";
 
 export type StockMapEntry = {
   available: boolean;
