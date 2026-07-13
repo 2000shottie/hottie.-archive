@@ -271,6 +271,7 @@ type AdminOrderInput = {
   buyerName?: string | null;
   buyerPhone?: string | null;
   shippingAddress?: ShippingAddress;
+  shippingName?: string | null;
   sessionId: string;
   paymentIntentId?: string | null;
   orderDate?: string | null;
@@ -290,10 +291,11 @@ function renderAdminHtml(input: AdminOrderInput) {
 
   const addr = input.shippingAddress;
   const addrHtml = addr
-    ? `${[addr.line1, addr.line2].filter(Boolean).join(", ")}<br/>
+    ? `${input.shippingName ? `<strong>${input.shippingName}</strong><br/>` : ""}
+       ${[addr.line1, addr.line2].filter(Boolean).join(", ")}<br/>
        ${[addr.city, addr.state, addr.postal_code].filter(Boolean).join(" ")}<br/>
        ${addr.country ?? ""}`
-    : "—";
+    : "<em>No shipping address on session — check Stripe dashboard.</em>";
 
   const total = fmtMoney(input.amountTotalCents, input.currency);
   const when = input.orderDate ? new Date(input.orderDate).toUTCString() : new Date().toUTCString();
