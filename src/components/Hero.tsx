@@ -1,8 +1,6 @@
 import { Link } from "@tanstack/react-router";
 // @ts-expect-error vite query param for cache bust
 import hero from "@/assets/hero.jpg?v=3";
-import bagPink from "@/assets/p-bag-pink.png";
-import sunnies from "@/assets/p-sunglasses.png";
 
 export function Hero() {
   return (
@@ -68,20 +66,27 @@ export function Hero() {
 
           </div>
 
-          {/* floating product chips */}
-          <img
-            src={bagPink}
-            alt=""
+          {/* floating sparkles */}
+          <span
             aria-hidden
-            className="pointer-events-none absolute -left-6 bottom-10 hidden w-40 animate-float drop-shadow-2xl md:block"
-          />
-          <img
-            src={sunnies}
-            alt=""
+            className="pointer-events-none absolute -left-2 bottom-16 hidden animate-float text-3xl md:block"
+          >
+            ✦
+          </span>
+          <span
             aria-hidden
-            className="pointer-events-none absolute -right-4 top-10 hidden w-44 animate-float drop-shadow-2xl md:block"
+            className="pointer-events-none absolute -right-1 top-14 hidden animate-float text-2xl md:block"
             style={{ animationDelay: "1.5s" }}
-          />
+          >
+            ✧
+          </span>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute right-16 bottom-6 hidden animate-float text-xl md:block"
+            style={{ animationDelay: "2.2s" }}
+          >
+            ✦
+          </span>
         </div>
       </div>
 

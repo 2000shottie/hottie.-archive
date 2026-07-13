@@ -111,7 +111,7 @@ function NewCard({ product }: { product: Product }) {
       <Link
         to="/product/$id"
         params={{ id: product.id }}
-        className={`block ${soldOut ? "pointer-events-none" : ""}`}
+        className="block"
       >
         <div
           className="relative aspect-square overflow-hidden rounded-2xl"

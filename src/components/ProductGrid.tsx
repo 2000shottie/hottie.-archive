@@ -65,7 +65,7 @@ function ProductCard({ product }: { product: Product }) {
           )}
           <span
             aria-label="Wishlist"
-            className="absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-full glass text-foreground/70 opacity-0 transition-all hover:text-primary group-hover:opacity-100"
+            className="pointer-events-none absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-full glass text-foreground/70 opacity-0 transition-all group-hover:opacity-100"
           >
             ♡
           </span>
