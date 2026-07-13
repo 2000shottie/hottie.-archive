@@ -1,14 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Public hook hit by pg_cron every 10 minutes to refresh every product's
- * Vestiaire stock status. Anyone can call it (it only writes to the
- * `product_stock` cache and the `stock_check_log` history).
+ * Public hook hit by pg_cron every 5 minutes to refresh every product's
+ * Vestiaire stock status. Protected by a shared secret so anonymous callers
+ * cannot burn Firecrawl credits.
+ *
+ * pg_cron sends `x-admin-token: <ADMIN_TOKEN>`.
  */
 export const Route = createFileRoute("/api/public/hooks/sync-stock")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const expected = process.env.ADMIN_TOKEN;
+        if (!expected) {
+          return Response.json({ ok: false, error: "server_misconfigured" }, { status: 500 });
+        }
+        const provided = request.headers.get("x-admin-token") ?? "";
+        // constant-time compare
+        if (provided.length !== expected.length) {
+          return Response.json({ ok: false, error: "unauthorized" }, { status: 401 });
+        }
+        let mismatch = 0;
+        for (let i = 0; i < expected.length; i++) {
+          mismatch |= expected.charCodeAt(i) ^ provided.charCodeAt(i);
+        }
+        if (mismatch !== 0) {
+          return Response.json({ ok: false, error: "unauthorized" }, { status: 401 });
+        }
+
         try {
           const { checkAll } = await import("@/lib/stock-checker.server");
           const result = await checkAll();
