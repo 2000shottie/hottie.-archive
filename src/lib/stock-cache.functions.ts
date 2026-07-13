@@ -106,8 +106,9 @@ export const refreshStockInBackground = createServerFn({ method: "POST" }).handl
 /**
  * Returns the most recent check log entries per product (admin use).
  */
-export const getRecentStockChecks = createServerFn({ method: "GET" }).handler(
-  async () => {
+export const getRecentStockChecks = createServerFn({ method: "GET" })
+  .middleware([requireAdminToken])
+  .handler(async () => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("product_stock")
@@ -118,14 +119,14 @@ export const getRecentStockChecks = createServerFn({ method: "GET" }).handler(
       return [];
     }
     return data ?? [];
-  },
-);
+  });
 
 /**
  * Returns active (not yet expired) reservations — admin use.
  */
-export const getActiveReservations = createServerFn({ method: "GET" }).handler(
-  async () => {
+export const getActiveReservations = createServerFn({ method: "GET" })
+  .middleware([requireAdminToken])
+  .handler(async () => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const nowIso = new Date().toISOString();
     const { data, error } = await supabaseAdmin
